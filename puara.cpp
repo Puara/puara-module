@@ -1358,13 +1358,13 @@ void Puara::interpret_serial(void *pvParameters) {
 
     bool Puara::start_serial_listening() {
         //std::cout << "starting serial monitor \n";
-        if (module_monitor = UART_MONITOR) {
+        if (module_monitor == UART_MONITOR) {
             xTaskCreate(uart_monitor, "serial_monitor", 2048, NULL, 10, NULL);
             xTaskCreate(interpret_serial, "interpret_serial", 4096, NULL, 10, NULL);
-        } else if (module_monitor = JTAG_MONITOR) {
+        } else if (module_monitor == JTAG_MONITOR) {
             xTaskCreate(jtag_monitor, "serial_monitor", 2048, NULL, 10, NULL);
             xTaskCreate(interpret_serial, "interpret_serial", 4096, NULL, 10, NULL);
-        } else if (module_monitor = USB_MONITOR) {
+        } else if (module_monitor == USB_MONITOR) {
             xTaskCreate(usb_monitor, "serial_monitor", 2048, NULL, 10, NULL);
             xTaskCreate(interpret_serial, "interpret_serial", 4096, NULL, 10, NULL);
         } else {
