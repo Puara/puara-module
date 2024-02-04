@@ -1303,6 +1303,7 @@ void Puara::interpret_serial(void *pvParameters) {
     }
 
     void Puara::jtag_monitor(void *pvParameters) {
+        #if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
         // Setup jtag module for USB Serial reads
         usb_serial_jtag_driver_config_t jtag_config {
             .tx_buffer_size = 256,
@@ -1326,9 +1327,11 @@ void Puara::interpret_serial(void *pvParameters) {
                 memset(serial_data, 0, sizeof serial_data);
             }
         }
+        #endif
     }
 
     void Puara::usb_monitor(void *pvParameters) {
+        #if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
         // // Setup usb module for USB reads
         // const char *product_name = dmiName.c_str();
         // const char *manufacturer_name = author.c_str();
@@ -1354,6 +1357,7 @@ void Puara::interpret_serial(void *pvParameters) {
         // tinyusb_init(&usb_config);
         // TODO: Read from USB interface
         std::cout << "USB OTG monitor not supported, use the USB Serial JTAG or UART interface" << std::endl;
+        #endif
     }
 
     bool Puara::start_serial_listening() {

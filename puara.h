@@ -33,11 +33,15 @@
 #include <cJSON.h>
 #include <esp_http_server.h>
 #include <driver/uart.h>
-#include <driver/usb_serial_jtag.h> // jtag module
 #include <mdns.h>
+#if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
+#include <driver/usb_serial_jtag.h> // jtag module
+#endif
+#if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
+#include "esp32-hal-tinyusb.h"
+#endif
 
 // The following libraries need to be included if using the espidf framework:
-
 #include <esp_log.h>
 #include <sys/unistd.h>
 #include <sys/stat.h>
@@ -46,7 +50,7 @@
 #include <esp_event.h>
 #include <soc/uart_struct.h>
 #include "esp_console.h"
-#include "esp32-hal-tinyusb.h"
+
 
 class Puara {
     
