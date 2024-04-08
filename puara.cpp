@@ -1501,7 +1501,7 @@ std::string Puara::getLocalPORTStr() {
 }
 
 bool Puara::IP1_ready() {
-    if (oscIP1 != "0.0.0.0" || oscIP1 != "") {
+    if ((oscIP1 != "0.0.0.0") && (oscIP1 != "")) {
         return true;
     } else {
         return false;
@@ -1509,7 +1509,7 @@ bool Puara::IP1_ready() {
 }
 
 bool Puara::IP2_ready() {
-    if (oscIP2 != "0.0.0.0" || oscIP2 != "") {
+    if ((oscIP2 != "0.0.0.0") && (oscIP2 != "")) {
         return true;
     } else {
         return false;
