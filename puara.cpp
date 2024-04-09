@@ -1501,17 +1501,17 @@ std::string Puara::getLocalPORTStr() {
 }
 
 bool Puara::IP1_ready() {
-    if ((oscIP1 != "0.0.0.0") && (oscIP1 != "")) {
-        return true;
-    } else {
+    if ((oscIP1 == "0.0.0.0") || (oscIP1 == "")) {
         return false;
+    } else {
+        return true;
     }
 }
 
 bool Puara::IP2_ready() {
-    if ((oscIP2 != "0.0.0.0") && (oscIP2 != "")) {
-        return true;
-    } else {
+    if ((oscIP2 == "0.0.0.0") || (oscIP2 == "")) {
         return false;
+    } else {
+        return true;
     }
 }
