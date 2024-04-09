@@ -720,7 +720,7 @@ std::string Puara::prepare_index() {
     Puara::find_and_replace("%CURRENTOSC1%", Puara::oscIP1, contents);
     Puara::find_and_replace("%CURRENTPORT1%", Puara::oscPORT1, contents);
     Puara::find_and_replace("%CURRENTOSC2%", Puara::oscIP2, contents);
-    Puara::find_and_replace("%CURRENTPORT2%", Puara::oscPORT1, contents);
+    Puara::find_and_replace("%CURRENTPORT2%", Puara::oscPORT2, contents);
     Puara::find_and_replace("%CURRENTLOCALPORT%", Puara::localPORT, contents);
     Puara::find_and_replace("%CURRENTSSID2%", Puara::wifiSSID, contents);
     Puara::find_and_replace("%CURRENTIP%", Puara::currentSTA_IP, contents);
