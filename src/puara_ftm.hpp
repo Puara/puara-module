@@ -12,6 +12,14 @@ struct FTM
 {
 
   wifi_ftm_initiator_cfg_t wifi_ftm_cfg; //struct for ftm config
+    /** FTM Initiator configuration
+      typedef struct {
+          uint8_t resp_mac[6];        // MAC address of the FTM Responder 
+          uint8_t channel;            // Primary channel of the FTM Responder
+          uint8_t frm_count;          // No. of FTM frames requested in terms of 4 or 8 bursts (allowed values - 0(No pref), 16, 24, 32, 64)
+          uint16_t burst_period;      // Requested time period between consecutive FTM bursts in 100's of milliseconds (0 - No pref)
+      } wifi_ftm_initiator_cfg_t;
+    */
   //std::string currentRouter_MAC;   //variable used for p.o.c testing --> see wifi.hpp
   //uint8_t currentRouter_bssid[6];    // MAC address of router defined in json.settings if connection concludes
   //uint8_t primary_channel_AP_ftm;    // channel of AP for FTM purposes
@@ -36,6 +44,6 @@ struct FTM
 /* event information from esp-idf referred version
 	 * FTM
     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_FTM_REPORT) {
-    	arduino_event.event_id = ARDUINO_EVENT_WIFI_FTM_REPORT;
+    	arduino_event.event_id = "FTM_REPORT";
     	memcpy(&arduino_event.event_info.wifi_ftm_report, event_data, sizeof(wifi_event_ftm_report_t));
 */
