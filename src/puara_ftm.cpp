@@ -14,18 +14,18 @@ void puara_ftm::init_ftm(){
     std::cout << "Initialising FTM" << "\n" << std::endl;
     // struct for esp_wifi_ftm_initiate_session(*ftm_initiator)
     //get responder MAC address
-    ftmi_cfg.resp_mac = currentRouter_bssid; //uint8_t currentRouter_bssid[6];
-    ftmi_cfg.channel = primary_channel_AP_ftm;
-    ftmi_cfg.frm_count = 0; //0 means no preference    
-    ftmi_cfg.burst_period = 0; // 0 means no preference
+    ftmi_cfg.resp_mac; // = currentRouter_bssid; //uint8_t currentRouter_bssid[6];
+    ftmi_cfg.channel; // = primary_channel_AP_ftm;
+    ftmi_cfg.frm_count; // = 0; //0 means no preference    
+    ftmi_cfg.burst_period; // = 0; // 0 means no preference
     //ftmi_cfg.use_get_report_api=false; /**< True - Using esp_wifi_ftm_get_report to get FTM report, False - Using ftm_report_data from
     //                                              WIFI_EVENT_FTM_REPORT to get FTM report */
 
     esp_err_t result = esp_wifi_ftm_initiate_session(&ftmi_cfg);
     if (result != ESP_OK) {
-        ESP_LOGE(TAG_STA, "Failed to start FTM session: %s", esp_err_to_name(result));
+        std::cout << "FTM initiate session failed :: result (esp_err_t) : " << result << "\n" << std::endl;
     }else if(result == ESP_OK) {
-        std::cout << "FTM initiate session OK :: result :: " << result << "\n" << std::endl;
+        std::cout << "FTM initiate session OK :: result (esp_err_t) : " << result << "\n" << std::endl;
     }
 }
 
@@ -42,7 +42,7 @@ void puara_ftm::printBSSID(const uint8_t bssid[6]){
 }
 
 void puara_ftm::getFTMReport(){
-
+/*
     esp_err_t result = esp_wifi_ftm_get_report(report, num_entries);
         if (result == ESP_OK) {
         // Process the report data
@@ -51,11 +51,11 @@ void puara_ftm::getFTMReport(){
         } else {
         // Handle error
         std::cout << "Error retrieving FTM report: " << result << std::endl;
-       } 
+       } */ 
 }
 
 
-void ftm_data::f2()
+void puara_ftm::f2()
 {
     return;
 }

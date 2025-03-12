@@ -19,6 +19,7 @@ Edu Meneses (2022) - https://www.edumeneses.com
 #include "puara_spiffs.hpp"
 #include "puara_web.hpp"
 #include "puara_wifi.hpp"
+#include "puara_ftm.hpp"
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>

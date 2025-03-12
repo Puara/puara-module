@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
-#include "esp_wifi_types.h"
+#include <iostream>
+#include <esp_wifi.h>
+#include "esp_log.h"
+#include <iomanip>
 
 namespace PuaraAPI
 {
@@ -14,7 +17,7 @@ struct puara_ftm
   uint8_t primary_channel_AP_ftm;    // channel of AP for FTM purposes
   uint8_t num_entries = 10;          // Number of entries you want to retrieve
   wifi_ftm_report_entry_t report[10]; // Adjust size based on expected entries
-  //char* TAG_STA = "ftm_station";
+  std::string TAG_STA = "ftm_station";
   //uint32_t s_rtt_est, s_dist_est;
 
   //wifi_ftm_initiator_cfg_t ftm_initiator; // struct for esp_wifi_ftm_initiate_session(*ftm_initiator)
