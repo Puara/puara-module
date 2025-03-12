@@ -39,6 +39,7 @@ struct PuaraGlobal
   PuaraAPI::WiFi wifi{config};
   PuaraAPI::Webserver webserver{config, device, spiffs, settings, wifi};
   PuaraAPI::MDNSService mdns;
+  PuaraAPI::FTM ftm;
 
   PuaraGlobal() { }
 
@@ -62,6 +63,7 @@ struct PuaraGlobal
     webserver.start_webserver();
     mdns.start(config.dmiName, config.dmiName);
     wifi.wifi_scan();
+    ftm.init_ftm();
 
     serial.module_monitor = monitor;
 

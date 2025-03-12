@@ -263,7 +263,7 @@ void WiFi::sta_event_handler(
   else if(event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP)
   {
     ip_event_got_ip_t* event = (ip_event_got_ip_t*)event_data;
-
+    
     std::stringstream tempBuf;
     tempBuf << esp_ip4_addr1_16(&event->ip_info.ip) << ".";
     tempBuf << esp_ip4_addr2_16(&event->ip_info.ip) << ".";
@@ -273,6 +273,30 @@ void WiFi::sta_event_handler(
     std::cout << "wifi/sta_event_handler: got ip:" << self.currentSTA_IP << std::endl;
     self.connect_counter = 0;
     xEventGroupSetBits(self.s_wifi_event_group, self.wifi_connected_bit);
+
+    // FTM implementation
+    wifi_ap_record_t ap_info;
+    if(esp_wifi_sta_get_ap_info(&ap_info) ==ESP_OK){
+      self.router_BSSID.clear();
+      std::stringstream mac_stream;
+      mac_stream << std::hex << std::setfill('0')
+          << std::setw(2) << (int)ap_info.bssid[0] << ":"
+          << std::setw(2) << (int)ap_info.bssid[1] << ":"
+          << std::setw(2) << (int)ap_info.bssid[2] << ":"
+          << std::setw(2) << (int)ap_info.bssid[3] << ":"
+          << std::setw(2) << (int)ap_info.bssid[4] << ":"
+          << std::setw(2) << (int)ap_info.bssid[5];
+       self.router_BSSID = mac_stream.str();
+       std::cout << "Responder MAC: " << self.router_BSSID << std::endl;
+       mac_stream.str("");
+       mac_stream.clear();
+    }
+    //end FTM implementation tests to get active Router MAC address
+  }
+  else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_FTM_REPORT){
+
+    std::cout << "FTM event check in" << std::endl;
+//    	memcpy(&arduino_event.event_info.wifi_ftm_report, event_data, sizeof(wifi_event_ftm_report_t));
   }
 }
 

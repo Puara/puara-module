@@ -30,6 +30,7 @@ struct WiFi
   std::string currentSTA_MAC;
   std::string currentAP_IP;
   std::string currentAP_MAC;
+  std::string router_BSSID; //used for FTM purposes
 
   std::string wifiAvailableSsid;
 
@@ -46,4 +47,4 @@ struct WiFi
   wifi_config_t wifi_config_ap;
   short int connect_counter;
 };
-} 
+}
