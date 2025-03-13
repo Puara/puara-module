@@ -304,6 +304,11 @@ void WiFi::sta_event_handler(
     std::cout<<"FTM Report received! rtt: "<< report->rtt_est <<", distance: "<< report->dist_est << std::endl;
 //    	memcpy(&arduino_event.event_info.wifi_ftm_report, event_data, sizeof(wifi_event_ftm_report_t));
   }
+ else {
+    std::cout<<"fuck you you stupid fucking asshole"<< std::endl;
+
+
+}
 }
 
 bool WiFi::get_StaIsConnected()
