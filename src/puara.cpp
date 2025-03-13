@@ -14,6 +14,7 @@ Edu Meneses (2022) - https://www.edumeneses.com
 
 #include "puara_config.hpp"
 #include "puara_device.hpp"
+#include "puara_littlefs.hpp"
 #include "puara_mdns.hpp"
 #include "puara_serial.hpp"
 #include "puara_spiffs.hpp"
@@ -33,6 +34,7 @@ struct PuaraGlobal
   PuaraAPI::DeviceConfiguration config;
   PuaraAPI::Device device;
   PuaraAPI::SPIFFS spiffs;
+  PuaraAPI::LITTLEFS littlefs;
   PuaraAPI::JSONSettings settings{config, spiffs};
   PuaraAPI::Serial serial{config, device, spiffs, settings};
   PuaraAPI::WiFi wifi{config};
@@ -49,6 +51,10 @@ struct PuaraGlobal
               << "Input Devices and Music Interaction Laboratory (IDMIL) \n"
               << "Firmware version: " << config.version << "\n"
               << std::endl;
+
+    littlefs.config_littlefs();
+    littlefs.mount_littlefs();
+    littlefs.unmount_littlefs();
 
     spiffs.config_spiffs();
     settings.read_config_json();

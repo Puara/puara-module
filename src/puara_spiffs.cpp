@@ -101,7 +101,7 @@ std::string JSONSettings::getVarText(std::string varName)
 void JSONSettings::read_config_json()
 { // Deserialize
 
-  std::cout << "json: Mounting FS" << std::endl;
+  std::cout << "Spiffs:json: Mounting FS" << std::endl;
   spiffs.mount_spiffs();
 
   std::cout << "json: Opening config json file" << std::endl;
@@ -181,7 +181,7 @@ void JSONSettings::read_config_json_internal(std::string& contents)
 
 void JSONSettings::read_settings_json()
 {
-  std::cout << "json: Mounting FS" << std::endl;
+  std::cout << "Spiffs:json: Mounting FS" << std::endl;
   spiffs.mount_spiffs();
 
   std::cout << "json: Opening settings json file" << std::endl;
