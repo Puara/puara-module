@@ -3,7 +3,7 @@
 
 namespace PuaraAPI
 {
-void FTM::init_ftm(){
+void FTM::initiateFTM(){
 
     //Start an FTM Initiator session by sending FTM request
     //If successful, event WIFI_EVENT_FTM_REPORT is generated with the result of the FTM procedure. 
@@ -13,13 +13,13 @@ void FTM::init_ftm(){
     //       SoftAP is started in, FTM defaults to a single burst in ASAP mode
 
     std::cout << "Initialising FTM" << std::endl;
-    // struct for esp_wifi_ftm_initiate_session(*ftm_initiator)
+
     //get responder MAC address
     std::copy(std::begin(wifi.currentRouter_BSSID), std::end(wifi.currentRouter_BSSID), std::begin(wifi_ftm_cfg.resp_mac));
 
     wifi_ftm_cfg.channel = wifi.ftm_channel; // = primary_channel_AP_ftm;
-    wifi_ftm_cfg.frm_count = 0; // No. of FTM frames requested in terms of 4 or 8 bursts (allowed values - 0(No pref), 16, 24, 32, 64)    
-    wifi_ftm_cfg.burst_period = 0; // Requested time period between consecutive FTM bursts in 100's of milliseconds (0 - No pref)
+    wifi_ftm_cfg.frm_count = 16; // No. of FTM frames requested in terms of 4 or 8 bursts (allowed values - 0(No pref), 16, 24, 32, 64)    
+    wifi_ftm_cfg.burst_period = 2; // Requested time period between consecutive FTM bursts in 100's of milliseconds (0 - No pref)
 
     esp_err_t result = esp_wifi_ftm_initiate_session(&wifi_ftm_cfg);
     if (result != ESP_OK) {
@@ -27,18 +27,6 @@ void FTM::init_ftm(){
     }else if(result == ESP_OK) {
         std::cout << "FTM initiate session OK :: result (esp_err_t) : " << result << "\n" << std::endl;
     }
-}
-
-void FTM::printBSSID(const uint8_t bssid[6]){
-    std::cout << "BSSID: ";
-    for (int j = 0; j < 6; ++j) {
-      //currentRouter_bssid[j] = bssid[j];
-      std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(bssid[j]);
-      if (j < 5) {
-        std::cout << ":";
-      }
-    }
-    std::cout << std::dec << std::endl;  // Switch back to decimal output
 }
 
 void FTM::getFTMReport(){
@@ -54,11 +42,6 @@ void FTM::getFTMReport(){
        } */ 
 }
 
-
-void FTM::f2()
-{
-    return;
-}
 
   //void ftm_monitor(void *prParameters); // function for xTaskCreate for FTM recurrent analysis
 } 

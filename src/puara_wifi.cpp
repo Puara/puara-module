@@ -280,7 +280,6 @@ void WiFi::sta_event_handler(
       std::copy(std::begin(ap_info.bssid), std::end(ap_info.bssid), std::begin(self.currentRouter_BSSID));
       self.ftm_channel = ap_info.primary;
 
-/*
   //Print string MAC for proof of concept
       self.router_BSSID.clear();
       std::stringstream mac_stream;
@@ -296,13 +295,13 @@ void WiFi::sta_event_handler(
        mac_stream.str("");
        mac_stream.clear();
   //end proof of concept print
-  */
     }
     //end FTM implementation tests to get active Router MAC address
   }
   else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_FTM_REPORT){
 
-    std::cout << "FTM event check in" << std::endl;
+    wifi_event_ftm_report_t* report = (wifi_event_ftm_report_t*) event_data;
+    std::cout<<"FTM Report received! rtt: "<< report->rtt_est <<", distance: "<< report->dist_est << std::endl;
 //    	memcpy(&arduino_event.event_info.wifi_ftm_report, event_data, sizeof(wifi_event_ftm_report_t));
   }
 }
