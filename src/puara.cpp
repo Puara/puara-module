@@ -39,7 +39,7 @@ struct PuaraGlobal
   PuaraAPI::WiFi wifi{config};
   PuaraAPI::Webserver webserver{config, device, spiffs, settings, wifi};
   PuaraAPI::MDNSService mdns;
-  PuaraAPI::FTM ftm;
+  PuaraAPI::FTM ftm{wifi};
 
   PuaraGlobal() { }
 

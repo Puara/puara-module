@@ -276,7 +276,12 @@ void WiFi::sta_event_handler(
 
     // FTM implementation
     wifi_ap_record_t ap_info;
-    if(esp_wifi_sta_get_ap_info(&ap_info) ==ESP_OK){
+    if(esp_wifi_sta_get_ap_info(&ap_info) == ESP_OK){
+      std::copy(std::begin(ap_info.bssid), std::end(ap_info.bssid), std::begin(self.currentRouter_BSSID));
+      self.ftm_channel = ap_info.primary;
+
+/*
+  //Print string MAC for proof of concept
       self.router_BSSID.clear();
       std::stringstream mac_stream;
       mac_stream << std::hex << std::setfill('0')
@@ -290,6 +295,8 @@ void WiFi::sta_event_handler(
        std::cout << "Responder MAC: " << self.router_BSSID << std::endl;
        mac_stream.str("");
        mac_stream.clear();
+  //end proof of concept print
+  */
     }
     //end FTM implementation tests to get active Router MAC address
   }

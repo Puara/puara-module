@@ -7,9 +7,12 @@
 
 namespace PuaraAPI
 {
+struct WiFi;
 
 struct FTM
 {
+
+WiFi& wifi;
 
   wifi_ftm_initiator_cfg_t wifi_ftm_cfg; //struct for ftm config
     /** FTM Initiator configuration
@@ -20,8 +23,7 @@ struct FTM
           uint16_t burst_period;      // Requested time period between consecutive FTM bursts in 100's of milliseconds (0 - No pref)
       } wifi_ftm_initiator_cfg_t;
     */
-  //std::string currentRouter_MAC;   //variable used for p.o.c testing --> see wifi.hpp
-  //uint8_t currentRouter_bssid[6];    // MAC address of router defined in json.settings if connection concludes
+  
   //uint8_t primary_channel_AP_ftm;    // channel of AP for FTM purposes
   //uint8_t num_entries = 10;          // Number of entries you want to retrieve
   wifi_ftm_report_entry_t wifi_ftm_report[10]; // Adjust size based on expected entries

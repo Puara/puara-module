@@ -30,7 +30,10 @@ struct WiFi
   std::string currentSTA_MAC;
   std::string currentAP_IP;
   std::string currentAP_MAC;
-  std::string router_BSSID; //used for FTM purposes
+  std::string router_BSSID; //used for FTM proof
+  uint8_t currentRouter_BSSID[6];    // MAC address of router
+  uint8_t ftm_channel; // channel of AP for FTM purposes
+
 
   std::string wifiAvailableSsid;
 

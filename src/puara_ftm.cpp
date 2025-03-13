@@ -1,4 +1,5 @@
 #include "puara_ftm.hpp"
+#include "puara_wifi.hpp"
 
 namespace PuaraAPI
 {
@@ -11,15 +12,14 @@ void FTM::init_ftm(){
     //    2. If FTM is initiated on a different channel than Station is connected in or internal
     //       SoftAP is started in, FTM defaults to a single burst in ASAP mode
 
-    std::cout << "Initialising FTM" << "\n" << std::endl;
+    std::cout << "Initialising FTM" << std::endl;
     // struct for esp_wifi_ftm_initiate_session(*ftm_initiator)
     //get responder MAC address
-    //wifi_ftm_cfg.resp_mac; // = currentRouter_bssid; //uint8_t currentRouter_bssid[6];
-    //wifi_ftm_cfg.channel; // = primary_channel_AP_ftm;
-    //wifi_ftm_cfg.frm_count; // = 0; //0 means no preference    
-    //wifi_ftmi_cfg.burst_period; // = 0; // 0 means no preference
-    //wifi_ftm_cfg.use_get_report_api=false; /**< True - Using esp_wifi_ftm_get_report to get FTM report, False - Using ftm_report_data from
-    //                                              WIFI_EVENT_FTM_REPORT to get FTM report */
+    std::copy(std::begin(wifi.currentRouter_BSSID), std::end(wifi.currentRouter_BSSID), std::begin(wifi_ftm_cfg.resp_mac));
+
+    wifi_ftm_cfg.channel = wifi.ftm_channel; // = primary_channel_AP_ftm;
+    wifi_ftm_cfg.frm_count = 0; // No. of FTM frames requested in terms of 4 or 8 bursts (allowed values - 0(No pref), 16, 24, 32, 64)    
+    wifi_ftm_cfg.burst_period = 0; // Requested time period between consecutive FTM bursts in 100's of milliseconds (0 - No pref)
 
     esp_err_t result = esp_wifi_ftm_initiate_session(&wifi_ftm_cfg);
     if (result != ESP_OK) {
