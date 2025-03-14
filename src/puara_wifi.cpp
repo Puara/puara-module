@@ -56,7 +56,7 @@ void WiFi::wifi_init()
     std::cout << "wifi_init:     AP-STA mode" << std::endl;
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
     std::cout << "wifi_init: loading AP config" << std::endl;
-    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &this->wifi_config_ap));
+    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &this->wifi_config));
   }
   else
   {
@@ -64,7 +64,7 @@ void WiFi::wifi_init()
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
   }
   std::cout << "wifi_init: loading STA config" << std::endl;
-  ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &this->wifi_config_sta));
+  ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &this->wifi_config));
   std::cout << "wifi_init: esp_wifi_start" << std::endl;
   ESP_ERROR_CHECK(esp_wifi_start());
 
@@ -95,7 +95,7 @@ void WiFi::wifi_init()
                 << "Switching to AP/STA mode" << std::endl;
       ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
       std::cout << "wifi_init: loading AP config" << std::endl;
-      ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &this->wifi_config_ap));
+      ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &this->wifi_config));
       std::cout << "wifi_init: Trying to connect one more time to SSID before giving up."
                 << std::endl;
       ESP_ERROR_CHECK(esp_wifi_start());
@@ -205,21 +205,21 @@ void WiFi::start_wifi()
   }
 
   strncpy(
-      (char*)this->wifi_config_sta.sta.ssid, config.wifiSSID.c_str(),
+      (char*)this->wifi_config.sta.ssid, config.wifiSSID.c_str(),
       config.wifiSSID.length() + 1);
   strncpy(
-      (char*)this->wifi_config_sta.sta.password, config.wifiPSK.c_str(),
+      (char*)this->wifi_config.sta.password, config.wifiPSK.c_str(),
       config.wifiPSK.length() + 1);
   strncpy(
-      (char*)this->wifi_config_ap.ap.ssid, config.dmiName.c_str(),
+      (char*)this->wifi_config.ap.ssid, config.dmiName.c_str(),
       config.dmiName.length() + 1);
-  this->wifi_config_ap.ap.ssid_len = config.dmiName.length();
-  this->wifi_config_ap.ap.channel = PuaraAPI::channel;
+  this->wifi_config.ap.ssid_len = config.dmiName.length();
+  this->wifi_config.ap.channel = PuaraAPI::channel;
   strncpy(
-      (char*)this->wifi_config_ap.ap.password, config.APpasswd.c_str(),
+      (char*)this->wifi_config.ap.password, config.APpasswd.c_str(),
       config.APpasswd.length() + 1);
-  this->wifi_config_ap.ap.max_connection = PuaraAPI::max_connection;
-  this->wifi_config_ap.ap.authmode = WIFI_AUTH_WPA_WPA2_PSK;
+  this->wifi_config.ap.max_connection = PuaraAPI::max_connection;
+  this->wifi_config.ap.authmode = WIFI_AUTH_WPA_WPA2_PSK;
 
   // Initialize NVS
   esp_err_t ret = nvs_flash_init();

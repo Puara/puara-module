@@ -46,10 +46,7 @@ struct WiFi
   const int wifi_fail_bit = BIT1;
   EventGroupHandle_t s_wifi_event_group;
 
-  wifi_config_t wifi_config_sta;
-  wifi_config_t wifi_config_ap;
-
-
+  wifi_config_t wifi_config;
 
   short int connect_counter;
 };
