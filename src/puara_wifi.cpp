@@ -279,6 +279,9 @@ void WiFi::sta_event_handler(
     if(esp_wifi_sta_get_ap_info(&ap_info) == ESP_OK){
       std::copy(std::begin(ap_info.bssid), std::end(ap_info.bssid), std::begin(self.currentRouter_BSSID));
       self.ftm_channel = ap_info.primary;
+      self.ftm_responder_state = ap_info.ftm_responder;
+
+      std::cout << "FTM Responder state: " << self.ftm_responder_state << std::endl;
 
   //Print string MAC for proof of concept
       self.router_BSSID.clear();
@@ -305,7 +308,7 @@ void WiFi::sta_event_handler(
 //    	memcpy(&arduino_event.event_info.wifi_ftm_report, event_data, sizeof(wifi_event_ftm_report_t));
   }
  else {
-    std::cout<<"fuck you you stupid fucking asshole"<< std::endl;
+    std::cout<<"how did you get here-print event info"<< std::endl;
 
 
 }

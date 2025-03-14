@@ -33,8 +33,8 @@ struct WiFi
   std::string router_BSSID; //used for FTM proof
   uint8_t currentRouter_BSSID[6];    // MAC address of router
   uint8_t ftm_channel; // channel of AP for FTM purposes
-
-
+  uint32_t ftm_responder_state; // flag to verify if connected responder supports FTM 
+  
   std::string wifiAvailableSsid;
 
   // Internal API
@@ -48,6 +48,9 @@ struct WiFi
 
   wifi_config_t wifi_config_sta;
   wifi_config_t wifi_config_ap;
+
+
+
   short int connect_counter;
 };
 }
