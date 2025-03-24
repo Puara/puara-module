@@ -14,7 +14,7 @@ namespace PuaraAPI
 struct DeviceConfiguration;
 struct Device;
 struct SPIFFS;
-struct JSONSettings;
+struct SpiffsJSONSettings;
 struct WiFi;
 
 struct Webserver
@@ -22,7 +22,7 @@ struct Webserver
   DeviceConfiguration& config;
   Device& device;
   SPIFFS& spiffs;
-  JSONSettings& settings;
+  SpiffsJSONSettings& settings;
   WiFi& wifi;
 
   // public API
