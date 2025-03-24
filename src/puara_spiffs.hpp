@@ -34,7 +34,7 @@ struct settingsVariables
   double numberValue;
 };
 
-struct JSONSettings
+struct SpiffsJSONSettings // TODO: generalize this class / remove from puara_spiffs
 {
   DeviceConfiguration& config;
   SPIFFS& spiffs;
@@ -59,4 +59,4 @@ struct JSONSettings
   void read_config_json_internal(std::string& contents);
   void merge_settings_json(std::string& new_contents);
 };
-} 
+}

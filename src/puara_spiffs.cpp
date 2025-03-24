@@ -88,17 +88,17 @@ void SPIFFS::unmount_spiffs()
 //// CONFIG ////
 
 // Can be improved
-double JSONSettings::getVarNumber(std::string varName)
+double SpiffsJSONSettings::getVarNumber(std::string varName)
 {
   return variables.at(variables_fields.at(varName)).numberValue;
 }
 
-std::string JSONSettings::getVarText(std::string varName)
+std::string SpiffsJSONSettings::getVarText(std::string varName)
 {
   return variables.at(variables_fields.at(varName)).textValue;
 }
 
-void JSONSettings::read_config_json()
+void SpiffsJSONSettings::read_config_json()
 { // Deserialize
 
   std::cout << "Spiffs:json: Mounting FS" << std::endl;
@@ -123,7 +123,7 @@ void JSONSettings::read_config_json()
   spiffs.unmount_spiffs();
 }
 
-void JSONSettings::read_config_json_internal(std::string& contents)
+void SpiffsJSONSettings::read_config_json_internal(std::string& contents)
 {
   std::cout << "json: Getting data" << std::endl;
   cJSON* root = cJSON_Parse(contents.c_str());
@@ -179,7 +179,7 @@ void JSONSettings::read_config_json_internal(std::string& contents)
   printf("Device unique name defined: %s\n", config.dmiName.c_str());
 }
 
-void JSONSettings::read_settings_json()
+void SpiffsJSONSettings::read_settings_json()
 {
   std::cout << "Spiffs:json: Mounting FS" << std::endl;
   spiffs.mount_spiffs();
@@ -202,7 +202,7 @@ void JSONSettings::read_settings_json()
   spiffs.unmount_spiffs();
 }
 
-void JSONSettings::read_settings_json_internal(std::string& contents, bool merge)
+void SpiffsJSONSettings::read_settings_json_internal(std::string& contents, bool merge)
 {
   std::cout << "json: Getting data" << std::endl;
   cJSON* root = cJSON_Parse(contents.c_str());
@@ -266,7 +266,7 @@ void JSONSettings::read_settings_json_internal(std::string& contents, bool merge
   cJSON_Delete(root);
 }
 
-void JSONSettings::write_config_json()
+void SpiffsJSONSettings::write_config_json()
 {
   std::cout << "SPIFFS: Mounting FS" << std::endl;
   spiffs.mount_spiffs();
@@ -341,7 +341,7 @@ void JSONSettings::write_config_json()
   spiffs.unmount_spiffs();
 }
 
-void JSONSettings::write_settings_json()
+void SpiffsJSONSettings::write_settings_json()
 {
   std::cout << "SPIFFS: Mounting FS" << std::endl;
   spiffs.mount_spiffs();
@@ -392,4 +392,4 @@ void JSONSettings::write_settings_json()
   spiffs.unmount_spiffs();
 }
 
-} 
+}

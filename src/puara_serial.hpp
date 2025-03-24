@@ -8,14 +8,14 @@ namespace PuaraAPI
 struct DeviceConfiguration;
 struct Device;
 struct SPIFFS;
-struct JSONSettings;
+struct SpiffsJSONSettings;
 
 struct Serial
 {
   DeviceConfiguration& config;
   Device& device;
   SPIFFS& spiffs;
-  JSONSettings& settings;
+  SpiffsJSONSettings& settings;
 
   // Set default monitor as UART
   int module_monitor = PuaraAPI::UART_MONITOR;
@@ -35,4 +35,4 @@ struct Serial
   std::string serial_data_str;
   std::string serial_data_str_buffer;
 };
-} 
+}

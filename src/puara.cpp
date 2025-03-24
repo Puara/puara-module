@@ -35,7 +35,8 @@ struct PuaraGlobal
   PuaraAPI::Device device;
   PuaraAPI::SPIFFS spiffs;
   PuaraAPI::LITTLEFS littlefs;
-  PuaraAPI::JSONSettings settings{config, spiffs};
+  PuaraAPI::SpiffsJSONSettings settings{config, spiffs};
+  PuaraAPI::LittleFSJSONSettings littlefsSettings{config, littlefs};
   PuaraAPI::Serial serial{config, device, spiffs, settings};
   PuaraAPI::WiFi wifi{config};
   PuaraAPI::Webserver webserver{config, device, spiffs, settings, wifi};
@@ -53,8 +54,7 @@ struct PuaraGlobal
               << std::endl;
 
     littlefs.config_littlefs();
-    littlefs.mount_littlefs();
-    littlefs.unmount_littlefs();
+    littlefsSettings.read_config_json();
 
     spiffs.config_spiffs();
     settings.read_config_json();
