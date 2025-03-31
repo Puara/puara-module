@@ -16,7 +16,7 @@ static constexpr bool spiffs_format_if_mount_failed = false;
 
 void SPIFFS::config_spiffs()
 {
-  spiffs_base_path = "/spiffs";
+  spiffs_base_path = "";
 }
 
 void SPIFFS::mount_spiffs()
@@ -204,6 +204,7 @@ void SpiffsJSONSettings::read_settings_json()
 
 void SpiffsJSONSettings::read_settings_json_internal(std::string& contents, bool merge)
 {
+  // Now parse the JSON
   std::cout << "json: Getting data" << std::endl;
   cJSON* root = cJSON_Parse(contents.c_str());
   cJSON* setting = NULL;

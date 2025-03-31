@@ -14,6 +14,7 @@ Edu Meneses (2022) - https://www.edumeneses.com
 
 #include "puara_config.hpp"
 #include "puara_device.hpp"
+#include "puara_filesystem.hpp"
 #include "puara_littlefs.hpp"
 #include "puara_mdns.hpp"
 #include "puara_serial.hpp"
@@ -41,6 +42,7 @@ struct PuaraGlobal
   PuaraAPI::WiFi wifi{config};
   PuaraAPI::Webserver webserver{config, device, spiffs, settings, wifi};
   PuaraAPI::MDNSService mdns;
+  PuaraAPI::FileSystem fs;
 
   PuaraGlobal() { }
 
@@ -53,12 +55,72 @@ struct PuaraGlobal
               << "Firmware version: " << config.version << "\n"
               << std::endl;
 
-    littlefs.config_littlefs();
-    littlefsSettings.read_config_json();
+#if defined(PUARA_LITTLEFS)
+    std::cout << "LittleFS **********************************************************\n";
+    fs.config();
+    fs.mount();
+    std::string configContents = fs.read("/config.json");
+    if(configContents.empty())
+    {
+      std::cout << "ERROR: Failed to load /config.json!\n";
+    }
+    else
+    {
+      std::cout << "Loaded config contents:\n" << configContents << "\n";
+    }
+    fs.unmount();
+    std::cout
+        << "LittleFS end **********************************************************\n";
+#else
+    std::cout << "SPIFFS **********************************************************\n";
+    fs.config();
+    fs.mount();
+    std::string configContents;
+    configContents = fs.read("/config.json");
 
-    spiffs.config_spiffs();
-    settings.read_config_json();
-    settings.read_settings_json();
+    if(configContents.empty())
+    {
+      std::cout << "ERROR: Could not load config from any path!\n";
+    }
+    else
+    {
+      std::cout << "Loaded config:\n" << configContents << std::endl;
+    }
+
+    std::cout << "SPIFFS: Reading settings.json file" << std::endl;
+    std::string settingsContents = fs.read("/settings.json");
+    if(settingsContents.empty())
+    {
+      std::cout << "ERROR: Failed to load /settings.json!\n";
+    }
+    else
+    {
+      std::cout << "Loaded settings contents:\n" << settingsContents << "\n";
+    }
+
+    fs.unmount();
+    std::cout
+        << "SPIFFS end **********************************************************\n";
+#endif
+
+    // std::cout << "Starting Puara..." << std::endl;
+    // std::cout << "LittleFS **********************************************************"
+    //           << std::endl;
+    // littlefs.config_littlefs();
+    // littlefsSettings.read_config_json();
+    // std::cout
+    //     << "LittleFS end **********************************************************"
+    //     << std::endl;
+
+    // std::cout << "SPIFFS **********************************************************"
+    //           << std::endl;
+    // spiffs.config_spiffs();
+    // settings.read_config_json();
+    // settings.read_settings_json();
+
+    // std::cout << "SPIFFS end **********************************************************"
+    //           << std::endl;
+
     wifi.start_wifi();
     webserver.start_webserver();
     mdns.start(config.dmiName, config.dmiName);
