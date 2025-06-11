@@ -159,26 +159,6 @@ void JSONSettings::read_config_json_internal(std::string& contents)
   {
     config.persistentAP = cJSON_GetObjectItem(root, "persistentAP")->valueint;
   }
-  if(cJSON_GetObjectItem(root, "oscIP1"))
-  {
-    config.oscIP1 = cJSON_GetObjectItem(root, "oscIP1")->valuestring;
-  }
-  if(cJSON_GetObjectItem(root, "oscPORT1"))
-  {
-    config.oscPORT1 = cJSON_GetObjectItem(root, "oscPORT1")->valueint;
-  }
-  if(cJSON_GetObjectItem(root, "oscIP2"))
-  {
-    config.oscIP2 = cJSON_GetObjectItem(root, "oscIP2")->valuestring;
-  }
-  if(cJSON_GetObjectItem(root, "oscPORT2"))
-  {
-    config.oscPORT2 = cJSON_GetObjectItem(root, "oscPORT2")->valueint;
-  }
-  if(cJSON_GetObjectItem(root, "localPORT"))
-  {
-    config.localPORT = cJSON_GetObjectItem(root, "localPORT")->valueint;
-  }
 
   std::cout << "\njson: Data collected:\n\n"
             << "device: " << config.device << "\n"
@@ -189,11 +169,6 @@ void JSONSettings::read_config_json_internal(std::string& contents)
             << "wifiSSID: " << config.wifiSSID << "\n"
             << "wifiPSK: " << config.wifiPSK << "\n"
             << "persistentAP: " << config.persistentAP << "\n"
-            << "oscIP1: " << config.oscIP1 << "\n"
-            << "oscPORT1: " << config.oscPORT1 << "\n"
-            << "oscIP2: " << config.oscIP2 << "\n"
-            << "oscPORT2: " << config.oscPORT2 << "\n"
-            << "localPORT: " << config.localPORT << "\n"
             << std::endl;
 
   cJSON_Delete(root);
@@ -312,11 +287,6 @@ void JSONSettings::write_config_json()
   cJSON* wifiSSID_json = NULL;
   cJSON* wifiPSK_json = NULL;
   cJSON* persistentAP_json = NULL;
-  cJSON* oscIP1_json = NULL;
-  cJSON* oscPORT1_json = NULL;
-  cJSON* oscIP2_json = NULL;
-  cJSON* oscPORT2_json = NULL;
-  cJSON* localPORT_json = NULL;
 
   cJSON* root = cJSON_CreateObject();
 
@@ -344,20 +314,6 @@ void JSONSettings::write_config_json()
   persistentAP_json = cJSON_CreateNumber(config.persistentAP);
   cJSON_AddItemToObject(root, "persistentAP", persistentAP_json);
 
-  oscIP1_json = cJSON_CreateString(config.oscIP1.c_str());
-  cJSON_AddItemToObject(root, "oscIP1", oscIP1_json);
-
-  oscPORT1_json = cJSON_CreateNumber(config.oscPORT1);
-  cJSON_AddItemToObject(root, "oscPORT1", oscPORT1_json);
-
-  oscIP2_json = cJSON_CreateString(config.oscIP2.c_str());
-  cJSON_AddItemToObject(root, "oscIP2", oscIP2_json);
-
-  oscPORT2_json = cJSON_CreateNumber(config.oscPORT2);
-  cJSON_AddItemToObject(root, "oscPORT2", oscPORT2_json);
-
-  localPORT_json = cJSON_CreateNumber(config.localPORT);
-  cJSON_AddItemToObject(root, "localPORT", localPORT_json);
 
   std::cout << "\njson: Data stored:\n"
             << "\ndevice: " << config.device << "\n"
@@ -368,11 +324,6 @@ void JSONSettings::write_config_json()
             << "wifiSSID: " << config.wifiSSID << "\n"
             << "wifiPSK: " << config.wifiPSK << "\n"
             << "persistentAP: " << config.persistentAP << "\n"
-            << "oscIP1: " << config.oscIP1 << "\n"
-            << "oscPORT1: " << config.oscPORT1 << "\n"
-            << "oscIP2: " << config.oscIP2 << "\n"
-            << "oscPORT2: " << config.oscPORT2 << "\n"
-            << "localPORT: " << config.localPORT << "\n"
             << std::endl;
 
   // Save to config.json

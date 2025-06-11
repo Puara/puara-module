@@ -152,11 +152,6 @@ std::string Webserver::prepare_index()
   find_and_replace("%CURRENTPSK%", config.wifiPSK, contents);
   checkmark("%CURRENTPERSISTENT%", config.persistentAP, contents);
   find_and_replace("%DEVICENAME%", config.device, contents);
-  find_and_replace("%CURRENTOSC1%", config.oscIP1, contents);
-  find_and_replace("%CURRENTPORT1%", config.oscPORT1, contents);
-  find_and_replace("%CURRENTOSC2%", config.oscIP2, contents);
-  find_and_replace("%CURRENTPORT2%", config.oscPORT2, contents);
-  find_and_replace("%CURRENTLOCALPORT%", config.localPORT, contents);
   find_and_replace("%CURRENTSSID2%", config.wifiSSID, contents);
   find_and_replace("%CURRENTIP%", wifi.currentSTA_IP, contents);
   find_and_replace("%CURRENTAPIP%", wifi.currentAP_IP, contents);
@@ -431,50 +426,6 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             };
             break;
           case 4:
-            std::cout << "oscIP1: " << str_token << std::endl;
-            if(!str_token.empty())
-            {
-              config.oscIP1 = str_token;
-            }
-            else
-            {
-              std::cout << "oscIP1 empty! Keeping the stored value" << std::endl;
-            }
-            break;
-          case 5:
-            std::cout << "oscPORT1: " << str_token << std::endl;
-            if(!str_token.empty())
-            {
-              config.oscPORT1 = stoi(str_token);
-            }
-            else
-            {
-              std::cout << "oscPORT1 empty! Keeping the stored value" << std::endl;
-            }
-            break;
-          case 6:
-            std::cout << "oscIP2: " << str_token << std::endl;
-            if(!str_token.empty())
-            {
-              config.oscIP2 = str_token;
-            }
-            else
-            {
-              std::cout << "oscIP2 empty! Keeping the stored value" << std::endl;
-            }
-            break;
-          case 7:
-            std::cout << "oscPORT2: " << str_token << std::endl;
-            if(!str_token.empty())
-            {
-              config.oscPORT2 = stoi(str_token);
-            }
-            else
-            {
-              std::cout << "oscPORT2 empty! Keeping the stored value" << std::endl;
-            }
-            break;
-          case 8:
             std::cout << "password: " << str_token << std::endl;
             if(!str_token.empty())
             {
@@ -485,15 +436,15 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
               std::cout << "password empty! Keeping the stored value" << std::endl;
             }
             break;
-          case 9:
+          case 5:
             std::cout << "Rebooting\n";
             ret_flag = true;
             break;
-          case 10:
+          case 6:
             std::cout << "persistentAP: " << str_token << std::endl;
             checkbox_persistentAP = true;
             break;
-          case 11:
+          case 7:
             std::cout << "localPORT: " << str_token << std::endl;
             if(!str_token.empty())
             {
