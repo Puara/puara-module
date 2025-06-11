@@ -44,14 +44,10 @@ struct PuaraGlobal
   void start(PuaraAPI::Monitors monitor)
   {
     std::cout << "\n"
-              << "**********************************************************\n"
-              << "* Puara Module Manager                                   *\n"
-              << "* Metalab - Société des Arts Technologiques (SAT)        *\n"
-              << "* Input Devices and Music Interaction Laboratory (IDMIL) *\n"
-              << "* Edu Meneses (2022) - https://www.edumeneses.com        *\n"
-              << "* Firmware version: " << config.version
-              << "                             *\n"
-              << "**********************************************************\n"
+              << "Puara Module Manager                                   \n"
+              << "Innovation - Société des Arts Technologiques (SAT)     \n"
+              << "Input Devices and Music Interaction Laboratory (IDMIL) \n"
+              << "Firmware version: " << config.version << "\n"
               << std::endl;
 
     spiffs.config_spiffs();
