@@ -57,7 +57,7 @@ struct Webserver
 
   // FIXME frozen::hash_map
   std::unordered_map<std::string, int> config_fields
-      = {{"SSID", 1},     {"APpasswd", 2},      {"APpasswdValidate", 3}, {"password", 4},
-         {"reboot", 5},   {"persistentAP", 6}, {"localPORT", 7}};
+      = {{"SSID", 1},     {"APpasswd", 2}, {"APpasswdValidate", 3},
+         {"password", 4}, {"reboot", 5},   {"persistentAP", 6}};
 };
 }

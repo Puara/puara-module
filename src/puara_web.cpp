@@ -444,17 +444,6 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             std::cout << "persistentAP: " << str_token << std::endl;
             checkbox_persistentAP = true;
             break;
-          case 7:
-            std::cout << "localPORT: " << str_token << std::endl;
-            if(!str_token.empty())
-            {
-              config.localPORT = stoi(str_token);
-            }
-            else
-            {
-              std::cout << "localPORT empty! Keeping the stored value" << std::endl;
-            }
-            break;
           default:
             std::cout << "Error, no match for config field to store received data\n";
             break;
