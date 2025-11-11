@@ -114,7 +114,7 @@ void Serial::interpret_serial()
 
 void Serial::uart_monitor()
 {
-  const int uart_num0 = 0; // UART port 0
+  const uart_port_t uart_num0 = UART_NUM_0; // UART port 0
   uart_config_t uart_config0 = {
       .baud_rate = 115200,
       .data_bits = UART_DATA_8_BITS,
@@ -238,4 +238,4 @@ bool Serial::start_serial_listening()
   }
   return 1;
 }
-} 
+}
