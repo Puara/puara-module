@@ -13,16 +13,16 @@ namespace PuaraAPI
 {
 struct DeviceConfiguration;
 struct Device;
-struct FileSystemWrapper;
-struct SpiffsJSONSettings;
+struct PuaraFileSystem;
+struct JSONSettings;
 struct WiFi;
 
 struct Webserver
 {
   DeviceConfiguration& config;
   Device& device;
-  FileSystemWrapper& fs;
-  SpiffsJSONSettings& settings;
+  PuaraFileSystem* fs;
+  JSONSettings& settings;
   WiFi& wifi;
 
   // public API

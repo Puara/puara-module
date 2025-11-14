@@ -1,5 +1,6 @@
 #pragma once
 #include "puara_config.hpp"
+#include "puara_filesystem.hpp"
 
 #define PUARA_SERIAL_BUFSIZE 1024
 
@@ -8,14 +9,14 @@ namespace PuaraAPI
 struct DeviceConfiguration;
 struct Device;
 struct SPIFFS;
-struct SpiffsJSONSettings;
+struct JSONSettings;
 
 struct Serial
 {
   DeviceConfiguration& config;
   Device& device;
-  FileSystemWrapper& fs;
-  SpiffsJSONSettings& settings;
+  PuaraFileSystem* fs;
+  JSONSettings& settings;
 
   // Set default monitor as UART
   int module_monitor = PuaraAPI::UART_MONITOR;
