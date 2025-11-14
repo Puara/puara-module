@@ -14,7 +14,7 @@ struct Serial
 {
   DeviceConfiguration& config;
   Device& device;
-  SPIFFS& spiffs;
+  FileSystemWrapper& fs;
   SpiffsJSONSettings& settings;
 
   // Set default monitor as UART

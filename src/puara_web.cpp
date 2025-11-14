@@ -2,7 +2,7 @@
 
 #include "puara_config.hpp"
 #include "puara_device.hpp"
-#include "puara_spiffs.hpp"
+#include "puara_filesystem.hpp"
 #include "puara_utils.hpp"
 #include "puara_wifi.hpp"
 
@@ -52,49 +52,49 @@ httpd_handle_t Webserver::start_webserver(void)
   }
   this->index.uri = "/";
   this->index.method = HTTP_GET;
-  this->index.handler = make_http_func(index_get_handler, "/spiffs/index.html");
+  this->index.handler = make_http_func(index_get_handler, "index.html");
   this->index.user_ctx = this;
 
   this->indexpost.uri = "/";
   this->indexpost.method = HTTP_POST;
-  this->indexpost.handler = make_http_func(index_post_handler, "/spiffs/index.html");
+  this->indexpost.handler = make_http_func(index_post_handler, "index.html");
   this->indexpost.user_ctx = this;
 
   this->style.uri = "/style.css";
   this->style.method = HTTP_GET;
-  this->style.handler = make_http_func(style_get_handler, "/spiffs/style.css");
+  this->style.handler = make_http_func(style_get_handler, "style.css");
   this->style.user_ctx = this;
 
   // this->factory.uri = "/factory.html";
   // this->factory.method    = HTTP_GET;
   // this->factory.handler   = get_handler;
-  // this->factory.user_ctx  = (char*)"/spiffs/factory.html";
+  // this->factory.user_ctx  = (char*)"factory.html";
 
   this->reboot.uri = "/reboot.html";
   this->reboot.method = HTTP_GET;
-  this->reboot.handler = make_http_func(get_handler, "/spiffs/reboot.html");
+  this->reboot.handler = make_http_func(get_handler, "reboot.html");
   this->reboot.user_ctx = this;
 
   this->scan.uri = "/scan.html";
   this->scan.method = HTTP_GET;
-  this->scan.handler = make_http_func(scan_get_handler, "/spiffs/scan.html");
+  this->scan.handler = make_http_func(scan_get_handler, "scan.html");
   this->scan.user_ctx = this;
 
   // this->update.uri = "/update.html";
   // this->update.method    = HTTP_GET;
   // this->update.handler   = get_handler;
-  // this->update.user_ctx  = (char*)"/spiffs/update.html";
+  // this->update.user_ctx  = (char*)"update.html";
 
   this->settingsget.uri = "/settings.html";
   this->settingsget.method = HTTP_GET;
   this->settingsget.handler
-      = make_http_func(settings_get_handler, "/spiffs/settings.html");
+      = make_http_func(settings_get_handler, "settings.html");
   this->settingsget.user_ctx = this;
 
   this->settingspost.uri = "/settings.html";
   this->settingspost.method = HTTP_POST;
   this->settingspost.handler
-      = make_http_func(settings_post_handler, "/spiffs/settings.html");
+      = make_http_func(settings_post_handler, "settings.html");
   this->settingspost.user_ctx = this;
 
   // Start the httpd server
@@ -118,7 +118,7 @@ httpd_handle_t Webserver::start_webserver(void)
 
   std::cout << "webserver: Error starting server!" << std::endl;
   return NULL;
-} 
+}
 
 void Webserver::stop_webserver(void)
 {
@@ -128,11 +128,8 @@ void Webserver::stop_webserver(void)
 
 std::string Webserver::prepare_index()
 {
-  spiffs.mount_spiffs();
-  std::cout << "http (spiffs): Reading index file" << std::endl;
-  std::ifstream in("/spiffs/index.html");
-  std::string contents(
-      (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+  std::cout << "http : Reading index file" << std::endl;
+  std::string contents = fs.read_file("index.html");
   // Put the module info on the HTML before send response
   find_and_replace("%DMINAME%", config.dmiName, contents);
   if(wifi.StaIsConnected)
@@ -164,8 +161,6 @@ std::string Webserver::prepare_index()
   find_and_replace("%MODULEINST%", config.institution, contents);
   find_and_replace("%MODULEVER%", config.version, contents);
 
-  spiffs.unmount_spiffs();
-
   return contents;
 }
 
@@ -179,11 +174,8 @@ esp_err_t Webserver::index_get_handler(httpd_req_t* req)
 
 esp_err_t Webserver::settings_get_handler(httpd_req_t* req)
 {
-  spiffs.mount_spiffs();
-  std::cout << "http (spiffs): Reading settings file" << std::endl;
-  std::ifstream in("/spiffs/settings.html");
-  std::string contents(
-      (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+  std::cout << "http : Reading settings file" << std::endl;
+  std::string contents = fs.read_file("settings.html")
 
   std::cout << "settings_get_handler: Adding variables to HTML" << std::endl;
   std::string settings;
@@ -272,13 +264,8 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
   }
 
   settings.write_settings_json();
-  spiffs.mount_spiffs();
-  std::cout << "http (spiffs): Reading saved.html file" << std::endl;
-  std::ifstream in("/spiffs/saved.html");
-  std::string contents(
-      (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-  httpd_resp_sendstr(req, contents.c_str());
-  spiffs.unmount_spiffs();
+  std::cout << "http : Reading saved.html file" << std::endl;
+  std::string contents = fs.read_file("saved.html");
 
   return ESP_OK;
 }
@@ -286,14 +273,10 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
 esp_err_t Webserver::get_handler(httpd_req_t* req)
 {
   const char* resp_str = (const char*)req->user_ctx;
-  spiffs.mount_spiffs();
-  std::cout << "http (spiffs): Reading requested file" << std::endl;
-  std::ifstream in(resp_str);
-  std::string contents(
-      (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+  std::string requested_path = std::string{resp_str};
+  std::cout << "http : Reading requested file " << requested_path << std::endl;
+  std::string contents = fs.read_file(requested_path);
   httpd_resp_sendstr(req, contents.c_str());
-
-  spiffs.unmount_spiffs();
 
   return ESP_OK;
 }
@@ -301,15 +284,11 @@ esp_err_t Webserver::get_handler(httpd_req_t* req)
 esp_err_t Webserver::style_get_handler(httpd_req_t* req)
 {
   const char* resp_str = (const char*)req->user_ctx;
-  spiffs.mount_spiffs();
-  std::cout << "http (spiffs): Reading style.css file" << std::endl;
-  std::ifstream in(resp_str);
-  std::string contents(
-      (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+  std::string requested_path = std::string{resp_str};
+  std::cout << "http : Reading style.css file" << std::endl;
+  std::string contents = fs.read_file(requested_path);
   httpd_resp_set_type(req, "text/css");
   httpd_resp_sendstr(req, contents.c_str());
-
-  spiffs.unmount_spiffs();
 
   return ESP_OK;
 }
@@ -317,35 +296,16 @@ esp_err_t Webserver::style_get_handler(httpd_req_t* req)
 esp_err_t Webserver::scan_get_handler(httpd_req_t* req)
 {
   const char* resp_str = (const char*)req->user_ctx;
-  spiffs.mount_spiffs();
-  std::cout << "http (spiffs): Reading scan.html file" << std::endl;
+  std::string requested_path = std::string{resp_str};
+  std::cout << "http : Reading scan.html file" << std::endl;
   std::ifstream in(resp_str);
-  std::string contents(
-      (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+  std::string contents = fs.read_file(requested_path);
   wifi.wifi_scan();
   find_and_replace("%SSIDS%", wifi.wifiAvailableSsid, contents);
   httpd_resp_sendstr(req, contents.c_str());
 
-  spiffs.unmount_spiffs();
-
   return ESP_OK;
 }
-
-// esp_err_t Webserver::update_get_handler(httpd_req_t *req) {
-
-//     const char* resp_str = (const char*) req->user_ctx;
-//     spiffs.mount_spiffs();
-//     std::cout << "http (spiffs): Reading update.html file" << std::endl;
-//     std::ifstream in(resp_str);
-//     std::string contents((std::istreambuf_iterator<char>(in)),
-//     std::istreambuf_iterator<char>());
-//     //httpd_resp_set_type(req, "text/html");
-//     httpd_resp_sendstr(req, contents.c_str());
-
-//     spiffs.unmount_spiffs();
-
-//     return ESP_OK;
-// }
 
 esp_err_t Webserver::index_post_handler(httpd_req_t* req)
 {
@@ -472,34 +432,25 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
     config.persistentAP = checkbox_persistentAP;
     APpasswdVal1.clear();
     APpasswdVal2.clear();
-
     remaining -= api_return;
   }
 
   if(ret_flag)
   {
-    spiffs.mount_spiffs();
-    std::cout << "http (spiffs): Reading reboot.html file" << std::endl;
-    std::ifstream in("/spiffs/reboot.html");
-    std::string contents(
-        (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    std::cout << "http : Reading reboot.html file" << std::endl;
+    std::string contents = fs.read_file("reboot.html");
     httpd_resp_sendstr(req, contents.c_str());
-    spiffs.unmount_spiffs();
     std::cout << "\nRebooting...\n" << std::endl;
     createTask<&Device::reboot_with_delay>(&device, "reboot_with_delay", 1024);
   }
   else
   {
     settings.write_config_json();
-    spiffs.mount_spiffs();
-    std::cout << "http (spiffs): Reading saved.html file" << std::endl;
-    std::ifstream in("/spiffs/saved.html");
-    std::string contents(
-        (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    std::cout << "http : Reading saved.html file" << std::endl;
+    std::string contents = fs.read_file("saved.html");
     httpd_resp_sendstr(req, contents.c_str());
-    spiffs.unmount_spiffs();
   }
 
   return ESP_OK;
 }
-} 
+}

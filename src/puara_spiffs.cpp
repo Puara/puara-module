@@ -1,4 +1,4 @@
-#include "puara_spiffs.hpp"
+#include "puara_filesystem.hpp"
 
 #include "puara_config.hpp"
 
@@ -14,12 +14,73 @@ namespace PuaraAPI
 static constexpr uint8_t spiffs_max_files = 10;
 static constexpr bool spiffs_format_if_mount_failed = false;
 
-void SPIFFS::config_spiffs()
+void LITTLEFS::mount()
 {
-  spiffs_base_path = "";
+  std::cout << "LittleFS: mounting FS" << std::endl;
+  if(!LittleFS.begin(true))
+  {
+    std::cout << "LittleFS: mount failed" << std::endl;
+    return;
+  }
+  std::cout << "LittleFS: mount successful" << std::endl;
 }
 
-void SPIFFS::mount_spiffs()
+void LITTLEFS::unmount()
+{
+  std::cout << "LittleFS: unmounting FS" << std::endl;
+  LittleFS.end();
+  std::cout << "LittleFS: unmounted" << std::endl;
+}
+
+std::string LITTLEFS::read_file(const char* path)
+{
+  mount();
+  std::cout << "LittleFS: reading file: " << path << std::endl;
+
+  if(!LittleFS.exists(path))
+  {
+    std::cout << "LittleFS: file not found: " << path << std::endl;
+    return "";
+  }
+
+  File file = LittleFS.open(path, "r"); //open file
+  std::string contents;
+
+  if(!file)
+  {
+    std::cout << "LittleFS: failed to open file: " << path << std::endl;
+    return "";
+  }
+
+  while(file.available())
+  {
+    contents += (char)file.read();
+  }
+
+  file.close();
+  unmount();
+  return contents;
+}
+
+void LITTLEFS::write_file(const std::string& path, const std::string& contents) {
+  mount();
+  std::cout << "littleFS: Writing file " << path << std::endl;
+
+  File file = LittleFS.open(path.c_str(), FILE_WRITE);
+  if (!file) {
+    std::cout << "LittleFS: failed to open file: " << path << std::endl;
+    return;
+  }
+  if (file.print(content.c_str())) {
+    std::cout << "LittleFS: wrote "  << path << ", closing" << std::endl;
+  } else {
+    std::cout << "LittleFS: failed to write "  << path << ", closing" << std::endl;
+  }
+  file.close();
+  unmount();
+}
+
+void SPIFFS::mount()
 {
   if(!esp_spiffs_mounted(spiffs_config.partition_label))
   {
@@ -71,7 +132,7 @@ void SPIFFS::mount_spiffs()
   }
 }
 
-void SPIFFS::unmount_spiffs()
+void SPIFFS::unmount()
 {
   // All done, unmount partition and disable SPIFFS
   if(esp_spiffs_mounted(spiffs_config.partition_label))
@@ -83,6 +144,35 @@ void SPIFFS::unmount_spiffs()
   {
     std::cout << "spiffs: SPIFFS not found" << std::endl;
   }
+}
+
+string SPIFFS::read_file(const std::string& path) {
+  mount();
+  std::ifstream in(spiffs_base_path + path);
+  if (!in) {
+    std::cout << "spiffs: Failed to open " << path << std::endl;
+    return;
+  }
+  std::cout << "spiffs: Reading " << path <<  std::endl;
+  return std::string contents(
+                              (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+  unmount();
+}
+
+// TODO: the body is the body of read_file.
+string SPIFFS::write_file(const std::string& path, const std::string& content) {
+  mount();
+  std::cout << "SPIFFS: Opening " << path << std::endl;
+  FILE* f = fopen((spiffs_base_path + path).c_str(), "w");
+  if(!f) {
+      std::cout << "SPIFFS: Failed to open " << path <<  << std::endl;
+      return;
+    }
+
+  fprintf(f, "%s", contents.c_str());
+  std::cout << "SPIFFS: wrote "  << path << ", closing" << std::endl;
+  fclose(f);
+  unmount();
 }
 
 //// CONFIG ////
@@ -98,32 +188,14 @@ std::string SpiffsJSONSettings::getVarText(std::string varName)
   return variables.at(variables_fields.at(varName)).textValue;
 }
 
-void SpiffsJSONSettings::read_config_json()
+void JSONSettings::read_config_json()
 { // Deserialize
 
-  std::cout << "Spiffs:json: Mounting FS" << std::endl;
-  spiffs.mount_spiffs();
-
-  std::cout << "json: Opening config json file" << std::endl;
-  FILE* f = fopen("/spiffs/config.json", "r");
-  if(f == NULL)
-  {
-    std::cout << "json: Failed to open file" << std::endl;
-    return;
-  }
-
-  std::cout << "json: Reading json file" << std::endl;
-  std::ifstream in("/spiffs/config.json");
-  std::string contents(
-      (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-
+  std::string contents = read_file("/config.json");
   read_config_json_internal(contents);
-
-  fclose(f);
-  spiffs.unmount_spiffs();
 }
 
-void SpiffsJSONSettings::read_config_json_internal(std::string& contents)
+void JSONSettings::read_config_json_internal(std::string& contents)
 {
   std::cout << "json: Getting data" << std::endl;
   cJSON* root = cJSON_Parse(contents.c_str());
@@ -179,30 +251,13 @@ void SpiffsJSONSettings::read_config_json_internal(std::string& contents)
   printf("Device unique name defined: %s\n", config.dmiName.c_str());
 }
 
-void SpiffsJSONSettings::read_settings_json()
+void JSONSettings::read_settings_json()
 {
-  std::cout << "Spiffs:json: Mounting FS" << std::endl;
-  spiffs.mount_spiffs();
-
-  std::cout << "json: Opening settings json file" << std::endl;
-  FILE* f = fopen("/spiffs/settings.json", "r");
-  if(f == NULL)
-  {
-    std::cout << "json: Failed to open file" << std::endl;
-    return;
-  }
-
-  std::cout << "json: Reading json file" << std::endl;
-  std::ifstream in("/spiffs/settings.json");
-  std::string contents(
-      (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-
+  fs.read_file("/settings.json");
   read_settings_json_internal(contents);
-  fclose(f);
-  spiffs.unmount_spiffs();
 }
 
-void SpiffsJSONSettings::read_settings_json_internal(std::string& contents, bool merge)
+void JSONSettings::read_settings_json_internal(std::string& contents, bool merge)
 {
   // Now parse the JSON
   std::cout << "json: Getting data" << std::endl;
@@ -267,18 +322,8 @@ void SpiffsJSONSettings::read_settings_json_internal(std::string& contents, bool
   cJSON_Delete(root);
 }
 
-void SpiffsJSONSettings::write_config_json()
+void JSONSettings::write_config_json()
 {
-  std::cout << "SPIFFS: Mounting FS" << std::endl;
-  spiffs.mount_spiffs();
-
-  std::cout << "SPIFFS: Opening config.json file" << std::endl;
-  FILE* f = fopen("/spiffs/config.json", "w");
-  if(f == NULL)
-  {
-    std::cout << "SPIFFS: Failed to open config.json file" << std::endl;
-    return;
-  }
 
   cJSON* device_json = NULL;
   cJSON* id_json = NULL;
@@ -330,30 +375,16 @@ void SpiffsJSONSettings::write_config_json()
   // Save to config.json
   std::cout << "write_config_json: Serializing json" << std::endl;
   std::string contents = cJSON_Print(root);
-  std::cout << "SPIFFS: Saving file" << std::endl;
-  fprintf(f, "%s", contents.c_str());
-  std::cout << "SPIFFS: closing" << std::endl;
-  fclose(f);
+
+  fs.write_file("/config.json", contents);
 
   std::cout << "write_config_json: Delete json entity" << std::endl;
   cJSON_Delete(root);
 
-  std::cout << "SPIFFS: umounting FS" << std::endl;
-  spiffs.unmount_spiffs();
 }
 
-void SpiffsJSONSettings::write_settings_json()
+void JSONSettings::write_settings_json()
 {
-  std::cout << "SPIFFS: Mounting FS" << std::endl;
-  spiffs.mount_spiffs();
-
-  std::cout << "SPIFFS: Opening settings.json file" << std::endl;
-  FILE* f = fopen("/spiffs/settings.json", "w");
-  if(f == NULL)
-  {
-    std::cout << "SPIFFS: Failed to open settings.json file" << std::endl;
-    return;
-  }
 
   cJSON* root = cJSON_CreateObject();
   cJSON* settings = cJSON_CreateArray();
@@ -382,15 +413,12 @@ void SpiffsJSONSettings::write_settings_json()
   std::cout << "write_settings_json: Serializing json" << std::endl;
   std::string contents = cJSON_Print(root);
   std::cout << "SPIFFS: Saving file" << std::endl;
-  fprintf(f, "%s", contents.c_str());
-  std::cout << "SPIFFS: closing" << std::endl;
-  fclose(f);
+
+  fs.write_file("/settings.json", contents);
 
   std::cout << "write_settings_json: Delete json entity" << std::endl;
   cJSON_Delete(root);
 
-  std::cout << "SPIFFS: umounting FS" << std::endl;
-  spiffs.unmount_spiffs();
 }
 
 }

@@ -2,6 +2,7 @@
 #include <esp_err.h>
 #include <esp_spi_flash.h>
 #include <esp_spiffs.h>
+#include <LittleFS.h>
 
 #include <unordered_map>
 #include <vector>
@@ -13,16 +14,34 @@ struct DeviceConfiguration;
 struct Serial;
 struct Webserver;
 
-struct SPIFFS
+class FileSystemWrapper {
+ public:
+  virtual void mount() = 0;
+  virtual void unmount() = 0;
+  virtual std::string read_file(const std::string& path) = 0;
+  virtual void write_file(const std::string& path, const std::string& content) = 0;
+};
+
+class SPIFFS: FileSystemWrapper
 {
 public:
-  void config_spiffs();
-  void mount_spiffs();
-  void unmount_spiffs();
+  void mount();
+  void unmount();
+  std::string read_file(const std::string& path) override;
+  void write_file(const std::string& path, const std::string& content) override;
 
 private:
   esp_vfs_spiffs_conf_t spiffs_config;
-  std::string spiffs_base_path;
+  std::string spiffs_base_path = "/spiffs/";
+};
+
+struct LITTLEFS: FileSystemWrapper
+{
+public:
+  void mount();
+  void unmount();
+  std::string read_file(const std::string& path) override;
+  void write_file(const std::string& path, const std::string& content) override;
 };
 
 // FIXME std::variant<std::string, double> instead
@@ -34,10 +53,10 @@ struct settingsVariables
   double numberValue;
 };
 
-struct SpiffsJSONSettings // TODO: generalize this class / remove from puara_spiffs
+struct SpiffsJSONSettings // TODO: remove from puara_filesystem
 {
   DeviceConfiguration& config;
-  SPIFFS& spiffs;
+  FileSystemWrapper& fs;
 
   // public API:
   void read_config_json();
