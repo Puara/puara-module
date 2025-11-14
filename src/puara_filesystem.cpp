@@ -32,18 +32,18 @@ void LITTLEFS::unmount()
   std::cout << "LittleFS: unmounted" << std::endl;
 }
 
-std::string LITTLEFS::read_file(const char* path)
+std::string LITTLEFS::read_file(const std::string& path)
 {
   mount();
   std::cout << "LittleFS: reading file: " << path << std::endl;
-
-  if(!LittleFS.exists(path))
+  auto path_c = path.c_str();
+  if(!LittleFS.exists(path.c_str()))
   {
     std::cout << "LittleFS: file not found: " << path << std::endl;
     return "";
   }
 
-  File file = LittleFS.open(path, "r"); //open file
+  File file = LittleFS.open(path_c, "r"); //open file
   std::string contents;
 
   if(!file)
@@ -71,7 +71,7 @@ void LITTLEFS::write_file(const std::string& path, const std::string& contents) 
     std::cout << "LittleFS: failed to open file: " << path << std::endl;
     return;
   }
-  if (file.print(content.c_str())) {
+  if (file.print(contents.c_str())) {
     std::cout << "LittleFS: wrote "  << path << ", closing" << std::endl;
   } else {
     std::cout << "LittleFS: failed to write "  << path << ", closing" << std::endl;
@@ -146,26 +146,25 @@ void SPIFFS::unmount()
   }
 }
 
-string SPIFFS::read_file(const std::string& path) {
+std::string SPIFFS::read_file(const std::string& path) {
   mount();
   std::ifstream in(spiffs_base_path + path);
   if (!in) {
     std::cout << "spiffs: Failed to open " << path << std::endl;
-    return;
+    return "";
   }
   std::cout << "spiffs: Reading " << path <<  std::endl;
-  return std::string contents(
-                              (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+  return std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
   unmount();
 }
 
 // TODO: the body is the body of read_file.
-string SPIFFS::write_file(const std::string& path, const std::string& content) {
+void SPIFFS::write_file(const std::string& path, const std::string& contents) {
   mount();
   std::cout << "SPIFFS: Opening " << path << std::endl;
   FILE* f = fopen((spiffs_base_path + path).c_str(), "w");
   if(!f) {
-      std::cout << "SPIFFS: Failed to open " << path <<  << std::endl;
+      std::cout << "SPIFFS: Failed to open " << path << std::endl;
       return;
     }
 
@@ -178,12 +177,12 @@ string SPIFFS::write_file(const std::string& path, const std::string& content) {
 //// CONFIG ////
 
 // Can be improved
-double SpiffsJSONSettings::getVarNumber(std::string varName)
+double JSONSettings::getVarNumber(std::string varName)
 {
   return variables.at(variables_fields.at(varName)).numberValue;
 }
 
-std::string SpiffsJSONSettings::getVarText(std::string varName)
+std::string JSONSettings::getVarText(std::string varName)
 {
   return variables.at(variables_fields.at(varName)).textValue;
 }
@@ -191,7 +190,7 @@ std::string SpiffsJSONSettings::getVarText(std::string varName)
 void JSONSettings::read_config_json()
 { // Deserialize
 
-  std::string contents = read_file("/config.json");
+  std::string contents = fs->read_file("/config.json");
   read_config_json_internal(contents);
 }
 
@@ -253,7 +252,7 @@ void JSONSettings::read_config_json_internal(std::string& contents)
 
 void JSONSettings::read_settings_json()
 {
-  fs.read_file("/settings.json");
+  std::string contents = fs->read_file("/settings.json");
   read_settings_json_internal(contents);
 }
 
@@ -376,7 +375,7 @@ void JSONSettings::write_config_json()
   std::cout << "write_config_json: Serializing json" << std::endl;
   std::string contents = cJSON_Print(root);
 
-  fs.write_file("/config.json", contents);
+  fs->write_file("/config.json", contents);
 
   std::cout << "write_config_json: Delete json entity" << std::endl;
   cJSON_Delete(root);
@@ -414,7 +413,7 @@ void JSONSettings::write_settings_json()
   std::string contents = cJSON_Print(root);
   std::cout << "SPIFFS: Saving file" << std::endl;
 
-  fs.write_file("/settings.json", contents);
+  fs->write_file("/settings.json", contents);
 
   std::cout << "write_settings_json: Delete json entity" << std::endl;
   cJSON_Delete(root);

@@ -15,13 +15,12 @@ Edu Meneses (2022) - https://www.edumeneses.com
 #include "puara_config.hpp"
 #include "puara_device.hpp"
 #include "puara_filesystem.hpp"
-#include "puara_littlefs.hpp"
 #include "puara_mdns.hpp"
 #include "puara_serial.hpp"
 #include "puara_filesystem.hpp"
 #include "puara_web.hpp"
 #include "puara_wifi.hpp"
-
+#include <memory>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
@@ -34,18 +33,15 @@ struct PuaraGlobal
 {
   PuaraAPI::DeviceConfiguration config;
   PuaraAPI::Device device;
-#if defined(PUARA_LITTLEFS)
-  PuaraAPI::FileSystemWrapper fs = LITTLEFS{};
-#else
-  PuaraAPI::FileSystemWrapper fs = SPIFFS{};
+  #if defined(PUARA_LITTLEFS)
+  std::unique_ptr<PuaraAPI::PuaraFileSystem> fs = std::make_unique<PuaraAPI::LITTLEFS>();
+  #else
+  std::unique_ptr<PuaraAPI::PuaraFileSystem> fs = std::make_unique<PuaraAPI::SPIFFS>();
 #endif
-  PuaraAPI::SPIFFS spiffs;
-  PuaraAPI::LITTLEFS littlefs;
-  PuaraAPI::SpiffsJSONSettings settings{config, spiffs};
-  PuaraAPI::LittleFSJSONSettings littlefsSettings{config, littlefs};
-  PuaraAPI::Serial serial{config, device, spiffs, settings};
+  PuaraAPI::JSONSettings settings{config, fs.get()};
+  PuaraAPI::Serial serial{config, device, fs.get(), settings};
   PuaraAPI::WiFi wifi{config};
-  PuaraAPI::Webserver webserver{config, device, spiffs, settings, wifi};
+  PuaraAPI::Webserver webserver{config, device, fs.get(), settings, wifi};
   PuaraAPI::MDNSService mdns;
 
   PuaraGlobal() { }
@@ -59,7 +55,7 @@ struct PuaraGlobal
               << "Firmware version: " << config.version << "\n"
               << std::endl;
 
-    std::string configContents = fs.read_file("/config.json");
+    std::string configContents = fs->read_file("/config.json");
     if(configContents.empty())
     {
       std::cout << "ERROR: Could not load config from any path!\n";
@@ -70,7 +66,7 @@ struct PuaraGlobal
     }
 
     std::cout << "SPIFFS: Reading settings.json file" << std::endl;
-    std::string settingsContents = fs.read_file("/settings.json");
+    std::string settingsContents = fs->read_file("/settings.json");
     if(settingsContents.empty())
     {
       std::cout << "ERROR: Failed to load /settings.json!\n";
@@ -133,11 +129,11 @@ void Puara::set_version(unsigned int user_version)
 
 void Puara::mount()
 {
-  return g_puara.spiffs.mount_spiffs();
+  return g_puara.fs->mount();
 }
 void Puara::unmount()
 {
-  return g_puara.spiffs.unmount_spiffs();
+  return g_puara.fs->unmount();
 }
 
 void Puara::read_config_json()

@@ -14,7 +14,7 @@ struct DeviceConfiguration;
 struct Serial;
 struct Webserver;
 
-class FileSystemWrapper {
+class PuaraFileSystem {
  public:
   virtual void mount() = 0;
   virtual void unmount() = 0;
@@ -22,11 +22,11 @@ class FileSystemWrapper {
   virtual void write_file(const std::string& path, const std::string& content) = 0;
 };
 
-class SPIFFS: FileSystemWrapper
+class SPIFFS: public PuaraFileSystem
 {
 public:
-  void mount();
-  void unmount();
+  void mount() override;
+  void unmount() override;
   std::string read_file(const std::string& path) override;
   void write_file(const std::string& path, const std::string& content) override;
 
@@ -35,11 +35,11 @@ private:
   std::string spiffs_base_path = "/spiffs/";
 };
 
-struct LITTLEFS: FileSystemWrapper
+struct LITTLEFS: public PuaraFileSystem
 {
 public:
-  void mount();
-  void unmount();
+  void mount() override;
+  void unmount() override;
   std::string read_file(const std::string& path) override;
   void write_file(const std::string& path, const std::string& content) override;
 };
@@ -52,11 +52,10 @@ struct settingsVariables
   std::string textValue;
   double numberValue;
 };
-
-struct SpiffsJSONSettings // TODO: remove from puara_filesystem
+struct JSONSettings // TODO: remove from puara_filesystem
 {
   DeviceConfiguration& config;
-  FileSystemWrapper& fs;
+  PuaraFileSystem* fs;
 
   // public API:
   void read_config_json();
