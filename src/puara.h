@@ -36,9 +36,8 @@ public:
   int unsigned getLocalPORT();
   std::string getLocalPORTStr();
 
-  void config_spiffs();
-  void mount_spiffs();
-  void unmount_spiffs();
+  void mount();
+  void unmount();
 
   void read_config_json();
   void write_config_json();
