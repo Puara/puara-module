@@ -14,9 +14,11 @@ Edu Meneses (2022) - https://www.edumeneses.com
 
 #include "puara_config.hpp"
 #include "puara_device.hpp"
+#include "puara_filesystem.hpp"
+#include "puara_littlefs.hpp"
 #include "puara_mdns.hpp"
 #include "puara_serial.hpp"
-#include "puara_spiffs.hpp"
+#include "puara_filesystem.hpp"
 #include "puara_web.hpp"
 #include "puara_wifi.hpp"
 
@@ -32,8 +34,15 @@ struct PuaraGlobal
 {
   PuaraAPI::DeviceConfiguration config;
   PuaraAPI::Device device;
+#if defined(PUARA_LITTLEFS)
+  PuaraAPI::FileSystemWrapper fs = LITTLEFS{};
+#else
+  PuaraAPI::FileSystemWrapper fs = SPIFFS{};
+#endif
   PuaraAPI::SPIFFS spiffs;
-  PuaraAPI::JSONSettings settings{config, spiffs};
+  PuaraAPI::LITTLEFS littlefs;
+  PuaraAPI::SpiffsJSONSettings settings{config, spiffs};
+  PuaraAPI::LittleFSJSONSettings littlefsSettings{config, littlefs};
   PuaraAPI::Serial serial{config, device, spiffs, settings};
   PuaraAPI::WiFi wifi{config};
   PuaraAPI::Webserver webserver{config, device, spiffs, settings, wifi};
@@ -54,9 +63,27 @@ struct PuaraGlobal
               << "**********************************************************\n"
               << std::endl;
 
-    spiffs.config_spiffs();
-    settings.read_config_json();
-    settings.read_settings_json();
+    std::string configContents = fs.read_file("/config.json");
+    if(configContents.empty())
+    {
+      std::cout << "ERROR: Could not load config from any path!\n";
+    }
+    else
+    {
+      std::cout << "Loaded config:\n" << configContents << std::endl;
+    }
+
+    std::cout << "SPIFFS: Reading settings.json file" << std::endl;
+    std::string settingsContents = fs.read_file("/settings.json");
+    if(settingsContents.empty())
+    {
+      std::cout << "ERROR: Failed to load /settings.json!\n";
+    }
+    else
+    {
+      std::cout << "Loaded settings contents:\n" << settingsContents << "\n";
+    }
+
     wifi.start_wifi();
     webserver.start_webserver();
     mdns.start(config.dmiName, config.dmiName);
@@ -173,15 +200,11 @@ bool Puara::IP2_ready()
 }
 
 
-void Puara::config_spiffs()
-{
-  return g_puara.spiffs.config_spiffs();
-}
-void Puara::mount_spiffs()
+void Puara::mount()
 {
   return g_puara.spiffs.mount_spiffs();
 }
-void Puara::unmount_spiffs()
+void Puara::unmount()
 {
   return g_puara.spiffs.unmount_spiffs();
 }
