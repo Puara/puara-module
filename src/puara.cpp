@@ -91,11 +91,11 @@ void Puara::stop_webserver(void)
   return g_puara.webserver.stop_webserver();
 }
 
-std::string Puara::get_dmi_name()
+std::string Puara::dmi_name()
 {
   return g_puara.config.dmiName;
 }
-unsigned int Puara::get_version()
+unsigned int Puara::version()
 {
   return g_puara.config.version;
 }

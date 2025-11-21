@@ -22,19 +22,25 @@ public:
   httpd_handle_t start_webserver(void);
   void stop_webserver(void);
 
-  std::string get_dmi_name();
-  unsigned int get_version();
+  std::string dmi_name();
+  unsigned int version();
   void set_version(unsigned int user_version);
-  std::string getIP1();
-  std::string getIP2();
+  std::string IP1();
+  std::string IP2();
   bool IP1_ready();
   bool IP2_ready();
-  int unsigned getPORT1();
-  int unsigned getPORT2();
-  std::string getPORT1Str();
-  std::string getPORT2Str();
-  int unsigned getLocalPORT();
-  std::string getLocalPORTStr();
+  int unsigned PORT1();
+  int unsigned PORT2();
+  std::string PORT1Str();
+  std::string PORT2Str();
+  int unsigned LocalPORT();
+  std::string LocalPORTStr();
+  unsigned int id();
+  std::string apIP();
+  std::string staIP();
+
+  bool persistentAP();
+  bool set_persistentAP(bool uservalue);
 
   void config_spiffs();
   void mount_spiffs();
