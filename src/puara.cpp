@@ -44,14 +44,10 @@ struct PuaraGlobal
   void start(PuaraAPI::Monitors monitor)
   {
     std::cout << "\n"
-              << "**********************************************************\n"
-              << "* Puara Module Manager                                   *\n"
-              << "* Metalab - Société des Arts Technologiques (SAT)        *\n"
-              << "* Input Devices and Music Interaction Laboratory (IDMIL) *\n"
-              << "* Edu Meneses (2022) - https://www.edumeneses.com        *\n"
-              << "* Firmware version: " << config.version
-              << "                             *\n"
-              << "**********************************************************\n"
+              << "Puara Module Manager                                   \n"
+              << "Innovation - Société des Arts Technologiques (SAT)     \n"
+              << "Input Devices and Music Interaction Laboratory (IDMIL) \n"
+              << "Firmware version: " << config.version << "\n"
               << std::endl;
 
     spiffs.config_spiffs();
@@ -107,71 +103,6 @@ void Puara::set_version(unsigned int user_version)
 {
   g_puara.config.version = user_version;
 }
-std::string Puara::IP1()
-{
-  return g_puara.config.oscIP1;
-}
-std::string Puara::IP2()
-{
-  return g_puara.config.oscIP2;
-}
-int unsigned Puara::PORT1()
-{
-  return g_puara.config.oscPORT1;
-}
-int unsigned Puara::PORT2()
-{
-  return g_puara.config.oscPORT2;
-}
-std::string Puara::PORT1Str()
-{
-  return std::to_string(g_puara.config.oscPORT1);
-}
-std::string Puara::PORT2Str()
-{
-  return std::to_string(g_puara.config.oscPORT2);
-}
-int unsigned Puara::LocalPORT()
-{
-  return g_puara.config.localPORT;
-}
-std::string Puara::LocalPORTStr()
-{
-  return std::to_string(g_puara.config.localPORT);
-}
-std::string Puara::staIP()
-{
-  return g_puara.wifi.currentSTA_IP;
-}
-std::string Puara::apIP()
-{
-  return g_puara.wifi.currentAP_IP;
-}
-unsigned int Puara::id()
-{
-  return g_puara.config.id;
-}
-
-bool Puara::persistentAP()
-{
-  return g_puara.config.persistentAP;
-}
-bool Puara::set_persistentAP(bool uservalue)
-{
-  g_puara.config.persistentAP = uservalue;
-
-  return 1;
-}
-
-bool Puara::IP1_ready()
-{
-  return g_puara.config.IP1_ready();
-}
-bool Puara::IP2_ready()
-{
-  return g_puara.config.IP2_ready();
-}
-
 
 void Puara::config_spiffs()
 {

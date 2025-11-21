@@ -23,13 +23,5 @@ struct DeviceConfiguration
   std::string wifiSSID;
   std::string wifiPSK;
   bool persistentAP = false;
-  std::string oscIP1;
-  unsigned int oscPORT1;
-  std::string oscIP2;
-  unsigned int oscPORT2;
-  unsigned int localPORT;
-
-  bool IP1_ready();
-  bool IP2_ready();
 };
 } 
