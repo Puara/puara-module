@@ -32,11 +32,6 @@ struct PuaraGlobal
 {
   PuaraAPI::DeviceConfiguration config;
   PuaraAPI::Device device;
-/* in order to facilitate deployment - this should rather be an Arduino flag that exists and is declared by Arduino IDE.
-/  if not, user needs to go modify values in      ~/.arduino15/packages/<board_package>/hardware/arduino/<version>/platform.txt
-/  or in      ~/.arduino15/packages/<board_package>/hardware/arduino/<version>/boards.txt
-/  to have the LITTLEFS flag defined when compiling.
-*/
 #if defined(PUARA_SPIFFS) 
   std::unique_ptr<PuaraAPI::PuaraFileSystem> fs = std::make_unique<PuaraAPI::SPIFFS>();
 #else
@@ -59,7 +54,7 @@ struct PuaraGlobal
               << "Firmware version: " << config.version << "\n"
               << std::endl;
 
-    std::string configContents = fs->read_file("/config.json");
+    std::string configContents = fs->read_file("config.json");
     if(configContents.empty())
     {
       std::cout << "ERROR: Could not load config from any path!\n";
@@ -70,10 +65,10 @@ struct PuaraGlobal
     }
 
     std::cout << "Reading settings.json file" << std::endl;
-    std::string settingsContents = fs->read_file("/settings.json");
+    std::string settingsContents = fs->read_file("settings.json");
     if(settingsContents.empty())
     {
-      std::cout << "ERROR: Failed to load /settings.json!\n";
+      std::cout << "ERROR: Failed to load settings.json!\n";
     }
     else
     {

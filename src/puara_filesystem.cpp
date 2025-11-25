@@ -149,12 +149,13 @@ void SPIFFS::unmount()
 
 std::string SPIFFS::read_file(const std::string& path) {
   mount();
-  std::ifstream in(spiffs_base_path + path);
+  std::string path_with_slash = "/" + path;
+  std::ifstream in(spiffs_base_path + path_with_slash);
   if (!in) {
-    std::cout << "spiffs: Failed to open " << path << std::endl;
+    std::cout << "spiffs: Failed to open " << path_with_slash << std::endl;
     return "";
   }
-  std::cout << "spiffs: Reading " << path <<  std::endl;
+  std::cout << "spiffs: Reading " << path_with_slash <<  std::endl;
   return std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
   unmount();
 }
@@ -191,7 +192,7 @@ std::string JSONSettings::getVarText(std::string varName)
 void JSONSettings::read_config_json()
 { // Deserialize
 
-  std::string contents = fs->read_file("/config.json");
+  std::string contents = fs->read_file("config.json");
   read_config_json_internal(contents);
 }
 
@@ -253,7 +254,7 @@ void JSONSettings::read_config_json_internal(std::string& contents)
 
 void JSONSettings::read_settings_json()
 {
-  std::string contents = fs->read_file("/settings.json");
+  std::string contents = fs->read_file("settings.json");
   read_settings_json_internal(contents);
 }
 
