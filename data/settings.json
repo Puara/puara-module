@@ -1,6 +1,18 @@
 {
     "settings": [
         {
+            "name": "OSC_IP",
+            "value": "192.168.4.2"
+        },
+        {
+            "name": "OSC_port",
+            "value": 9000
+        },
+        {
+            "name": "OSC_local_port",
+            "value": 9000
+        },
+        {
             "name": "Hitchhiker",
             "value": "Ford"
         },
