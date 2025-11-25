@@ -129,7 +129,7 @@ void Webserver::stop_webserver(void)
 std::string Webserver::prepare_index()
 {
   std::cout << "http : Reading index file" << std::endl;
-  std::string contents = fs->read_file("index.html");
+  std::string contents = fs->read_file("/index.html");
   // Put the module info on the HTML before send response
   find_and_replace("%DMINAME%", config.dmiName, contents);
   if(wifi.StaIsConnected)

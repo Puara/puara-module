@@ -35,11 +35,12 @@ void LITTLEFS::unmount()
 std::string LITTLEFS::read_file(const std::string& path)
 {
   mount();
+  std::string path_with_slash = "/" + path;
   std::cout << "LittleFS: reading file: " << path << std::endl;
-  auto path_c = path.c_str();
-  if(!LittleFS.exists(path.c_str()))
+  auto path_c = path_with_slash.c_str();
+  if(!LittleFS.exists(path_c))
   {
-    std::cout << "LittleFS: file not found: " << path << std::endl;
+    std::cout << "LittleFS: file not found: " << path_c << std::endl;
     return "";
   }
 
@@ -48,7 +49,7 @@ std::string LITTLEFS::read_file(const std::string& path)
 
   if(!file)
   {
-    std::cout << "LittleFS: failed to open file: " << path << std::endl;
+    std::cout << "LittleFS: failed to open file: " << path_c << std::endl;
     return "";
   }
 

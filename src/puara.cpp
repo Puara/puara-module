@@ -17,7 +17,6 @@ Edu Meneses (2022) - https://www.edumeneses.com
 #include "puara_filesystem.hpp"
 #include "puara_mdns.hpp"
 #include "puara_serial.hpp"
-#include "puara_filesystem.hpp"
 #include "puara_web.hpp"
 #include "puara_wifi.hpp"
 #include <memory>
@@ -33,10 +32,15 @@ struct PuaraGlobal
 {
   PuaraAPI::DeviceConfiguration config;
   PuaraAPI::Device device;
-  #if defined(PUARA_LITTLEFS)
-  std::unique_ptr<PuaraAPI::PuaraFileSystem> fs = std::make_unique<PuaraAPI::LITTLEFS>();
-  #else
+/* in order to facilitate deployment - this should rather be an Arduino flag that exists and is declared by Arduino IDE.
+/  if not, user needs to go modify values in      ~/.arduino15/packages/<board_package>/hardware/arduino/<version>/platform.txt
+/  or in      ~/.arduino15/packages/<board_package>/hardware/arduino/<version>/boards.txt
+/  to have the LITTLEFS flag defined when compiling.
+*/
+#if defined(PUARA_SPIFFS) 
   std::unique_ptr<PuaraAPI::PuaraFileSystem> fs = std::make_unique<PuaraAPI::SPIFFS>();
+#else
+  std::unique_ptr<PuaraAPI::PuaraFileSystem> fs = std::make_unique<PuaraAPI::LITTLEFS>();
 #endif
   PuaraAPI::JSONSettings settings{config, fs.get()};
   PuaraAPI::Serial serial{config, device, fs.get(), settings};
@@ -65,7 +69,7 @@ struct PuaraGlobal
       std::cout << "Loaded config:\n" << configContents << std::endl;
     }
 
-    std::cout << "SPIFFS: Reading settings.json file" << std::endl;
+    std::cout << "Reading settings.json file" << std::endl;
     std::string settingsContents = fs->read_file("/settings.json");
     if(settingsContents.empty())
     {
@@ -75,7 +79,8 @@ struct PuaraGlobal
     {
       std::cout << "Loaded settings contents:\n" << settingsContents << "\n";
     }
-
+    settings.read_settings_json();
+    settings.read_config_json();
     wifi.start_wifi();
     webserver.start_webserver();
     mdns.start(config.dmiName, config.dmiName);
@@ -95,6 +100,7 @@ struct PuaraGlobal
     std::cout << "Puara Start Done!\n\n  Type \"reboot\" in the serial monitor to reset "
                  "the ESP32.\n\n";
   }
+
 };
 
 static PuaraGlobal g_puara;
