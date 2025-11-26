@@ -55,7 +55,7 @@ struct settingsVariables
 struct JSONSettings // TODO: remove from puara_filesystem
 {
   DeviceConfiguration& config;
-  PuaraFileSystem* fs;
+  PuaraFileSystem* fs{};
 
   // public API:
   void read_config_json();
