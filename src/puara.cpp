@@ -54,28 +54,8 @@ struct PuaraGlobal
               << "Firmware version: " << config.version << "\n"
               << std::endl;
 
-    std::string configContents = fs->read_file("config.json");
-    if(configContents.empty())
-    {
-      std::cout << "ERROR: Could not load config from any path!\n";
-    }
-    else
-    {
-      std::cout << "Loaded config:\n" << configContents << std::endl;
-    }
-
-    std::cout << "Reading settings.json file" << std::endl;
-    std::string settingsContents = fs->read_file("settings.json");
-    if(settingsContents.empty())
-    {
-      std::cout << "ERROR: Failed to load settings.json!\n";
-    }
-    else
-    {
-      std::cout << "Loaded settings contents:\n" << settingsContents << "\n";
-    }
-    settings.read_settings_json();
     settings.read_config_json();
+    settings.read_settings_json();
     wifi.start_wifi();
     webserver.start_webserver();
     mdns.start(config.dmiName, config.dmiName);
@@ -84,13 +64,12 @@ struct PuaraGlobal
     serial.module_monitor = monitor;
 
     // some delay added as start listening blocks the hw monitor
-    std::cout << "Starting serial monitor..." << std::endl;
+    LOG("Starting serial monitor...");
     vTaskDelay(50 / portTICK_RATE_MS);
-    if(serial.start_serial_listening())
-    {
-    };
+    if(serial.start_serial_listening()){ // ??
+      };
     vTaskDelay(50 / portTICK_RATE_MS);
-    std::cout << "serial listening ready" << std::endl;
+    LOG("serial listening ready");
 
     std::cout << "Puara Start Done!\n\n  Type \"reboot\" in the serial monitor to reset "
                  "the ESP32.\n\n";

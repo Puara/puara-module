@@ -16,31 +16,31 @@ static constexpr bool spiffs_format_if_mount_failed = false;
 
 void LITTLEFS::mount()
 {
-  std::cout << "LittleFS: mounting FS" << std::endl;
+  LOG("LittleFS: mounting FS");
   if(!LittleFS.begin(true))
   {
-    std::cout << "LittleFS: mount failed" << std::endl;
+    LOG("LittleFS: mount failed");
     return;
   }
-  std::cout << "LittleFS: mount successful" << std::endl;
+  LOG("LittleFS: mount successful");
 }
 
 void LITTLEFS::unmount()
 {
-  std::cout << "LittleFS: unmounting FS" << std::endl;
+  LOG("LittleFS: unmounting FS");
   LittleFS.end();
-  std::cout << "LittleFS: unmounted" << std::endl;
+  LOG("LittleFS: unmounted");
 }
 
 std::string LITTLEFS::read_file(const std::string& path)
 {
   mount();
   std::string path_with_slash = "/" + path;
-  std::cout << "LittleFS: reading file: " << path << std::endl;
+  LOG("LittleFS: reading file: " << path);
   auto path_c = path_with_slash.c_str();
   if(!LittleFS.exists(path_c))
   {
-    std::cout << "LittleFS: file not found: " << path_c << std::endl;
+    LOG("LittleFS: file not found: " << path_c);
     return "";
   }
 
@@ -49,7 +49,7 @@ std::string LITTLEFS::read_file(const std::string& path)
 
   if(!file)
   {
-    std::cout << "LittleFS: failed to open file: " << path_c << std::endl;
+    LOG("LittleFS: failed to open file: " << path_c);
     return "";
   }
 
@@ -65,17 +65,17 @@ std::string LITTLEFS::read_file(const std::string& path)
 
 void LITTLEFS::write_file(const std::string& path, const std::string& contents) {
   mount();
-  std::cout << "littleFS: Writing file " << path << std::endl;
+  LOG("littleFS: Writing file " << path);
 
   File file = LittleFS.open(path.c_str(), FILE_WRITE);
   if (!file) {
-    std::cout << "LittleFS: failed to open file: " << path << std::endl;
+    LOG("LittleFS: failed to open file: " << path);
     return;
   }
   if (file.print(contents.c_str())) {
-    std::cout << "LittleFS: wrote "  << path << ", closing" << std::endl;
+    LOG("LittleFS: wrote "  << path << ", closing");
   } else {
-    std::cout << "LittleFS: failed to write "  << path << ", closing" << std::endl;
+    LOG("LittleFS: failed to write "  << path << ", closing");
   }
   file.close();
   unmount();
@@ -85,7 +85,7 @@ void SPIFFS::mount()
 {
   if(!esp_spiffs_mounted(spiffs_config.partition_label))
   {
-    std::cout << "spiffs: Initializing SPIFFS" << std::endl;
+    LOG("spiffs: Initializing SPIFFS");
 
     spiffs_config.base_path = this->spiffs_base_path.c_str();
     spiffs_config.max_files = PuaraAPI::spiffs_max_files;
@@ -100,16 +100,15 @@ void SPIFFS::mount()
     {
       if(ret == ESP_FAIL)
       {
-        std::cout << "spiffs: Failed to mount or format filesystem" << std::endl;
+        LOG("spiffs: Failed to mount or format filesystem");
       }
       else if(ret == ESP_ERR_NOT_FOUND)
       {
-        std::cout << "spiffs: Failed to find SPIFFS partition" << std::endl;
+        LOG("spiffs: Failed to find SPIFFS partition");
       }
       else
       {
-        std::cout << "spiffs: Failed to initialize SPIFFS (" << esp_err_to_name(ret)
-                  << ")" << std::endl;
+        LOG("spiffs: Failed to initialize SPIFFS (" << esp_err_to_name(ret) << ")");
       }
       return;
     }
@@ -118,18 +117,17 @@ void SPIFFS::mount()
     ret = esp_spiffs_info(spiffs_config.partition_label, &total, &used);
     if(ret != ESP_OK)
     {
-      std::cout << "spiffs: Failed to get SPIFFS partition information ("
-                << esp_err_to_name(ret) << ")" << std::endl;
+      LOG("spiffs: Failed to get SPIFFS partition information ("
+                << esp_err_to_name(ret) << ")");
     }
     else
     {
-      std::cout << "spiffs: Partition size: total: " << total << ", used: " << used
-                << std::endl;
+      LOG("spiffs: Partition size: total: " << total << ", used: " << used);
     }
   }
   else
   {
-    std::cout << "spiffs: SPIFFS already initialized" << std::endl;
+    LOG("spiffs: SPIFFS already initialized");
   }
 }
 
@@ -139,11 +137,11 @@ void SPIFFS::unmount()
   if(esp_spiffs_mounted(spiffs_config.partition_label))
   {
     esp_vfs_spiffs_unregister(spiffs_config.partition_label);
-    std::cout << "spiffs: SPIFFS unmounted" << std::endl;
+    LOG("spiffs: SPIFFS unmounted");
   }
   else
   {
-    std::cout << "spiffs: SPIFFS not found" << std::endl;
+    LOG("spiffs: SPIFFS not found");
   }
 }
 
@@ -152,10 +150,10 @@ std::string SPIFFS::read_file(const std::string& path) {
   std::string path_with_slash = "/" + path;
   std::ifstream in(spiffs_base_path + path_with_slash);
   if (!in) {
-    std::cout << "spiffs: Failed to open " << path_with_slash << std::endl;
+    LOG("spiffs: Failed to open " << path_with_slash);
     return "";
   }
-  std::cout << "spiffs: Reading " << path_with_slash <<  std::endl;
+  LOG("spiffs: Reading " << path_with_slash);
   return std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
   unmount();
 }
@@ -163,15 +161,15 @@ std::string SPIFFS::read_file(const std::string& path) {
 // TODO: the body is the body of read_file.
 void SPIFFS::write_file(const std::string& path, const std::string& contents) {
   mount();
-  std::cout << "SPIFFS: Opening " << path << std::endl;
+  LOG("SPIFFS: Opening " << path);
   FILE* f = fopen((spiffs_base_path + path).c_str(), "w");
   if(!f) {
-      std::cout << "SPIFFS: Failed to open " << path << std::endl;
+      LOG("SPIFFS: Failed to open " << path);
       return;
     }
 
   fprintf(f, "%s", contents.c_str());
-  std::cout << "SPIFFS: wrote "  << path << ", closing" << std::endl;
+  LOG("SPIFFS: wrote "  << path << ", closing");
   fclose(f);
   unmount();
 }
@@ -198,7 +196,7 @@ void JSONSettings::read_config_json()
 
 void JSONSettings::read_config_json_internal(std::string& contents)
 {
-  std::cout << "json: Getting data" << std::endl;
+  LOG("json: Getting data");
   cJSON* root = cJSON_Parse(contents.c_str());
   if(cJSON_GetObjectItem(root, "device"))
   {
@@ -233,8 +231,7 @@ void JSONSettings::read_config_json_internal(std::string& contents)
     config.persistentAP = cJSON_GetObjectItem(root, "persistentAP")->valueint;
   }
 
-  std::cout << "\njson: Data collected:\n\n"
-            << "device: " << config.device << "\n"
+  std::cout << "device: " << config.device << "\n"
             << "id: " << config.id << "\n"
             << "author: " << config.author << "\n"
             << "institution: " << config.institution << "\n"
@@ -249,7 +246,7 @@ void JSONSettings::read_config_json_internal(std::string& contents)
   std::stringstream tempBuf;
   tempBuf << config.device << "_" << std::setfill('0') << std::setw(3) << config.id;
   config.dmiName = tempBuf.str();
-  printf("Device unique name defined: %s\n", config.dmiName.c_str());
+  std::cout << "Device unique name defined: " << config.dmiName.c_str() << std::endl;
 }
 
 void JSONSettings::read_settings_json()
@@ -261,12 +258,12 @@ void JSONSettings::read_settings_json()
 void JSONSettings::read_settings_json_internal(std::string& contents, bool merge)
 {
   // Now parse the JSON
-  std::cout << "json: Getting data" << std::endl;
+  LOG("json: Getting data");
   cJSON* root = cJSON_Parse(contents.c_str());
   cJSON* setting = NULL;
   cJSON* settings = NULL;
 
-  std::cout << "json: Parse settings information" << std::endl;
+  LOG("json: Parse settings information");
   settings = cJSON_GetObjectItemCaseSensitive(root, "settings");
 
   settingsVariables temp;
@@ -274,7 +271,7 @@ void JSONSettings::read_settings_json_internal(std::string& contents, bool merge
   {
     variables.clear();
   }
-  std::cout << "json: Extract info" << std::endl;
+  LOG("json: Extract info");
   cJSON_ArrayForEach(setting, settings)
   {
     cJSON* name = cJSON_GetObjectItemCaseSensitive(setting, "name");
@@ -374,12 +371,12 @@ void JSONSettings::write_config_json()
             << std::endl;
 
   // Save to config.json
-  std::cout << "write_config_json: Serializing json" << std::endl;
+  LOG("write_config_json: Serializing json");
   std::string contents = cJSON_Print(root);
 
   fs->write_file("/config.json", contents);
 
-  std::cout << "write_config_json: Delete json entity" << std::endl;
+  LOG("write_config_json: Delete json entity");
   cJSON_Delete(root);
 
 }
@@ -411,13 +408,13 @@ void JSONSettings::write_settings_json()
   }
 
   // Save to settings.json
-  std::cout << "write_settings_json: Serializing json" << std::endl;
+  LOG("write_settings_json: Serializing json");
   std::string contents = cJSON_Print(root);
-  std::cout << "SPIFFS: Saving file" << std::endl;
+  LOG("Filesystem: Saving file");
 
   fs->write_file("/settings.json", contents);
 
-  std::cout << "write_settings_json: Delete json entity" << std::endl;
+  LOG("write_settings_json: Delete json entity");
   cJSON_Delete(root);
 
 }

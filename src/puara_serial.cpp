@@ -10,7 +10,7 @@
 #include <driver/usb_serial_jtag.h> // jtag module
 #endif
 
-#if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
+#if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3  // ??
 #include "esp32-hal-tinyusb.h"
 #endif
 
@@ -187,16 +187,20 @@ void Serial::usb_monitor()
   // // Setup USB interface
   // tinyusb_init(&usb_config);
   // TODO: Read from USB interface
-  std::cout << "USB OTG monitor not supported, use the USB Serial JTAG or UART interface"
-            << std::endl;
+  LOG("USB OTG monitor not supported, use the USB Serial JTAG or UART interface");
 #endif
 }
 
 bool Serial::start_serial_listening()
 {
-  // std::cout << "starting serial monitor \n";
   if(module_monitor == UART_MONITOR)
-  {
+  {/*  // getting this e message everytime : E (20645) uart: UART driver already installed
+      // so looking for solution .. 
+    if(uart_is_driver_installed(UART_NUM_1))
+    {
+      LOG("UART driver already installed. Skipping initialization.");
+      return true;
+    } */
     createTask<&Serial::uart_monitor>(this, "serial_monitor", 2048);
     createTask<&Serial::interpret_serial>(this, "interpret_serial", 4096);
   }
@@ -212,7 +216,7 @@ bool Serial::start_serial_listening()
   }
   else
   {
-    std::cout << "Invalid Monitor Type" << std::endl;
+    LOG("Invalid Monitor Type");
   }
   return 1;
 }

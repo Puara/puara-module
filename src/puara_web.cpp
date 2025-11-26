@@ -98,12 +98,11 @@ httpd_handle_t Webserver::start_webserver(void)
   this->settingspost.user_ctx = this;
 
   // Start the httpd server
-  std::cout << "webserver: Starting server on port: " << webserver_config.server_port
-            << std::endl;
+  LOG("webserver: Starting server on port: " << webserver_config.server_port);
   if(httpd_start(&webserver, &webserver_config) == ESP_OK)
   {
     // Set URI handlers
-    std::cout << "webserver: Registering URI handlers" << std::endl;
+    LOG("webserver: Registering URI handlers");
     httpd_register_uri_handler(webserver, &this->index);
     httpd_register_uri_handler(webserver, &this->indexpost);
     httpd_register_uri_handler(webserver, &this->style);
@@ -116,7 +115,7 @@ httpd_handle_t Webserver::start_webserver(void)
     return webserver;
   }
 
-  std::cout << "webserver: Error starting server!" << std::endl;
+  LOG("webserver: Error starting server!");
   return NULL;
 }
 
@@ -128,8 +127,8 @@ void Webserver::stop_webserver(void)
 
 std::string Webserver::prepare_index()
 {
-  std::cout << "http : Reading index file" << std::endl;
-  std::string contents = fs->read_file("/index.html");
+  LOG("http : Reading index file");
+  std::string contents = fs->read_file("index.html");
   // Put the module info on the HTML before send response
   find_and_replace("%DMINAME%", config.dmiName, contents);
   if(wifi.StaIsConnected)
@@ -174,10 +173,10 @@ esp_err_t Webserver::index_get_handler(httpd_req_t* req)
 
 esp_err_t Webserver::settings_get_handler(httpd_req_t* req)
 {
-  std::cout << "http : Reading settings file" << std::endl;
+  LOG("http : Reading settings file");
   std::string contents = fs->read_file("settings.html");
 
-  std::cout << "settings_get_handler: Adding variables to HTML" << std::endl;
+  LOG("settings_get_handler: Adding variables to HTML");
   std::string settings;
   for(const auto& it : this->settings.variables)
   {
@@ -238,7 +237,7 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
     // adding delimiter to process last variable in the loop
     str_buf.append(delimiter);
 
-    std::cout << "Settings stored:" << std::endl;
+    LOG("Settings stored:");
     auto& variables = settings.variables;
     auto& variables_fields = settings.variables_fields;
     while((pos = str_buf.find(delimiter)) != std::string::npos)
@@ -247,7 +246,7 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
       field_pos = str_buf.find(field_delimiter);
       field = str_token.substr(0, field_pos);
       str_token.erase(0, field_pos + field_delimiter.length());
-      std::cout << field << ": ";
+      LOG(field << ": ");
       if(variables.at(variables_fields.at(field)).type == "text")
       {
         variables.at(variables_fields.at(field)).textValue = urlDecode(str_token);
@@ -256,15 +255,15 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
       {
         variables.at(variables_fields.at(field)).numberValue = std::stod(str_token);
       }
-      std::cout << str_token << std::endl;
+      LOG(str_token);
       str_buf.erase(0, pos + delimiter.length());
     }
-    std::cout << std::endl;
+    LOG("");
     remaining -= api_return;
   }
 
   settings.write_settings_json();
-  std::cout << "http : Reading saved.html file" << std::endl;
+  LOG("http : Reading saved.html file");
   std::string contents = fs->read_file("saved.html");
 
   return ESP_OK;
@@ -274,7 +273,7 @@ esp_err_t Webserver::get_handler(httpd_req_t* req)
 {
   const char* resp_str = (const char*)req->user_ctx;
   std::string requested_path = std::string{resp_str};
-  std::cout << "http : Reading requested file " << requested_path << std::endl;
+  LOG("http : Reading requested file " << requested_path);
   std::string contents = fs->read_file(requested_path);
   httpd_resp_sendstr(req, contents.c_str());
 
@@ -285,7 +284,7 @@ esp_err_t Webserver::style_get_handler(httpd_req_t* req)
 {
   const char* resp_str = (const char*)req->user_ctx;
   std::string requested_path = std::string{resp_str};
-  std::cout << "http : Reading style.css file" << std::endl;
+  LOG("http : Reading style.css file");
   std::string contents = fs->read_file(requested_path);
   httpd_resp_set_type(req, "text/css");
   httpd_resp_sendstr(req, contents.c_str());
@@ -297,7 +296,7 @@ esp_err_t Webserver::scan_get_handler(httpd_req_t* req)
 {
   const char* resp_str = (const char*)req->user_ctx;
   std::string requested_path = std::string{resp_str};
-  std::cout << "http : Reading scan.html file" << std::endl;
+  LOG("http : Reading scan.html file");
   std::ifstream in(resp_str);
   std::string contents = fs->read_file(requested_path);
   wifi.wifi_scan();
@@ -350,69 +349,67 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
         switch(config_fields.at(field))
         {
           case 1:
-            std::cout << "SSID: " << str_token << std::endl;
+            LOG("SSID: " << str_token);
             if(!str_token.empty())
             {
               config.wifiSSID = urlDecode(str_token);
             }
             else
             {
-              std::cout << "SSID empty! Keeping the stored value" << std::endl;
+              LOG("SSID empty! Keeping the stored value");
             }
             break;
           case 2:
-            std::cout << "APpasswd: " << str_token << std::endl;
+            LOG("APpasswd: " << str_token);
             if(!str_token.empty())
             {
               this->APpasswdVal1 = urlDecode(str_token);
             }
             else
             {
-              std::cout << "APpasswd empty! Keeping the stored value" << std::endl;
+              LOG("APpasswd empty! Keeping the stored value");
               this->APpasswdVal1.clear();
             };
             break;
           case 3:
-            std::cout << "APpasswdValidate: " << str_token << std::endl;
+            LOG("APpasswdValidate: " << str_token);
             if(!str_token.empty())
             {
               this->APpasswdVal2 = urlDecode(str_token);
             }
             else
             {
-              std::cout << "APpasswdValidate empty! Keeping the stored value"
-                        << std::endl;
+              LOG("APpasswdValidate empty! Keeping the stored value");
               this->APpasswdVal2.clear();
             };
             break;
           case 4:
-            std::cout << "password: " << str_token << std::endl;
+            LOG("password: " << str_token);
             if(!str_token.empty())
             {
               config.wifiPSK = urlDecode(str_token);
             }
             else
             {
-              std::cout << "password empty! Keeping the stored value" << std::endl;
+              LOG("password empty! Keeping the stored value");
             }
             break;
           case 5:
-            std::cout << "Rebooting\n";
+            LOG("Rebooting");
             ret_flag = true;
             break;
           case 6:
-            std::cout << "persistentAP: " << str_token << std::endl;
+            LOG("persistentAP: " << str_token);
             checkbox_persistentAP = true;
             break;
           default:
-            std::cout << "Error, no match for config field to store received data\n";
+            LOG("Error, no match for config field to store received data");
             break;
         }
       }
       else
       {
-        std::cout << "Error, no match for config field to store received data: " << field
-                  << std::endl;
+        LOG("Error, no match for config field to store received data: " << field );
       }
       str_buf.erase(0, pos + delimiter.length());
     }
@@ -422,12 +419,11 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
        && APpasswdVal1.length() > 7)
     {
       config.APpasswd = APpasswdVal1;
-      std::cout << "Puara password changed!\n";
+      LOG("Puara password changed!");
     }
     else
     {
-      std::cout << "Puara password doesn't match or shorter than 8 characteres. "
-                   "Passwork not changed.\n";
+      LOG("Puara password doesn't match or shorter than 8 characteres. Passwork not changed.");
     }
     config.persistentAP = checkbox_persistentAP;
     APpasswdVal1.clear();
@@ -437,16 +433,16 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
 
   if(ret_flag)
   {
-    std::cout << "http : Reading reboot.html file" << std::endl;
+    LOG("http : Reading reboot.html file");
     std::string contents = fs->read_file("reboot.html");
     httpd_resp_sendstr(req, contents.c_str());
-    std::cout << "\nRebooting...\n" << std::endl;
+    LOG("Rebooting...");
     createTask<&Device::reboot_with_delay>(&device, "reboot_with_delay", 1024);
   }
   else
   {
     settings.write_config_json();
-    std::cout << "http : Reading saved.html file" << std::endl;
+    LOG("http : Reading saved.html file");
     std::string contents = fs->read_file("saved.html");
     httpd_resp_sendstr(req, contents.c_str());
   }
