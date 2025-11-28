@@ -68,7 +68,7 @@ void Serial::interpret_serial()
     }
     else if(serial_data_str.compare("readconfig") == 0)
     {
-      std::string contents = fs.read_file("config.json");
+      std::string contents = fs.read_file("/config.json");
       this->send_serial_data(contents);
     }
     else if(serial_data_str.rfind("sendsettings", 0) == 0)

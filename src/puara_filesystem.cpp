@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+
 namespace PuaraAPI
 {
 //// CONFIG ////
@@ -25,7 +26,7 @@ std::string JSONSettings::getVarText(std::string varName)
 void JSONSettings::read_config_json()
 { // Deserialize
 
-  std::string contents = fs.read_file("config.json");
+  std::string contents = fs.read_file("/config.json");
   read_config_json_internal(contents);
 }
 
@@ -86,7 +87,7 @@ void JSONSettings::read_config_json_internal(std::string& contents)
 
 void JSONSettings::read_settings_json()
 {
-  std::string contents = fs.read_file("settings.json");
+  std::string contents = fs.read_file("/settings.json");
   read_settings_json_internal(contents);
 }
 

@@ -10,7 +10,7 @@ class PuaraFileSystem {
  public:
   void mount();
   void unmount();
-  std::string read_file(const std::string& path);
+  std::string read_file(std::string_view path);
   void write_file(const std::string& path, const std::string& content);
 };
 }

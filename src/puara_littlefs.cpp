@@ -23,12 +23,11 @@ void PuaraFileSystem::unmount()
   LOG("LittleFS: unmounted");
 }
 
-std::string PuaraFileSystem::read_file(const std::string& path)
+std::string PuaraFileSystem::read_file(std::string_view path)
 {
   mount();
-  std::string path_with_slash = "/" + path;
-  LOG("LittleFS: reading file: " << path);
-  auto path_c = path_with_slash.c_str();
+  auto path_c = std::string(path).c_str();
+  LOG("LittleFS: reading file: " << path_c);
   if(!LittleFS.exists(path_c))
   {
     LOG("LittleFS: file not found: " << path_c);

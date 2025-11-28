@@ -74,17 +74,18 @@ void PuaraFileSystem::unmount()
   }
 }
 
-std::string PuaraFileSystem::read_file(const std::string& path)
+std::string PuaraFileSystem::read_file(std::string_view path)
 {
   mount();
-  std::string path_with_slash = "/" + path;
-  std::ifstream in(spiffs_base_path + path_with_slash);
+  std::string full_path = spiffs_base_path;
+  full_path.append(path);
+  std::ifstream in(full_path);
   if(!in)
   {
-    LOG("spiffs: Failed to open " << path_with_slash);
+    LOG("spiffs: Failed to open " << full_path);
     return "";
   }
-  LOG("spiffs: Reading " << path_with_slash);
+  LOG("spiffs: Reading " << full_path);
   return std::string(
       (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
   unmount();

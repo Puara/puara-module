@@ -128,7 +128,7 @@ void Webserver::stop_webserver(void)
 std::string Webserver::prepare_index()
 {
   LOG("http : Reading index file");
-  std::string contents = fs.read_file("index.html");
+  std::string contents = fs.read_file("/index.html");
   // Put the module info on the HTML before send response
   find_and_replace("%DMINAME%", config.dmiName, contents);
   if(wifi.StaIsConnected)
@@ -174,7 +174,7 @@ esp_err_t Webserver::index_get_handler(httpd_req_t* req)
 esp_err_t Webserver::settings_get_handler(httpd_req_t* req)
 {
   LOG("http : Reading settings file");
-  std::string contents = fs.read_file("settings.html");
+  std::string contents = fs.read_file("/settings.html");
 
   LOG("settings_get_handler: Adding variables to HTML");
   std::string settings;
@@ -264,7 +264,7 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
 
   settings.write_settings_json();
   LOG("http : Reading saved.html file");
-  std::string contents = fs.read_file("saved.html");
+  std::string contents = fs.read_file("/saved.html");
 
   return ESP_OK;
 }
@@ -434,7 +434,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
   if(ret_flag)
   {
     LOG("http : Reading reboot.html file");
-    std::string contents = fs.read_file("reboot.html");
+    std::string contents = fs.read_file("/reboot.html");
     httpd_resp_sendstr(req, contents.c_str());
     LOG("Rebooting...");
     createTask<&Device::reboot_with_delay>(&device, "reboot_with_delay", 1024);
@@ -443,7 +443,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
   {
     settings.write_config_json();
     LOG("http : Reading saved.html file");
-    std::string contents = fs.read_file("saved.html");
+    std::string contents = fs.read_file("/saved.html");
     httpd_resp_sendstr(req, contents.c_str());
   }
 
