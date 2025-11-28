@@ -35,11 +35,11 @@ void WiFi::wifi_init()
   esp_err_t setname = esp_netif_set_hostname(ap_netif, config.dmiName.c_str());
   if(setname != ESP_OK)
   {
-    std::cout << "wifi_init: failed to set hostname: " << config.dmiName << std::endl;
+    LOG("wifi_init: failed to set hostname: " << config.dmiName);
   }
   else
   {
-    std::cout << "wifi_init: hostname: " << config.dmiName << std::endl;
+    LOG("wifi_init: hostname: " << config.dmiName);
   }
 
   esp_event_handler_instance_t instance_any_id;
@@ -49,25 +49,25 @@ void WiFi::wifi_init()
   ESP_ERROR_CHECK(esp_event_handler_instance_register(
       IP_EVENT, IP_EVENT_STA_GOT_IP, &WiFi::sta_event_handler, this, &instance_got_ip));
 
-  std::cout << "wifi_init: setting wifi mode" << std::endl;
+  LOG("wifi_init: setting wifi mode");
   if(config.persistentAP)
   {
-    std::cout << "wifi_init:     AP-STA mode" << std::endl;
+    LOG("wifi_init:     AP-STA mode");
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
-    std::cout << "wifi_init: loading AP config" << std::endl;
+    LOG("wifi_init: loading AP config");
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &this->wifi_config_ap));
   }
   else
   {
-    std::cout << "wifi_init:     STA mode" << std::endl;
+    LOG("wifi_init:     STA mode");
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
   }
-  std::cout << "wifi_init: loading STA config" << std::endl;
+  LOG("wifi_init: loading STA config");
   ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &this->wifi_config_sta));
-  std::cout << "wifi_init: esp_wifi_start" << std::endl;
+  LOG("wifi_init: esp_wifi_start");
   ESP_ERROR_CHECK(esp_wifi_start());
 
-  std::cout << "wifi_init: wifi_init finished." << std::endl;
+  LOG("wifi_init: wifi_init finished.");
 
   /* Waiting until either the connection is established (this->wifi_connected_bit)
    * or connection failed for the maximum number of re-tries (this->wifi_fail_bit).
@@ -80,23 +80,21 @@ void WiFi::wifi_init()
    * can test which event actually happened. */
   if(bits & this->wifi_connected_bit)
   {
-    std::cout << "wifi_init: Connected to SSID: " << config.wifiSSID << std::endl;
+    LOG("wifi_init: Connected to SSID: " << config.wifiSSID);
     currentSSID = config.wifiSSID;
     this->StaIsConnected = true;
   }
   else if(bits & this->wifi_fail_bit)
   {
-    std::cout << "wifi_init: Failed to connect to SSID: " << config.wifiSSID
-              << std::endl;
+    LOG("wifi_init: Failed to connect to SSID: " << config.wifiSSID);
     if(!config.persistentAP)
     {
-      std::cout << "wifi_init: Failed to connect to SSID: " << config.wifiSSID
-                << "Switching to AP/STA mode" << std::endl;
+      LOG("wifi_init: Failed to connect to SSID: " << config.wifiSSID
+                << "Switching to AP/STA mode");
       ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
-      std::cout << "wifi_init: loading AP config" << std::endl;
+      LOG("wifi_init: loading AP config");
       ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &this->wifi_config_ap));
-      std::cout << "wifi_init: Trying to connect one more time to SSID before giving up."
-                << std::endl;
+      LOG("wifi_init: Trying to connect one more time to SSID before giving up.");
       ESP_ERROR_CHECK(esp_wifi_start());
     }
     else
@@ -106,7 +104,7 @@ void WiFi::wifi_init()
   }
   else
   {
-    std::cout << "wifi_init: UNEXPECTED EVENT" << std::endl;
+    LOG("wifi_init: UNEXPECTED EVENT");
   }
 
   /* The event will not be processed after unregister */
@@ -159,7 +157,7 @@ void WiFi::wifi_scan(void)
   esp_wifi_scan_start(NULL, true);
   ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&number, ap_info));
   ESP_ERROR_CHECK(esp_wifi_scan_get_ap_num(&ap_count));
-  std::cout << "wifi_scan: Total APs scanned = " << ap_count << std::endl;
+  LOG("wifi_scan: Total APs scanned = " << ap_count);
   wifiAvailableSsid.clear();
   for(int i = 0; (i < PuaraAPI::wifiScanSize) && (i < ap_count); i++)
   {
@@ -180,26 +178,23 @@ void WiFi::start_wifi()
   // Check if wifiSSID is empty and wifiPSK have less than 8 characteres
   if(config.dmiName.empty())
   {
-    std::cout << "start_wifi: Module name unpopulated. Using default name: Puara"
-              << std::endl;
+    LOG("start_wifi: Module name unpopulated. Using default name: Puara");
     config.dmiName = "Puara";
   }
   if(config.APpasswd.empty() || config.APpasswd.length() < 8
      || config.APpasswd == "password")
   {
-    std::cout << "startWifi: AP password error. Possible causes:" << "\n"
+    LOG("startWifi: AP password error. Possible causes:" << "\n"
               << "startWifi:   - no AP password" << "\n"
               << "startWifi:   - password is less than 8 characteres long" << "\n"
               << "startWifi:   - password is set to \"password\"" << "\n"
               << "startWifi: Using default AP password: password" << "\n"
-              << "startWifi: It is strongly recommended to change the password"
-              << std::endl;
+              << "startWifi: It is strongly recommended to change the password");
     config.APpasswd = "password";
   }
   if(config.wifiSSID.empty())
   {
-    std::cout << "start_wifi: No blank SSID allowed. Using default name: Puara"
-              << std::endl;
+    LOG("start_wifi: No blank SSID allowed. Using default name: Puara");
     config.wifiSSID = "Puara";
   }
 
@@ -229,7 +224,7 @@ void WiFi::start_wifi()
   }
   ESP_ERROR_CHECK(ret);
 
-  std::cout << "startWifi: Starting WiFi config" << std::endl;
+  LOG("startWifi: Starting WiFi config");
   this->connect_counter = 0;
   wifi_init();
   this->ApStarted = true;
@@ -246,18 +241,18 @@ void WiFi::sta_event_handler(
   }
   else if(event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED)
   {
-    printf("%d, %d", self.connect_counter, PuaraAPI::wifi_maximum_retry);
+    std::cout << "Trying to connect to AP " << self.connect_counter << "/" << PuaraAPI::wifi_maximum_retry << std::endl;
     if(self.connect_counter < PuaraAPI::wifi_maximum_retry)
     {
       self.connect_counter++;
       esp_wifi_connect();
-      std::cout << "wifi/sta_event_handler: retry to connect to the AP" << std::endl;
+      LOG("wifi/sta_event_handler: retry to connect to the AP");
     }
     else
     {
       xEventGroupSetBits(self.s_wifi_event_group, self.wifi_fail_bit);
+      std::cout << "Connect to external AP failed. Creating own Access Point network\n" << std::endl;
     }
-    std::cout << "wifi/sta_event_handler: connect to the AP fail" << std::endl;
   }
   else if(event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP)
   {
@@ -269,7 +264,7 @@ void WiFi::sta_event_handler(
     tempBuf << esp_ip4_addr3_16(&event->ip_info.ip) << ".";
     tempBuf << esp_ip4_addr4_16(&event->ip_info.ip);
     self.currentSTA_IP = tempBuf.str();
-    std::cout << "wifi/sta_event_handler: got ip:" << self.currentSTA_IP << std::endl;
+    LOG("wifi/sta_event_handler: got ip:" << self.currentSTA_IP);
     self.connect_counter = 0;
     xEventGroupSetBits(self.s_wifi_event_group, self.wifi_connected_bit);
   }

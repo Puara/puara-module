@@ -14,12 +14,12 @@ Edu Meneses (2022) - https://www.edumeneses.com
 
 #include "puara_config.hpp"
 #include "puara_device.hpp"
+#include "puara_filesystem.hpp"
 #include "puara_mdns.hpp"
 #include "puara_serial.hpp"
-#include "puara_spiffs.hpp"
 #include "puara_web.hpp"
 #include "puara_wifi.hpp"
-
+#include <memory>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
@@ -32,11 +32,11 @@ struct PuaraGlobal
 {
   PuaraAPI::DeviceConfiguration config;
   PuaraAPI::Device device;
-  PuaraAPI::SPIFFS spiffs;
-  PuaraAPI::JSONSettings settings{config, spiffs};
-  PuaraAPI::Serial serial{config, device, spiffs, settings};
+  PuaraAPI::PuaraFileSystem fs;
+  PuaraAPI::JSONSettings settings{config, fs};
+  PuaraAPI::Serial serial{config, device, fs, settings};
   PuaraAPI::WiFi wifi{config};
-  PuaraAPI::Webserver webserver{config, device, spiffs, settings, wifi};
+  PuaraAPI::Webserver webserver{config, device, fs, settings, wifi};
   PuaraAPI::MDNSService mdns;
 
   PuaraGlobal() { }
@@ -50,7 +50,6 @@ struct PuaraGlobal
               << "Firmware version: " << config.version << "\n"
               << std::endl;
 
-    spiffs.config_spiffs();
     settings.read_config_json();
     settings.read_settings_json();
     wifi.start_wifi();
@@ -61,17 +60,17 @@ struct PuaraGlobal
     serial.module_monitor = monitor;
 
     // some delay added as start listening blocks the hw monitor
-    std::cout << "Starting serial monitor..." << std::endl;
+    LOG("Starting serial monitor...");
     vTaskDelay(50 / portTICK_RATE_MS);
-    if(serial.start_serial_listening())
-    {
-    };
+    if(serial.start_serial_listening()){ // ??
+      };
     vTaskDelay(50 / portTICK_RATE_MS);
-    std::cout << "serial listening ready" << std::endl;
+    LOG("serial listening ready");
 
     std::cout << "Puara Start Done!\n\n  Type \"reboot\" in the serial monitor to reset "
                  "the ESP32.\n\n";
   }
+
 };
 
 static PuaraGlobal g_puara;
@@ -104,17 +103,13 @@ void Puara::set_version(unsigned int user_version)
   g_puara.config.version = user_version;
 }
 
-void Puara::config_spiffs()
+void Puara::mount()
 {
-  return g_puara.spiffs.config_spiffs();
+  return g_puara.fs.mount();
 }
-void Puara::mount_spiffs()
+void Puara::unmount()
 {
-  return g_puara.spiffs.mount_spiffs();
-}
-void Puara::unmount_spiffs()
-{
-  return g_puara.spiffs.unmount_spiffs();
+  return g_puara.fs.unmount();
 }
 
 void Puara::read_config_json()

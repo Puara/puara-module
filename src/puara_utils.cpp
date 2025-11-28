@@ -1,4 +1,5 @@
 #include "puara_utils.hpp"
+#include "puara_config.hpp"
 
 #include <iostream>
 
@@ -12,7 +13,7 @@ void find_and_replace(std::string old_text, std::string new_text, std::string& s
     str.replace(old_text_position, old_text.length(), new_text);
     old_text_position = str.find(old_text);
   }
-  std::cout << "http (find_and_replace): Success" << std::endl;
+  LOG("http (find_and_replace): Success");
 }
 
 void find_and_replace(std::string old_text, double new_number, std::string& str)
@@ -24,7 +25,7 @@ void find_and_replace(std::string old_text, double new_number, std::string& str)
     str.replace(old_text_position, old_text.length(), conversion);
     old_text_position = str.find(old_text);
   }
-  std::cout << "http (find_and_replace): Success" << std::endl;
+  LOG("http (find_and_replace): Success");
 }
 
 void find_and_replace(std::string old_text, unsigned int new_number, std::string& str)
@@ -36,7 +37,7 @@ void find_and_replace(std::string old_text, unsigned int new_number, std::string
     str.replace(old_text_position, old_text.length(), conversion);
     old_text_position = str.find(old_text);
   }
-  std::cout << "http (find_and_replace): Success" << std::endl;
+  LOG("http (find_and_replace): Success");
 }
 
 void checkmark(std::string old_text, bool value, std::string& str)
@@ -54,11 +55,11 @@ void checkmark(std::string old_text, bool value, std::string& str)
       conversion = "";
     }
     str.replace(old_text_position, old_text.length(), conversion);
-    std::cout << "http (checkmark): Success" << std::endl;
+    LOG("http (checkmark): Success");
   }
   else
   {
-    std::cout << "http (checkmark): Could not find the requested string" << std::endl;
+    LOG("http (checkmark): Could not find the requested string");
   }
 }
 

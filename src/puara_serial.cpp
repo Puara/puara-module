@@ -2,15 +2,21 @@
 
 #include "puara_config.hpp"
 #include "puara_device.hpp"
-#include "puara_spiffs.hpp"
+#include "puara_filesystem.hpp"
 #include "puara_utils.hpp"
+
+#if defined(PUARA_SPIFFS)
+#include "puara_spiffs.hpp"
+#else
+#include "puara_littlefs.hpp"
+#endif
 
 #include <driver/uart.h>
 #if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
 #include <driver/usb_serial_jtag.h> // jtag module
 #endif
 
-#if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
+#if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3  // ??
 #include "esp32-hal-tinyusb.h"
 #endif
 
@@ -62,19 +68,8 @@ void Serial::interpret_serial()
     }
     else if(serial_data_str.compare("readconfig") == 0)
     {
-      spiffs.mount_spiffs();
-      FILE* f = fopen("/spiffs/config.json", "r");
-      if(f == NULL)
-      {
-        std::cout << "json: Failed to open file" << std::endl;
-        return;
-      }
-      std::ifstream in("/spiffs/config.json");
-      std::string contents(
-          (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+      std::string contents = fs.read_file("/config.json");
       this->send_serial_data(contents);
-      fclose(f);
-      spiffs.unmount_spiffs();
     }
     else if(serial_data_str.rfind("sendsettings", 0) == 0)
     {
@@ -87,19 +82,8 @@ void Serial::interpret_serial()
     }
     else if(serial_data_str.compare("readsettings") == 0)
     {
-      spiffs.mount_spiffs();
-      FILE* f = fopen("/spiffs/settings.json", "r");
-      if(f == NULL)
-      {
-        std::cout << "json: Failed to open file" << std::endl;
-        return;
-      }
-      std::ifstream in("/spiffs/settings.json");
-      std::string contents(
-          (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+      std::string contents = fs.read_file("/settings.json");
       this->send_serial_data(contents);
-      fclose(f);
-      spiffs.unmount_spiffs();
     }
     else
     {
@@ -209,16 +193,20 @@ void Serial::usb_monitor()
   // // Setup USB interface
   // tinyusb_init(&usb_config);
   // TODO: Read from USB interface
-  std::cout << "USB OTG monitor not supported, use the USB Serial JTAG or UART interface"
-            << std::endl;
+  LOG("USB OTG monitor not supported, use the USB Serial JTAG or UART interface");
 #endif
 }
 
 bool Serial::start_serial_listening()
 {
-  // std::cout << "starting serial monitor \n";
   if(module_monitor == UART_MONITOR)
-  {
+  {/*  // getting this e message everytime : E (20645) uart: UART driver already installed
+      // so looking for solution .. 
+    if(uart_is_driver_installed(UART_NUM_1))
+    {
+      LOG("UART driver already installed. Skipping initialization.");
+      return true;
+    } */
     createTask<&Serial::uart_monitor>(this, "serial_monitor", 2048);
     createTask<&Serial::interpret_serial>(this, "interpret_serial", 4096);
   }
@@ -234,7 +222,7 @@ bool Serial::start_serial_listening()
   }
   else
   {
-    std::cout << "Invalid Monitor Type" << std::endl;
+    LOG("Invalid Monitor Type");
   }
   return 1;
 }
