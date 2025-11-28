@@ -15,7 +15,7 @@ struct Serial
 {
   DeviceConfiguration& config;
   Device& device;
-  PuaraFileSystem* fs{};
+  PuaraFileSystem fs;
   JSONSettings& settings;
 
   // Set default monitor as UART

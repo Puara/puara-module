@@ -21,7 +21,7 @@ struct Webserver
 {
   DeviceConfiguration& config;
   Device& device;
-  PuaraFileSystem* fs{};
+  PuaraFileSystem& fs;
   JSONSettings& settings;
   WiFi& wifi;
 

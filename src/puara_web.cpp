@@ -128,7 +128,7 @@ void Webserver::stop_webserver(void)
 std::string Webserver::prepare_index()
 {
   LOG("http : Reading index file");
-  std::string contents = fs->read_file("index.html");
+  std::string contents = fs.read_file("index.html");
   // Put the module info on the HTML before send response
   find_and_replace("%DMINAME%", config.dmiName, contents);
   if(wifi.StaIsConnected)
@@ -174,7 +174,7 @@ esp_err_t Webserver::index_get_handler(httpd_req_t* req)
 esp_err_t Webserver::settings_get_handler(httpd_req_t* req)
 {
   LOG("http : Reading settings file");
-  std::string contents = fs->read_file("settings.html");
+  std::string contents = fs.read_file("settings.html");
 
   LOG("settings_get_handler: Adding variables to HTML");
   std::string settings;
@@ -264,7 +264,7 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
 
   settings.write_settings_json();
   LOG("http : Reading saved.html file");
-  std::string contents = fs->read_file("saved.html");
+  std::string contents = fs.read_file("saved.html");
 
   return ESP_OK;
 }
@@ -274,7 +274,7 @@ esp_err_t Webserver::get_handler(httpd_req_t* req)
   const char* resp_str = (const char*)req->user_ctx;
   std::string requested_path = std::string{resp_str};
   LOG("http : Reading requested file " << requested_path);
-  std::string contents = fs->read_file(requested_path);
+  std::string contents = fs.read_file(requested_path);
   httpd_resp_sendstr(req, contents.c_str());
 
   return ESP_OK;
@@ -285,7 +285,7 @@ esp_err_t Webserver::style_get_handler(httpd_req_t* req)
   const char* resp_str = (const char*)req->user_ctx;
   std::string requested_path = std::string{resp_str};
   LOG("http : Reading style.css file");
-  std::string contents = fs->read_file(requested_path);
+  std::string contents = fs.read_file(requested_path);
   httpd_resp_set_type(req, "text/css");
   httpd_resp_sendstr(req, contents.c_str());
 
@@ -298,7 +298,7 @@ esp_err_t Webserver::scan_get_handler(httpd_req_t* req)
   std::string requested_path = std::string{resp_str};
   LOG("http : Reading scan.html file");
   std::ifstream in(resp_str);
-  std::string contents = fs->read_file(requested_path);
+  std::string contents = fs.read_file(requested_path);
   wifi.wifi_scan();
   find_and_replace("%SSIDS%", wifi.wifiAvailableSsid, contents);
   httpd_resp_sendstr(req, contents.c_str());
@@ -434,7 +434,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
   if(ret_flag)
   {
     LOG("http : Reading reboot.html file");
-    std::string contents = fs->read_file("reboot.html");
+    std::string contents = fs.read_file("reboot.html");
     httpd_resp_sendstr(req, contents.c_str());
     LOG("Rebooting...");
     createTask<&Device::reboot_with_delay>(&device, "reboot_with_delay", 1024);
@@ -443,7 +443,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
   {
     settings.write_config_json();
     LOG("http : Reading saved.html file");
-    std::string contents = fs->read_file("saved.html");
+    std::string contents = fs.read_file("saved.html");
     httpd_resp_sendstr(req, contents.c_str());
   }
 

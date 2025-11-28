@@ -1,48 +1,23 @@
 #pragma once
+
+#if defined(PUARA_SPIFFS)
+#include "puara_spiffs.hpp"
+#else
+#include "puara_littlefs.hpp"
+#endif
+
 #include <esp_err.h>
-#include <esp_spi_flash.h>
-#include <esp_spiffs.h>
-#include <LittleFS.h>
 
 #include <unordered_map>
 #include <vector>
 #include <string>
+
 
 namespace PuaraAPI
 {
 struct DeviceConfiguration;
 struct Serial;
 struct Webserver;
-
-class PuaraFileSystem {
- public:
-  virtual void mount() = 0;
-  virtual void unmount() = 0;
-  virtual std::string read_file(const std::string& path) = 0;
-  virtual void write_file(const std::string& path, const std::string& content) = 0;
-};
-
-class SPIFFS: public PuaraFileSystem
-{
-public:
-  void mount() override;
-  void unmount() override;
-  std::string read_file(const std::string& path) override;
-  void write_file(const std::string& path, const std::string& content) override;
-
-private:
-  esp_vfs_spiffs_conf_t spiffs_config;
-  std::string spiffs_base_path = "/spiffs/";
-};
-
-struct LITTLEFS: public PuaraFileSystem
-{
-public:
-  void mount() override;
-  void unmount() override;
-  std::string read_file(const std::string& path) override;
-  void write_file(const std::string& path, const std::string& content) override;
-};
 
 // FIXME std::variant<std::string, double> instead
 struct settingsVariables
@@ -55,7 +30,7 @@ struct settingsVariables
 struct JSONSettings // TODO: remove from puara_filesystem
 {
   DeviceConfiguration& config;
-  PuaraFileSystem* fs{};
+  PuaraFileSystem& fs;
 
   // public API:
   void read_config_json();

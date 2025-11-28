@@ -32,15 +32,11 @@ struct PuaraGlobal
 {
   PuaraAPI::DeviceConfiguration config;
   PuaraAPI::Device device;
-#if defined(PUARA_SPIFFS) 
-  std::unique_ptr<PuaraAPI::PuaraFileSystem> fs = std::make_unique<PuaraAPI::SPIFFS>();
-#else
-  std::unique_ptr<PuaraAPI::PuaraFileSystem> fs = std::make_unique<PuaraAPI::LITTLEFS>();
-#endif
-  PuaraAPI::JSONSettings settings{config, fs.get()};
-  PuaraAPI::Serial serial{config, device, fs.get(), settings};
+  PuaraAPI::PuaraFileSystem fs;
+  PuaraAPI::JSONSettings settings{config, fs};
+  PuaraAPI::Serial serial{config, device, fs, settings};
   PuaraAPI::WiFi wifi{config};
-  PuaraAPI::Webserver webserver{config, device, fs.get(), settings, wifi};
+  PuaraAPI::Webserver webserver{config, device, fs, settings, wifi};
   PuaraAPI::MDNSService mdns;
 
   PuaraGlobal() { }
@@ -109,11 +105,11 @@ void Puara::set_version(unsigned int user_version)
 
 void Puara::mount()
 {
-  return g_puara.fs->mount();
+  return g_puara.fs.mount();
 }
 void Puara::unmount()
 {
-  return g_puara.fs->unmount();
+  return g_puara.fs.unmount();
 }
 
 void Puara::read_config_json()

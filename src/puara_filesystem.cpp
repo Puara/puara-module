@@ -7,173 +7,8 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-
 namespace PuaraAPI
 {
-
-static constexpr uint8_t spiffs_max_files = 10;
-static constexpr bool spiffs_format_if_mount_failed = false;
-
-void LITTLEFS::mount()
-{
-  LOG("LittleFS: mounting FS");
-  if(!LittleFS.begin(true))
-  {
-    LOG("LittleFS: mount failed");
-    return;
-  }
-  LOG("LittleFS: mount successful");
-}
-
-void LITTLEFS::unmount()
-{
-  LOG("LittleFS: unmounting FS");
-  LittleFS.end();
-  LOG("LittleFS: unmounted");
-}
-
-std::string LITTLEFS::read_file(const std::string& path)
-{
-  mount();
-  std::string path_with_slash = "/" + path;
-  LOG("LittleFS: reading file: " << path);
-  auto path_c = path_with_slash.c_str();
-  if(!LittleFS.exists(path_c))
-  {
-    LOG("LittleFS: file not found: " << path_c);
-    return "";
-  }
-
-  File file = LittleFS.open(path_c, "r"); //open file
-  std::string contents;
-
-  if(!file)
-  {
-    LOG("LittleFS: failed to open file: " << path_c);
-    return "";
-  }
-
-  while(file.available())
-  {
-    contents += (char)file.read();
-  }
-
-  file.close();
-  unmount();
-  return contents;
-}
-
-void LITTLEFS::write_file(const std::string& path, const std::string& contents) {
-  mount();
-  LOG("littleFS: Writing file " << path);
-
-  File file = LittleFS.open(path.c_str(), FILE_WRITE);
-  if (!file) {
-    LOG("LittleFS: failed to open file: " << path);
-    return;
-  }
-  if (file.print(contents.c_str())) {
-    LOG("LittleFS: wrote "  << path << ", closing");
-  } else {
-    LOG("LittleFS: failed to write "  << path << ", closing");
-  }
-  file.close();
-  unmount();
-}
-
-void SPIFFS::mount()
-{
-  if(!esp_spiffs_mounted(spiffs_config.partition_label))
-  {
-    LOG("spiffs: Initializing SPIFFS");
-
-    spiffs_config.base_path = this->spiffs_base_path.c_str();
-    spiffs_config.max_files = PuaraAPI::spiffs_max_files;
-    spiffs_config.partition_label = NULL;
-    spiffs_config.format_if_mount_failed = PuaraAPI::spiffs_format_if_mount_failed;
-
-    // Use settings defined above to initialize and mount SPIFFS filesystem.
-    // Note: esp_vfs_spiffs_register is an all-in-one convenience function.
-    esp_err_t ret = esp_vfs_spiffs_register(&spiffs_config);
-
-    if(ret != ESP_OK)
-    {
-      if(ret == ESP_FAIL)
-      {
-        LOG("spiffs: Failed to mount or format filesystem");
-      }
-      else if(ret == ESP_ERR_NOT_FOUND)
-      {
-        LOG("spiffs: Failed to find SPIFFS partition");
-      }
-      else
-      {
-        LOG("spiffs: Failed to initialize SPIFFS (" << esp_err_to_name(ret) << ")");
-      }
-      return;
-    }
-
-    size_t total = 0, used = 0;
-    ret = esp_spiffs_info(spiffs_config.partition_label, &total, &used);
-    if(ret != ESP_OK)
-    {
-      LOG("spiffs: Failed to get SPIFFS partition information ("
-                << esp_err_to_name(ret) << ")");
-    }
-    else
-    {
-      LOG("spiffs: Partition size: total: " << total << ", used: " << used);
-    }
-  }
-  else
-  {
-    LOG("spiffs: SPIFFS already initialized");
-  }
-}
-
-void SPIFFS::unmount()
-{
-  // All done, unmount partition and disable SPIFFS
-  if(esp_spiffs_mounted(spiffs_config.partition_label))
-  {
-    esp_vfs_spiffs_unregister(spiffs_config.partition_label);
-    LOG("spiffs: SPIFFS unmounted");
-  }
-  else
-  {
-    LOG("spiffs: SPIFFS not found");
-  }
-}
-
-std::string SPIFFS::read_file(const std::string& path) {
-  mount();
-  std::string path_with_slash = "/" + path;
-  std::ifstream in(spiffs_base_path + path_with_slash);
-  if (!in) {
-    LOG("spiffs: Failed to open " << path_with_slash);
-    return "";
-  }
-  LOG("spiffs: Reading " << path_with_slash);
-  return std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-  unmount();
-}
-
-// TODO: the body is the body of read_file.
-void SPIFFS::write_file(const std::string& path, const std::string& contents) {
-  mount();
-  LOG("SPIFFS: Opening " << path);
-  FILE* f = fopen((spiffs_base_path + path).c_str(), "w");
-  if(!f) {
-      LOG("SPIFFS: Failed to open " << path);
-      return;
-    }
-
-  fprintf(f, "%s", contents.c_str());
-  LOG("SPIFFS: wrote "  << path << ", closing");
-  fclose(f);
-  unmount();
-}
-
 //// CONFIG ////
 
 // Can be improved
@@ -190,7 +25,7 @@ std::string JSONSettings::getVarText(std::string varName)
 void JSONSettings::read_config_json()
 { // Deserialize
 
-  std::string contents = fs->read_file("config.json");
+  std::string contents = fs.read_file("config.json");
   read_config_json_internal(contents);
 }
 
@@ -251,7 +86,7 @@ void JSONSettings::read_config_json_internal(std::string& contents)
 
 void JSONSettings::read_settings_json()
 {
-  std::string contents = fs->read_file("settings.json");
+  std::string contents = fs.read_file("settings.json");
   read_settings_json_internal(contents);
 }
 
@@ -374,7 +209,7 @@ void JSONSettings::write_config_json()
   LOG("write_config_json: Serializing json");
   std::string contents = cJSON_Print(root);
 
-  fs->write_file("/config.json", contents);
+  fs.write_file("config.json", contents);
 
   LOG("write_config_json: Delete json entity");
   cJSON_Delete(root);
@@ -412,7 +247,7 @@ void JSONSettings::write_settings_json()
   std::string contents = cJSON_Print(root);
   LOG("Filesystem: Saving file");
 
-  fs->write_file("/settings.json", contents);
+  fs.write_file("/settings.json", contents);
 
   LOG("write_settings_json: Delete json entity");
   cJSON_Delete(root);

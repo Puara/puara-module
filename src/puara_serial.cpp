@@ -5,6 +5,12 @@
 #include "puara_filesystem.hpp"
 #include "puara_utils.hpp"
 
+#if defined(PUARA_SPIFFS)
+#include "puara_spiffs.hpp"
+#else
+#include "puara_littlefs.hpp"
+#endif
+
 #include <driver/uart.h>
 #if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3
 #include <driver/usb_serial_jtag.h> // jtag module
@@ -62,7 +68,7 @@ void Serial::interpret_serial()
     }
     else if(serial_data_str.compare("readconfig") == 0)
     {
-      std::string contents = fs->read_file("config.json");
+      std::string contents = fs.read_file("config.json");
       this->send_serial_data(contents);
     }
     else if(serial_data_str.rfind("sendsettings", 0) == 0)
@@ -76,7 +82,7 @@ void Serial::interpret_serial()
     }
     else if(serial_data_str.compare("readsettings") == 0)
     {
-      std::string contents = fs->read_file("/settings.json");
+      std::string contents = fs.read_file("/settings.json");
       this->send_serial_data(contents);
     }
     else
