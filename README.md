@@ -1,8 +1,8 @@
 # Puara Module
 
-Library for creating music controllers using the Puara framework 
+Library for developing embedded controllers with the Puara framework based on ESP-32 based platforms. 
 
-It includes a Wi-Fi manager (set SSID/password for wireless networks), a [OSC](https://en.wikipedia.org/wiki/Open_Sound_Control) manager (set addresses to send OSC messages), setup tools, and [libmapper](http://libmapper.github.io/) compatibility*.
+It includes a Wi-Fi manager (set SSID/password for wireless networks), an [OSC](https://en.wikipedia.org/wiki/Open_Sound_Control) manager (set addresses to send OSC messages), setup tools, and [libmapper](http://libmapper.github.io/) compatibility*.
 
 This pseudo-library currently has the following dependencies:
 
@@ -12,10 +12,11 @@ This pseudo-library currently has the following dependencies:
 
 Use the [template](https://github.com/Puara/puara-module-template) to start using the Puara Module.
 
+
+
 ## More Info on the related [GuitarAMI](https://github.com/Puara/GuitarAMI) and [Puara](https://github.com/Puara) research
 
 [https://www.edumeneses.com](https://www.edumeneses.com)
-
 [http://www-new.idmil.org/project/guitarami/](http://www-new.idmil.org/project/guitarami/)
 
 ## Licensing
