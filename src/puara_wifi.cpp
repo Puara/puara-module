@@ -35,11 +35,13 @@ void WiFi::wifi_init()
   esp_err_t setname = esp_netif_set_hostname(ap_netif, config.dmiName.c_str());
   if(setname != ESP_OK)
   {
-    LOG("wifi_init: failed to set hostname: " << config.dmiName);
+    LOG("wifi_init: failed to set hostname: ");
+    LOG(config.dmiName.c_str());
   }
   else
   {
-    LOG("wifi_init: hostname: " << config.dmiName);
+    LOG("wifi_init: hostname: ");
+    LOG(config.dmiName);
   }
 
   esp_event_handler_instance_t instance_any_id;
@@ -80,17 +82,20 @@ void WiFi::wifi_init()
    * can test which event actually happened. */
   if(bits & this->wifi_connected_bit)
   {
-    LOG("wifi_init: Connected to SSID: " << config.wifiSSID);
+    LOG("wifi_init: Connected to SSID: ");
+    LOG(config.wifiSSID);
     currentSSID = config.wifiSSID;
     this->StaIsConnected = true;
   }
   else if(bits & this->wifi_fail_bit)
   {
-    LOG("wifi_init: Failed to connect to SSID: " << config.wifiSSID);
+    LOG("wifi_init: Failed to connect to SSID: ");
+    LOG(config.wifiSSID);
     if(!config.persistentAP)
     {
-      LOG("wifi_init: Failed to connect to SSID: " << config.wifiSSID
-                << "Switching to AP/STA mode");
+      LOG("wifi_init: Failed to connect to SSID: ");
+      LOG(config.wifiSSID);
+      LOG("Switching to AP/STA mode");
       ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
       LOG("wifi_init: loading AP config");
       ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &this->wifi_config_ap));
@@ -157,7 +162,8 @@ void WiFi::wifi_scan(void)
   esp_wifi_scan_start(NULL, true);
   ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&number, ap_info));
   ESP_ERROR_CHECK(esp_wifi_scan_get_ap_num(&ap_count));
-  LOG("wifi_scan: Total APs scanned = " << ap_count);
+  LOG("wifi_scan: Total APs scanned = ");
+  LOG(std::to_string(ap_count).c_str());
   wifiAvailableSsid.clear();
   for(int i = 0; (i < PuaraAPI::wifiScanSize) && (i < ap_count); i++)
   {
@@ -184,12 +190,12 @@ void WiFi::start_wifi()
   if(config.APpasswd.empty() || config.APpasswd.length() < 8
      || config.APpasswd == "password")
   {
-    LOG("startWifi: AP password error. Possible causes:" << "\n"
-              << "startWifi:   - no AP password" << "\n"
-              << "startWifi:   - password is less than 8 characteres long" << "\n"
-              << "startWifi:   - password is set to \"password\"" << "\n"
-              << "startWifi: Using default AP password: password" << "\n"
-              << "startWifi: It is strongly recommended to change the password");
+    LOG("startWifi: AP password error. Possible causes:");
+    LOG("startWifi:   - no AP password");
+    LOG("startWifi:   - password is less than 8 characteres long");
+    LOG("startWifi:   - password is set to \"password\"");
+    LOG("startWifi: Using default AP password: password");
+    LOG("startWifi: It is strongly recommended to change the password");
     config.APpasswd = "password";
   }
   if(config.wifiSSID.empty())
@@ -264,7 +270,8 @@ void WiFi::sta_event_handler(
     tempBuf << esp_ip4_addr3_16(&event->ip_info.ip) << ".";
     tempBuf << esp_ip4_addr4_16(&event->ip_info.ip);
     self.currentSTA_IP = tempBuf.str();
-    LOG("wifi/sta_event_handler: got ip:" << self.currentSTA_IP);
+    LOG("wifi/sta_event_handler: got ip:");
+    LOG(self.currentSTA_IP);
     self.connect_counter = 0;
     xEventGroupSetBits(self.s_wifi_event_group, self.wifi_connected_bit);
   }

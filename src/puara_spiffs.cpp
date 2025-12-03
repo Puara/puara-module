@@ -37,7 +37,8 @@ void PuaraFileSystem::mount()
       }
       else
       {
-        LOG("spiffs: Failed to initialize SPIFFS (" << esp_err_to_name(ret) << ")");
+        LOG("spiffs: Failed to initialize SPIFFS :");
+        LOG(esp_err_to_name(ret));
       }
       return;
     }
@@ -46,12 +47,15 @@ void PuaraFileSystem::mount()
     ret = esp_spiffs_info(spiffs_config.partition_label, &total, &used);
     if(ret != ESP_OK)
     {
-      LOG("spiffs: Failed to get SPIFFS partition information (" << esp_err_to_name(ret)
-                                                                 << ")");
+      LOG("spiffs: Failed to get SPIFFS partition information");
+      LOG(esp_err_to_name(ret));
     }
     else
     {
-      LOG("spiffs: Partition size: total: " << total << ", used: " << used);
+      LOG("spiffs: Partition size: total: ");
+      LOG(std::to_string(total).c_str());
+      LOG("used: ");
+      LOG(std::to_string(used).c_str());
     }
   }
   else
@@ -82,10 +86,12 @@ std::string PuaraFileSystem::read_file(std::string_view path)
   std::ifstream in(full_path);
   if(!in)
   {
-    LOG("spiffs: Failed to open " << full_path);
+    LOG("spiffs: Failed to open ");
+    LOG(full_path);
     return "";
   }
-  LOG("spiffs: Reading " << full_path);
+  LOG("spiffs: Reading ");
+  LOG(full_path);
   return std::string(
       (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
   unmount();
@@ -95,16 +101,20 @@ std::string PuaraFileSystem::read_file(std::string_view path)
 void PuaraFileSystem::write_file(const std::string& path, const std::string& contents)
 {
   mount();
-  LOG("SPIFFS: Opening " << path);
+  LOG("SPIFFS: Opening ");
+  LOG(path);
   FILE* f = fopen((spiffs_base_path + path).c_str(), "w");
   if(!f)
   {
-    LOG("SPIFFS: Failed to open " << path);
+    LOG("SPIFFS: Failed to open ");
+    LOG(path);
     return;
   }
 
   fprintf(f, "%s", contents.c_str());
-  LOG("SPIFFS: wrote " << path << ", closing");
+  LOG("SPIFFS: wrote ");
+  LOG(path);
+  LOG("closing");
   fclose(f);
   unmount();
 }
