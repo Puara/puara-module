@@ -41,7 +41,7 @@ void WiFi::wifi_init()
   else
   {
     LOG("wifi_init: hostname: ");
-    LOG(config.dmiName);
+    LOG(config.dmiName.c_str());
   }
 
   esp_event_handler_instance_t instance_any_id;
@@ -252,7 +252,6 @@ void WiFi::sta_event_handler(
     {
       self.connect_counter++;
       esp_wifi_connect();
-      LOG("wifi/sta_event_handler: retry to connect to the AP");
     }
     else
     {

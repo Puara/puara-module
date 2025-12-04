@@ -87,11 +87,11 @@ std::string PuaraFileSystem::read_file(std::string_view path)
   if(!in)
   {
     LOG("spiffs: Failed to open ");
-    LOG(full_path);
+    LOG(full_path.c_str());
     return "";
   }
   LOG("spiffs: Reading ");
-  LOG(full_path);
+  LOG(full_path.c_str());
   return std::string(
       (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
   unmount();
