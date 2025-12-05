@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 
-#define PUARA_DEBUG  //uncomment this line to access all LOG statements for debug
+//#define PUARA_DEBUG  //uncomment this line to access all LOG statements for debug
 
 #ifdef PUARA_DEBUG
   #include "freertos/FreeRTOS.h"
