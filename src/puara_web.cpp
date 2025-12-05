@@ -98,7 +98,8 @@ httpd_handle_t Webserver::start_webserver(void)
   this->settingspost.user_ctx = this;
 
   // Start the httpd server
-  LOG("webserver: Starting server on port: " << webserver_config.server_port);
+  LOG("webserver: Starting server on port: ");
+  LOG(std::to_string(webserver_config.server_port).c_str());
   if(httpd_start(&webserver, &webserver_config) == ESP_OK)
   {
     // Set URI handlers
@@ -246,7 +247,7 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
       field_pos = str_buf.find(field_delimiter);
       field = str_token.substr(0, field_pos);
       str_token.erase(0, field_pos + field_delimiter.length());
-      LOG(field << ": ");
+      LOG(field);
       if(variables.at(variables_fields.at(field)).type == "text")
       {
         variables.at(variables_fields.at(field)).textValue = urlDecode(str_token);
@@ -273,7 +274,8 @@ esp_err_t Webserver::get_handler(httpd_req_t* req)
 {
   const char* resp_str = (const char*)req->user_ctx;
   std::string requested_path = std::string{resp_str};
-  LOG("http : Reading requested file " << requested_path);
+  LOG("http : Reading requested file ");
+  LOG(requested_path);
   std::string contents = fs.read_file(requested_path);
   httpd_resp_sendstr(req, contents.c_str());
 
@@ -349,7 +351,8 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
         switch(config_fields.at(field))
         {
           case 1:
-            LOG("SSID: " << str_token);
+            LOG("SSID: ");
+            LOG(str_token);
             if(!str_token.empty())
             {
               config.wifiSSID = urlDecode(str_token);
@@ -360,7 +363,8 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             }
             break;
           case 2:
-            LOG("APpasswd: " << str_token);
+            LOG("APpasswd: ");
+            LOG(str_token);
             if(!str_token.empty())
             {
               this->APpasswdVal1 = urlDecode(str_token);
@@ -372,7 +376,8 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             };
             break;
           case 3:
-            LOG("APpasswdValidate: " << str_token);
+            LOG("APpasswdValidate: ");
+            LOG(str_token);
             if(!str_token.empty())
             {
               this->APpasswdVal2 = urlDecode(str_token);
@@ -384,7 +389,8 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             };
             break;
           case 4:
-            LOG("password: " << str_token);
+            LOG("password: ");
+            LOG(str_token);
             if(!str_token.empty())
             {
               config.wifiPSK = urlDecode(str_token);
@@ -399,7 +405,8 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             ret_flag = true;
             break;
           case 6:
-            LOG("persistentAP: " << str_token);
+            LOG("persistentAP: ");
+            LOG(str_token);
             checkbox_persistentAP = true;
             break;
           default:
@@ -409,7 +416,8 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
       }
       else
       {
-        LOG("Error, no match for config field to store received data: " << field );
+        LOG("Error, no match for config field to store received data: ");
+        LOG(field);
       }
       str_buf.erase(0, pos + delimiter.length());
     }
