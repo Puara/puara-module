@@ -2,19 +2,10 @@
 #include <string>
 #include <iostream>
 
-//#define PUARA_DEBUG  //uncomment this line to access all LOG statements for debug
+#define PUARA_DEBUG  //uncomment this line to access all LOG statements for debug
 
 #ifdef PUARA_DEBUG
-  #include "freertos/FreeRTOS.h"
-  #include "freertos/task.h"
-
-  #define LOG(x) do { \
-    UBaseType_t stackHighWaterMark = uxTaskGetStackHighWaterMark(NULL); \
-    if (stackHighWaterMark < 100) { \
-        fprintf(stderr, "WARNING: Low stack space! Remaining: %lu\n", (unsigned long)stackHighWaterMark); \
-    } \
-    fprintf(stderr, "%s\n", x); \
-  } while(0)
+  #define LOG(x) do { fprintf(stderr, "%s\n", x); } while(0)
 #else
   #define LOG(x) do {} while(0)
 #endif
