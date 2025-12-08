@@ -74,7 +74,7 @@ void PuaraFileSystem::write_file(const std::string& path, const std::string& con
   } else {
     LOG("LittleFS: failed to write ");
     LOG(path.c_str());
-    LOG(" closing");
+    LOG("closing");
   }
   file.close();
   unmount();
