@@ -247,7 +247,7 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
       field_pos = str_buf.find(field_delimiter);
       field = str_token.substr(0, field_pos);
       str_token.erase(0, field_pos + field_delimiter.length());
-      LOG(field);
+      LOG(field.c_str());
       if(variables.at(variables_fields.at(field)).type == "text")
       {
         variables.at(variables_fields.at(field)).textValue = urlDecode(str_token);
@@ -275,7 +275,7 @@ esp_err_t Webserver::get_handler(httpd_req_t* req)
   const char* resp_str = (const char*)req->user_ctx;
   std::string requested_path = std::string{resp_str};
   LOG("http : Reading requested file ");
-  LOG(requested_path);
+  LOG(requested_path.c_str());
   std::string contents = fs.read_file(requested_path);
   httpd_resp_sendstr(req, contents.c_str());
 
@@ -352,7 +352,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
         {
           case 1:
             LOG("SSID: ");
-            LOG(str_token);
+            LOG(str_token.c_str());
             if(!str_token.empty())
             {
               config.wifiSSID = urlDecode(str_token);
@@ -364,7 +364,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             break;
           case 2:
             LOG("APpasswd: ");
-            LOG(str_token);
+            LOG(str_token.c_str());
             if(!str_token.empty())
             {
               this->APpasswdVal1 = urlDecode(str_token);
@@ -377,7 +377,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             break;
           case 3:
             LOG("APpasswdValidate: ");
-            LOG(str_token);
+            LOG(str_token.c_str());
             if(!str_token.empty())
             {
               this->APpasswdVal2 = urlDecode(str_token);
@@ -390,7 +390,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             break;
           case 4:
             LOG("password: ");
-            LOG(str_token);
+            LOG(str_token.c_str());
             if(!str_token.empty())
             {
               config.wifiPSK = urlDecode(str_token);
@@ -417,7 +417,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
       else
       {
         LOG("Error, no match for config field to store received data: ");
-        LOG(field);
+        LOG(field.c_str());
       }
       str_buf.erase(0, pos + delimiter.length());
     }

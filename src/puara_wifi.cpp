@@ -83,18 +83,18 @@ void WiFi::wifi_init()
   if(bits & this->wifi_connected_bit)
   {
     LOG("wifi_init: Connected to SSID: ");
-    LOG(config.wifiSSID);
+    LOG(config.wifiSSID.c_str());
     currentSSID = config.wifiSSID;
     this->StaIsConnected = true;
   }
   else if(bits & this->wifi_fail_bit)
   {
     LOG("wifi_init: Failed to connect to SSID: ");
-    LOG(config.wifiSSID);
+    LOG(config.wifiSSID.c_str());
     if(!config.persistentAP)
     {
       LOG("wifi_init: Failed to connect to SSID: ");
-      LOG(config.wifiSSID);
+      LOG(config.wifiSSID.c_str());
       LOG("Switching to AP/STA mode");
       ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
       LOG("wifi_init: loading AP config");
@@ -192,7 +192,7 @@ void WiFi::start_wifi()
   {
     LOG("startWifi: AP password error. Possible causes:");
     LOG("startWifi:   - no AP password");
-    LOG("startWifi:   - password is less than 8 characteres long");
+    LOG("startWifi:   - password is less than 8 characters long");
     LOG("startWifi:   - password is set to \"password\"");
     LOG("startWifi: Using default AP password: password");
     LOG("startWifi: It is strongly recommended to change the password");
@@ -270,7 +270,7 @@ void WiFi::sta_event_handler(
     tempBuf << esp_ip4_addr4_16(&event->ip_info.ip);
     self.currentSTA_IP = tempBuf.str();
     LOG("wifi/sta_event_handler: got ip:");
-    LOG(self.currentSTA_IP);
+    LOG(self.currentSTA_IP.c_str());
     self.connect_counter = 0;
     xEventGroupSetBits(self.s_wifi_event_group, self.wifi_connected_bit);
   }

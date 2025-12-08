@@ -212,13 +212,10 @@ void Serial::usb_monitor()
 
 bool Serial::start_serial_listening()
 {
-  LOG("here");
   if(module_monitor == UART_MONITOR)
   { 
-    LOG("or here");
     createTask<&Serial::uart_monitor>(this, "serial_monitor", 2048);
     createTask<&Serial::interpret_serial>(this, "interpret_serial", 4096);
-    LOG("better even, here!");
   }
   else if(module_monitor == JTAG_MONITOR)
   {

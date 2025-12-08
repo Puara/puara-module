@@ -113,7 +113,7 @@ void PuaraFileSystem::write_file(const std::string& path, const std::string& con
 
   fprintf(f, "%s", contents.c_str());
   LOG("SPIFFS: wrote ");
-  LOG(path);
+  LOG(path.c_str());
   LOG("closing");
   fclose(f);
   unmount();
