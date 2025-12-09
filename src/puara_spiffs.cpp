@@ -92,9 +92,9 @@ std::string PuaraFileSystem::read_file(std::string_view path)
   }
   LOG("spiffs: Reading ");
   LOG(full_path.c_str());
-  return std::string(
-      (std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+  std::string content((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
   unmount();
+  return content;
 }
 
 // TODO: the body is the body of read_file.
