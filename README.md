@@ -12,6 +12,10 @@ This pseudo-library currently has the following dependencies:
 
 Use the [template](https://github.com/Puara/puara-module-template) to start using the Puara Module.
 
+## Git History
+
+For information on viewing the full commit and merge history of this repository, including how to search for specific changes, see the [Git History Guide](GIT_HISTORY.md).
+
 ## More Info on the related [GuitarAMI](https://github.com/Puara/GuitarAMI) and [Puara](https://github.com/Puara) research
 
 [https://www.edumeneses.com](https://www.edumeneses.com)
