@@ -52,17 +52,17 @@ httpd_handle_t Webserver::start_webserver(void)
   }
   this->index.uri = "/";
   this->index.method = HTTP_GET;
-  this->index.handler = make_http_func(index_get_handler, "index.html");
+  this->index.handler = make_http_func(index_get_handler, "/index.html");
   this->index.user_ctx = this;
 
   this->indexpost.uri = "/";
   this->indexpost.method = HTTP_POST;
-  this->indexpost.handler = make_http_func(index_post_handler, "index.html");
+  this->indexpost.handler = make_http_func(index_post_handler, "/index.html");
   this->indexpost.user_ctx = this;
 
   this->style.uri = "/style.css";
   this->style.method = HTTP_GET;
-  this->style.handler = make_http_func(style_get_handler, "style.css");
+  this->style.handler = make_http_func(style_get_handler, "/style.css");
   this->style.user_ctx = this;
 
   // this->factory.uri = "/factory.html";
@@ -72,12 +72,12 @@ httpd_handle_t Webserver::start_webserver(void)
 
   this->reboot.uri = "/reboot.html";
   this->reboot.method = HTTP_GET;
-  this->reboot.handler = make_http_func(get_handler, "reboot.html");
+  this->reboot.handler = make_http_func(get_handler, "/reboot.html");
   this->reboot.user_ctx = this;
 
   this->scan.uri = "/scan.html";
   this->scan.method = HTTP_GET;
-  this->scan.handler = make_http_func(scan_get_handler, "scan.html");
+  this->scan.handler = make_http_func(scan_get_handler, "/scan.html");
   this->scan.user_ctx = this;
 
   // this->update.uri = "/update.html";
@@ -88,13 +88,13 @@ httpd_handle_t Webserver::start_webserver(void)
   this->settingsget.uri = "/settings.html";
   this->settingsget.method = HTTP_GET;
   this->settingsget.handler
-      = make_http_func(settings_get_handler, "settings.html");
+      = make_http_func(settings_get_handler, "/settings.html");
   this->settingsget.user_ctx = this;
 
   this->settingspost.uri = "/settings.html";
   this->settingspost.method = HTTP_POST;
   this->settingspost.handler
-      = make_http_func(settings_post_handler, "settings.html");
+      = make_http_func(settings_post_handler, "/settings.html");
   this->settingspost.user_ctx = this;
 
   // Start the httpd server
