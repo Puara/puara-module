@@ -25,7 +25,7 @@ httpd_handle_t Webserver::start_webserver(void)
   this->webserver = NULL;
 
   this->webserver_config.task_priority = tskIDLE_PRIORITY + 5;
-  this->webserver_config.stack_size = 4096;
+  this->webserver_config.stack_size = 8192;
   this->webserver_config.core_id = tskNO_AFFINITY;
   this->webserver_config.server_port = 80;
   this->webserver_config.ctrl_port = 32768;

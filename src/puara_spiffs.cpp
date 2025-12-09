@@ -102,12 +102,12 @@ void PuaraFileSystem::write_file(const std::string& path, const std::string& con
 {
   mount();
   LOG("SPIFFS: Opening ");
-  LOG(path);
+  LOG(path.c_str());
   FILE* f = fopen((spiffs_base_path + path).c_str(), "w");
   if(!f)
   {
     LOG("SPIFFS: Failed to open ");
-    LOG(path);
+    LOG(path.c_str());
     return;
   }
 

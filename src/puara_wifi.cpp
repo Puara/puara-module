@@ -162,8 +162,8 @@ void WiFi::wifi_scan(void)
   esp_wifi_scan_start(NULL, true);
   ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&number, ap_info));
   ESP_ERROR_CHECK(esp_wifi_scan_get_ap_num(&ap_count));
-//  LOG("wifi_scan: Total APs scanned = ");  // either of these two LOG() lines (165-166) alert stack canary and make program crash and reboot
-//  LOG(std::to_string(ap_count).c_str());
+  LOG("wifi_scan: Total APs scanned = ");  
+  LOG(std::to_string(ap_count).c_str());
   wifiAvailableSsid.clear();
   for(int i = 0; (i < PuaraAPI::wifiScanSize) && (i < ap_count); i++)
   {
