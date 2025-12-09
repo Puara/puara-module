@@ -47,14 +47,14 @@ git log --all --grep="OSC" --oneline
 
 ### Search for commits that modified OSC-related files
 ```bash
-git log --all --oneline -- "*.json" | grep -i osc
+git log --all -S"osc" -- "*.json"
 git log --all -- data/settings.json
 ```
 
 ### Search for actual code changes containing "OSC"
 To find commits where the actual diff contains "OSC":
 ```bash
-git log --all -S"OSC" --source --all
+git log --all -S"OSC" --source
 ```
 
 Or with more context:
@@ -129,7 +129,7 @@ git log -S"OSC_IP" -p -- data/settings.json
 
 ### View commits between two dates
 ```bash
-git log --all --since="2024-01-01" --until="2024-12-31" --oneline
+git log --all --since="2023-01-01" --until="2024-12-31" --oneline
 ```
 
 ### See who changed what in a file
