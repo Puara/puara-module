@@ -406,7 +406,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             break;
           case 6:
             LOG("persistentAP: ");
-            LOG(str_token);
+            LOG(str_token.c_str());
             checkbox_persistentAP = true;
             break;
           default:
