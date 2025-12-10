@@ -25,7 +25,7 @@ httpd_handle_t Webserver::start_webserver(void)
   this->webserver = NULL;
 
   this->webserver_config.task_priority = tskIDLE_PRIORITY + 5;
-  this->webserver_config.stack_size = 4096;
+  this->webserver_config.stack_size = 8192;
   this->webserver_config.core_id = tskNO_AFFINITY;
   this->webserver_config.server_port = 80;
   this->webserver_config.ctrl_port = 32768;
@@ -52,17 +52,17 @@ httpd_handle_t Webserver::start_webserver(void)
   }
   this->index.uri = "/";
   this->index.method = HTTP_GET;
-  this->index.handler = make_http_func(index_get_handler, "index.html");
+  this->index.handler = make_http_func(index_get_handler, "/index.html");
   this->index.user_ctx = this;
 
   this->indexpost.uri = "/";
   this->indexpost.method = HTTP_POST;
-  this->indexpost.handler = make_http_func(index_post_handler, "index.html");
+  this->indexpost.handler = make_http_func(index_post_handler, "/index.html");
   this->indexpost.user_ctx = this;
 
   this->style.uri = "/style.css";
   this->style.method = HTTP_GET;
-  this->style.handler = make_http_func(style_get_handler, "style.css");
+  this->style.handler = make_http_func(style_get_handler, "/style.css");
   this->style.user_ctx = this;
 
   // this->factory.uri = "/factory.html";
@@ -72,12 +72,12 @@ httpd_handle_t Webserver::start_webserver(void)
 
   this->reboot.uri = "/reboot.html";
   this->reboot.method = HTTP_GET;
-  this->reboot.handler = make_http_func(get_handler, "reboot.html");
+  this->reboot.handler = make_http_func(get_handler, "/reboot.html");
   this->reboot.user_ctx = this;
 
   this->scan.uri = "/scan.html";
   this->scan.method = HTTP_GET;
-  this->scan.handler = make_http_func(scan_get_handler, "scan.html");
+  this->scan.handler = make_http_func(scan_get_handler, "/scan.html");
   this->scan.user_ctx = this;
 
   // this->update.uri = "/update.html";
@@ -88,17 +88,18 @@ httpd_handle_t Webserver::start_webserver(void)
   this->settingsget.uri = "/settings.html";
   this->settingsget.method = HTTP_GET;
   this->settingsget.handler
-      = make_http_func(settings_get_handler, "settings.html");
+      = make_http_func(settings_get_handler, "/settings.html");
   this->settingsget.user_ctx = this;
 
   this->settingspost.uri = "/settings.html";
   this->settingspost.method = HTTP_POST;
   this->settingspost.handler
-      = make_http_func(settings_post_handler, "settings.html");
+      = make_http_func(settings_post_handler, "/settings.html");
   this->settingspost.user_ctx = this;
 
   // Start the httpd server
-  LOG("webserver: Starting server on port: " << webserver_config.server_port);
+  LOG("webserver: Starting server on port: ");
+  LOG(std::to_string(webserver_config.server_port).c_str());
   if(httpd_start(&webserver, &webserver_config) == ESP_OK)
   {
     // Set URI handlers
@@ -246,7 +247,7 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
       field_pos = str_buf.find(field_delimiter);
       field = str_token.substr(0, field_pos);
       str_token.erase(0, field_pos + field_delimiter.length());
-      LOG(field << ": ");
+      LOG(field.c_str());
       if(variables.at(variables_fields.at(field)).type == "text")
       {
         variables.at(variables_fields.at(field)).textValue = urlDecode(str_token);
@@ -273,7 +274,8 @@ esp_err_t Webserver::get_handler(httpd_req_t* req)
 {
   const char* resp_str = (const char*)req->user_ctx;
   std::string requested_path = std::string{resp_str};
-  LOG("http : Reading requested file " << requested_path);
+  LOG("http : Reading requested file ");
+  LOG(requested_path.c_str());
   std::string contents = fs.read_file(requested_path);
   httpd_resp_sendstr(req, contents.c_str());
 
@@ -349,7 +351,8 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
         switch(config_fields.at(field))
         {
           case 1:
-            LOG("SSID: " << str_token);
+            LOG("SSID: ");
+            LOG(str_token.c_str());
             if(!str_token.empty())
             {
               config.wifiSSID = urlDecode(str_token);
@@ -360,7 +363,8 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             }
             break;
           case 2:
-            LOG("APpasswd: " << str_token);
+            LOG("APpasswd: ");
+            LOG(str_token.c_str());
             if(!str_token.empty())
             {
               this->APpasswdVal1 = urlDecode(str_token);
@@ -372,7 +376,8 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             };
             break;
           case 3:
-            LOG("APpasswdValidate: " << str_token);
+            LOG("APpasswdValidate: ");
+            LOG(str_token.c_str());
             if(!str_token.empty())
             {
               this->APpasswdVal2 = urlDecode(str_token);
@@ -384,7 +389,8 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             };
             break;
           case 4:
-            LOG("password: " << str_token);
+            LOG("password: ");
+            LOG(str_token.c_str());
             if(!str_token.empty())
             {
               config.wifiPSK = urlDecode(str_token);
@@ -399,7 +405,8 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             ret_flag = true;
             break;
           case 6:
-            LOG("persistentAP: " << str_token);
+            LOG("persistentAP: ");
+            LOG(str_token.c_str());
             checkbox_persistentAP = true;
             break;
           default:
@@ -409,7 +416,8 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
       }
       else
       {
-        LOG("Error, no match for config field to store received data: " << field );
+        LOG("Error, no match for config field to store received data: ");
+        LOG(field.c_str());
       }
       str_buf.erase(0, pos + delimiter.length());
     }
