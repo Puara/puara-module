@@ -1,15 +1,6 @@
 #pragma once
 #include <string>
 #include <iostream>
-
-// #define PUARA_DEBUG  //uncomment this line to access all LOG statements for debug
-
-#ifdef PUARA_DEBUG
-  #define LOG(x) do { fprintf(stderr, "%s\n", x); } while(0)
-#else
-  #define LOG(x) do {} while(0)
-#endif
-
 namespace PuaraAPI
 {
 

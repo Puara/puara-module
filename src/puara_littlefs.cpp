@@ -1,5 +1,6 @@
 #include "puara_littlefs.hpp"
 #include "puara_config.hpp"
+#include "puara_logger.hpp"
 
 #if !defined(PUARA_SPIFFS)
 

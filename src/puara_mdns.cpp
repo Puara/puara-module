@@ -1,5 +1,6 @@
 #include "puara_mdns.hpp"
 #include "puara_config.hpp"
+#include "puara_logger.hpp"
 
 #include <mdns.h>
 

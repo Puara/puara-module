@@ -4,6 +4,7 @@
 #include "puara_device.hpp"
 #include "puara_filesystem.hpp"
 #include "puara_utils.hpp"
+#include "puara_logger.hpp"
 
 #if defined(PUARA_SPIFFS)
 #include "puara_spiffs.hpp"

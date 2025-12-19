@@ -3,6 +3,7 @@
 #include "puara_config.hpp"
 #if defined(PUARA_SPIFFS)
 
+#include "puara_logger.hpp"
 #include <fstream>
 
 namespace PuaraAPI

@@ -1,5 +1,6 @@
 #include "puara_utils.hpp"
 #include "puara_config.hpp"
+#include "puara_logger.hpp"
 
 #include <iostream>
 

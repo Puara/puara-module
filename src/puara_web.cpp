@@ -3,6 +3,7 @@
 #include "puara_config.hpp"
 #include "puara_device.hpp"
 #include "puara_filesystem.hpp"
+#include "puara_logger.hpp"
 #include "puara_utils.hpp"
 #include "puara_wifi.hpp"
 
