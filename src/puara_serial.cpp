@@ -129,7 +129,7 @@ void Serial::uart_monitor()
     if (err != ESP_OK)
     {
       LOG("Failed to install UART driver. Error code: ");
-      LOG(std::to_string(err).c_str());
+      LOG(err);
       return;
     }
   }

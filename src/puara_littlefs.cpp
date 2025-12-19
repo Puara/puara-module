@@ -60,21 +60,21 @@ std::string PuaraFileSystem::read_file(std::string_view path)
 void PuaraFileSystem::write_file(const std::string& path, const std::string& contents) {
   mount();
   LOG("littleFS: Writing file ");
-  LOG(path.c_str());
+  LOG(path);
 
   File file = LittleFS.open(path.c_str(), FILE_WRITE);
   if (!file) {
     LOG("LittleFS: failed to open file: ");
-    LOG(path.c_str());
+    LOG(path);
     return;
   }
   if (file.print(contents.c_str())) {
     LOG("LittleFS: wrote ");
-    LOG(path.c_str());
+    LOG(path);
     LOG("closing");
   } else {
     LOG("LittleFS: failed to write ");
-    LOG(path.c_str());
+    LOG(path);
     LOG("closing");
   }
   file.close();

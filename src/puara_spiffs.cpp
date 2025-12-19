@@ -54,9 +54,9 @@ void PuaraFileSystem::mount()
     else
     {
       LOG("spiffs: Partition size: total: ");
-      LOG(std::to_string(total).c_str());
+      LOG(total);
       LOG("used: ");
-      LOG(std::to_string(used).c_str());
+      LOG(used);
     }
   }
   else
@@ -88,11 +88,11 @@ std::string PuaraFileSystem::read_file(std::string_view path)
   if(!in)
   {
     LOG("spiffs: Failed to open ");
-    LOG(full_path.c_str());
+    LOG(full_path);
     return "";
   }
   LOG("spiffs: Reading ");
-  LOG(full_path.c_str());
+  LOG(full_path);
   std::string content((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
   unmount();
   return content;
@@ -103,18 +103,18 @@ void PuaraFileSystem::write_file(const std::string& path, const std::string& con
 {
   mount();
   LOG("SPIFFS: Opening ");
-  LOG(path.c_str());
+  LOG(path);
   FILE* f = fopen((spiffs_base_path + path).c_str(), "w");
   if(!f)
   {
     LOG("SPIFFS: Failed to open ");
-    LOG(path.c_str());
+    LOG(path);
     return;
   }
 
   fprintf(f, "%s", contents.c_str());
   LOG("SPIFFS: wrote ");
-  LOG(path.c_str());
+  LOG(path);
   LOG("closing");
   fclose(f);
   unmount();

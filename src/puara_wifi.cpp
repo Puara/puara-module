@@ -37,12 +37,12 @@ void WiFi::wifi_init()
   if(setname != ESP_OK)
   {
     LOG("wifi_init: failed to set hostname: ");
-    LOG(config.dmiName.c_str());
+    LOG(config.dmiName);
   }
   else
   {
     LOG("wifi_init: hostname: ");
-    LOG(config.dmiName.c_str());
+    LOG(config.dmiName);
   }
 
   esp_event_handler_instance_t instance_any_id;
@@ -84,18 +84,18 @@ void WiFi::wifi_init()
   if(bits & this->wifi_connected_bit)
   {
     LOG("wifi_init: Connected to SSID: ");
-    LOG(config.wifiSSID.c_str());
+    LOG(config.wifiSSID);
     currentSSID = config.wifiSSID;
     this->StaIsConnected = true;
   }
   else if(bits & this->wifi_fail_bit)
   {
     LOG("wifi_init: Failed to connect to SSID: ");
-    LOG(config.wifiSSID.c_str());
+    LOG(config.wifiSSID);
     if(!config.persistentAP)
     {
       LOG("wifi_init: Failed to connect to SSID: ");
-      LOG(config.wifiSSID.c_str());
+      LOG(config.wifiSSID);
       LOG("Switching to AP/STA mode");
       ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
       LOG("wifi_init: loading AP config");
@@ -164,7 +164,7 @@ void WiFi::wifi_scan(void)
   ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&number, ap_info));
   ESP_ERROR_CHECK(esp_wifi_scan_get_ap_num(&ap_count));
   LOG("wifi_scan: Total APs scanned = ");
-  LOG(std::to_string(ap_count).c_str());
+  LOG(ap_count);
   wifiAvailableSsid.clear();
   for(int i = 0; (i < PuaraAPI::wifiScanSize) && (i < ap_count); i++)
   {
@@ -271,7 +271,7 @@ void WiFi::sta_event_handler(
     tempBuf << esp_ip4_addr4_16(&event->ip_info.ip);
     self.currentSTA_IP = tempBuf.str();
     LOG("wifi/sta_event_handler: got ip:");
-    LOG(self.currentSTA_IP.c_str());
+    LOG(self.currentSTA_IP);
     self.connect_counter = 0;
     xEventGroupSetBits(self.s_wifi_event_group, self.wifi_connected_bit);
   }
