@@ -8,6 +8,15 @@
 
 namespace PuaraAPI
 {
+
+struct EspErr{
+  esp_err_t value;
+};
+// required as esp_err_t is int32 and creates conflicts with log(int32) 
+inline void log(EspErr err) {
+  fprintf(stderr, "ESP Error: %s\n", esp_err_to_name(err.value));
+}
+
 template<std::size_t N>
 inline void log(const char (&str)[N]) {
   fprintf(stderr, "%s\n", str);
@@ -50,9 +59,6 @@ inline void log(float v) {
 }
 inline void log(double v) {
   fprintf(stderr, "%f\n", v);
-}
-inline void log(esp_err_t err) {
-  fprintf(stderr, "ESP Error: %s\n", esp_err_to_name(err));
 }
 }
 
