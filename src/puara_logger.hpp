@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <string>
 #include <string_view>
-#include <span>
+//#include <span>
 #include <cinttypes>
 
 namespace PuaraAPI
