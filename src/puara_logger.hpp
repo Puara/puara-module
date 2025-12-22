@@ -49,7 +49,7 @@ inline void log(double v) {
 }
 }
 
-// #define PUARA_DEBUG  //uncomment this line to access all LOG statements for debug
+#define PUARA_DEBUG  //uncomment this line to access all LOG statements for debug
 
 #ifdef PUARA_DEBUG
   #define LOG(x) do { ::PuaraAPI::log(x); } while(0)
