@@ -12,6 +12,9 @@ template<std::size_t N>
 inline void log(const char (&str)[N]) {
   fprintf(stderr, "%s\n", str);
 }
+inline void log(const char* str) {
+  fprintf(stderr, "%s\n", str);
+}
 inline void log(std::string_view str) {
   fprintf(stderr, "%*s\n", str.size(), str.data());
 }
