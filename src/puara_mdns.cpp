@@ -15,7 +15,7 @@ void MDNSService::start(std::string_view device_name, std::string_view instance_
   if(err)
   {
     LOG("MDNS Init failed: ");
-    LOG(err);
+    LOG(EspErr{err});
     return;
   }
   // set hostname
