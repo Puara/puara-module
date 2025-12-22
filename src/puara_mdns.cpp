@@ -15,7 +15,7 @@ void MDNSService::start(std::string_view device_name, std::string_view instance_
   if(err)
   {
     LOG("MDNS Init failed: ");
-    LOG(esp_err_to_name(err));
+    LOG(err);
     return;
   }
   // set hostname
@@ -23,7 +23,7 @@ void MDNSService::start(std::string_view device_name, std::string_view instance_
   // set default instance
   ESP_ERROR_CHECK(mdns_instance_name_set(instance_name.data()));
   LOG("MDNS Init completed. Device name: ");
-  LOG(device_name.data());
+  LOG(device_name);
   std::cout << "Device wifi network : " << device_name << "\n"
             << "Open device network config/settings in browser with : http://" << device_name << ".local/" 
             << std::endl;

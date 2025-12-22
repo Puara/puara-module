@@ -39,7 +39,7 @@ void PuaraFileSystem::mount()
       else
       {
         LOG("spiffs: Failed to initialize SPIFFS :");
-        LOG(esp_err_to_name(ret));
+        LOG(ret);
       }
       return;
     }
@@ -49,7 +49,7 @@ void PuaraFileSystem::mount()
     if(ret != ESP_OK)
     {
       LOG("spiffs: Failed to get SPIFFS partition information");
-      LOG(esp_err_to_name(ret));
+      LOG(ret);
     }
     else
     {

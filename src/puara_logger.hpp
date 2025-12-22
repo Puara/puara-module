@@ -2,8 +2,9 @@
 #include <cstdio>
 #include <string>
 #include <string_view>
-//#include <span>
+#include <span>
 #include <cinttypes>
+#include "esp_err.h"
 
 namespace PuaraAPI
 {
@@ -46,6 +47,9 @@ inline void log(float v) {
 }
 inline void log(double v) {
   fprintf(stderr, "%f\n", v);
+}
+inline void log(esp_err_t err) {
+  fprintf(stderr, "ESP Error: %s\n", esp_err_to_name(err));
 }
 }
 
