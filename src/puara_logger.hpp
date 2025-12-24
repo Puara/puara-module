@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <string>
 #include <string_view>
-//#include <span>
+#include <span>
 #include <cinttypes>
 #include "esp_err.h"
 
@@ -62,7 +62,7 @@ inline void log(double v) {
 }
 inline void log(size_t v){
   if (sizeof(v) == sizeof(uint32_t)) {
-        log(static_cast<uint32_t>(v)); 
+        log(static_cast<uint32_t>(v));
     } else if (sizeof(v) == sizeof(uint64_t)) {
         log(static_cast<uint64_t>(v));
     } else {
