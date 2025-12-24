@@ -1,9 +1,10 @@
-#include "puara_spiffs.hpp"
 
-#include "puara_config.hpp"
 #if defined(PUARA_SPIFFS)
 
+#include "puara_spiffs.hpp"
+#include "puara_config.hpp"
 #include "puara_logger.hpp"
+
 #include <fstream>
 
 namespace PuaraAPI
@@ -39,7 +40,7 @@ void PuaraFileSystem::mount()
       else
       {
         LOG("spiffs: Failed to initialize SPIFFS :");
-        LOG(ret);
+        LOG(EspErr{ret});
       }
       return;
     }
@@ -49,7 +50,7 @@ void PuaraFileSystem::mount()
     if(ret != ESP_OK)
     {
       LOG("spiffs: Failed to get SPIFFS partition information");
-      LOG(ret);
+      LOG(EspErr{ret});
     }
     else
     {

@@ -60,6 +60,17 @@ inline void log(float v) {
 inline void log(double v) {
   fprintf(stderr, "%f\n", v);
 }
+inline void log(size_t v){
+  if (sizeof(v) == sizeof(uint32_t)) {
+        log(static_cast<uint32_t>(v)); 
+    } else if (sizeof(v) == sizeof(uint64_t)) {
+        log(static_cast<uint64_t>(v));
+    } else {
+      fprintf(stderr, "Unknown size for size_t. :/ ");
+    }
+
+}
+
 }
 
 #define PUARA_DEBUG  //uncomment this line to access all LOG statements for debug
