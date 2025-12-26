@@ -5,6 +5,7 @@
 #include "puara_config.hpp"
 #include "puara_logger.hpp"
 
+#include <cstdint>
 #include <fstream>
 
 namespace PuaraAPI
@@ -55,9 +56,9 @@ void PuaraFileSystem::mount()
     else
     {
       LOG("spiffs: Partition size: total: ");
-      LOG(total);
+      LOG(static_cast<intptr_t>(total));
       LOG("used: ");
-      LOG(used);
+      LOG(static_cast<intptr_t>(used));
     }
   }
   else

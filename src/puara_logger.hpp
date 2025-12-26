@@ -60,9 +60,7 @@ inline void log(double v) {
   fprintf(stderr, "%f\n", v);
 }
 /*
-inline void log(size_t v, bool force_size_t) {
-  // to avoid lack of portability and flag maintenance in multiple test files
-  // we use dummy variable "force_size_t" to allow overloading of log() with size_t vs int32/64
+inline void log(size_t v) {
     if constexpr (sizeof(v) == sizeof(uint32_t)) {
         log(static_cast<uint32_t>(v)); 
     } else if constexpr (sizeof(v) == sizeof(uint64_t)) {
