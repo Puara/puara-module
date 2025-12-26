@@ -65,8 +65,6 @@ inline void log(size_t v, bool force_portability) {
         log(static_cast<uint32_t>(v)); 
     } else if constexpr (sizeof(v) == sizeof(uint64_t)) {
         log(static_cast<uint64_t>(v));
-    } else {
-      static_assert(sizeof(size_t) == -1, "Invalid size for size_t");
     }
 }
 
