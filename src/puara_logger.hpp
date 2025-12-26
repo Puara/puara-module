@@ -2,7 +2,6 @@
 #include <cstdio>
 #include <string>
 #include <string_view>
-#include <span>
 #include <cinttypes>
 #include "esp_err.h"
 
@@ -60,16 +59,19 @@ inline void log(float v) {
 inline void log(double v) {
   fprintf(stderr, "%f\n", v);
 }
-inline void log(size_t v){
-  if (sizeof(v) == sizeof(uint32_t)) {
-        log(static_cast<uint32_t>(v));
-    } else if (sizeof(v) == sizeof(uint64_t)) {
+/*
+inline void log(size_t v, bool force_size_t) {
+  // to avoid lack of portability and flag maintenance in multiple test files
+  // we use dummy variable "force_size_t" to allow overloading of log() with size_t vs int32/64
+    if constexpr (sizeof(v) == sizeof(uint32_t)) {
+        log(static_cast<uint32_t>(v)); 
+    } else if constexpr (sizeof(v) == sizeof(uint64_t)) {
         log(static_cast<uint64_t>(v));
     } else {
-      fprintf(stderr, "Unknown size for size_t. :/ ");
+      static_assert(sizeof(size_t) == -1, "Invalid size for size_t");
     }
-
 }
+*/
 
 }
 
