@@ -59,8 +59,8 @@ inline void log(float v) {
 inline void log(double v) {
   fprintf(stderr, "%f\n", v);
 }
-/*
-inline void log(size_t v) {
+
+inline void log(size_t v, bool force_portability) {
     if constexpr (sizeof(v) == sizeof(uint32_t)) {
         log(static_cast<uint32_t>(v)); 
     } else if constexpr (sizeof(v) == sizeof(uint64_t)) {
@@ -69,7 +69,6 @@ inline void log(size_t v) {
       static_assert(sizeof(size_t) == -1, "Invalid size for size_t");
     }
 }
-*/
 
 }
 

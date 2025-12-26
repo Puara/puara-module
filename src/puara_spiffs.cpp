@@ -56,9 +56,9 @@ void PuaraFileSystem::mount()
     else
     {
       LOG("spiffs: Partition size: total: ");
-      LOG(static_cast<intptr_t>(total));
+      LOG(total, 1);
       LOG("used: ");
-      LOG(static_cast<intptr_t>(used));
+      LOG(used, 1);
     }
   }
   else
