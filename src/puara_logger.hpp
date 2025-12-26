@@ -66,13 +66,12 @@ inline void log(size_t v, bool force_portability) {
         log(static_cast<uint64_t>(v));
     }
 }
-
 }
 
 #define PUARA_DEBUG  //uncomment this line to access all LOG statements for debug
 
 #ifdef PUARA_DEBUG
-  #define LOG(x) do { ::PuaraAPI::log(x); } while(0)
+  #define LOG(x, ...) do { ::PuaraAPI::log(x, ##__VA_ARGS__); } while(0)
 #else
-  #define LOG(x) do {} while(0)
+  #define LOG(x, ...) do {} while(0)  
 #endif
