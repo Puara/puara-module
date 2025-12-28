@@ -59,7 +59,7 @@ inline void log(float v) {
 inline void log(double v) {
   fprintf(stderr, "%f\n", v);
 }
-inline void log(size_t v, bool force_portability) {
+inline void log(size_t v) {
     if constexpr (sizeof(v) == sizeof(uint32_t)) {
         log(static_cast<uint32_t>(v)); 
     } else if constexpr (sizeof(v) == sizeof(uint64_t)) {
@@ -71,7 +71,7 @@ inline void log(size_t v, bool force_portability) {
 #define PUARA_DEBUG  //uncomment this line to access all LOG statements for debug
 
 #ifdef PUARA_DEBUG
-  #define LOG(x, ...) do { ::PuaraAPI::log(x, ##__VA_ARGS__); } while(0)
+  #define LOG(x) do { ::PuaraAPI::log(x); } while(0)
 #else
-  #define LOG(x, ...) do {} while(0)  
+  #define LOG(x) do {} while(0)
 #endif
