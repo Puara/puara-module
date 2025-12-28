@@ -59,14 +59,18 @@ inline void log(float v) {
 inline void log(double v) {
   fprintf(stderr, "%f\n", v);
 }
-/*
+
+#ifdef ESP32C3_VARIANT
 inline void log(size_t v) {
     if constexpr (sizeof(v) == sizeof(uint32_t)) {
         log(static_cast<uint32_t>(v)); 
     } else if constexpr (sizeof(v) == sizeof(uint64_t)) {
         log(static_cast<uint64_t>(v));
     }
-}*/
+}
+#endif
+
+
 }
 
 #define PUARA_DEBUG  //uncomment this line to access all LOG statements for debug
