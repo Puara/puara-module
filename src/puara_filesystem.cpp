@@ -1,6 +1,7 @@
 #include "puara_filesystem.hpp"
 
 #include "puara_config.hpp"
+#include "puara_logger.hpp"
 
 #include <cJSON.h>
 

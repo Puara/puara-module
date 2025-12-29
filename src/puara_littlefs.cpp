@@ -1,5 +1,6 @@
 #include "puara_littlefs.hpp"
 #include "puara_config.hpp"
+#include "puara_logger.hpp"
 
 #if !defined(PUARA_SPIFFS)
 
@@ -27,10 +28,12 @@ std::string PuaraFileSystem::read_file(std::string_view path)
 {
   mount();
   auto path_c = std::string(path).c_str();
-  LOG("LittleFS: reading file: " << path_c);
+  LOG("LittleFS: reading file: ");
+  LOG(path_c);
   if(!LittleFS.exists(path_c))
   {
-    LOG("LittleFS: file not found: " << path_c);
+    LOG("LittleFS: file not found: ");
+    LOG(path_c);
     return "";
   }
 
@@ -39,7 +42,8 @@ std::string PuaraFileSystem::read_file(std::string_view path)
 
   if(!file)
   {
-    LOG("LittleFS: failed to open file: " << path_c);
+    LOG("LittleFS: failed to open file: ");
+    LOG(path_c);
     return "";
   }
 
@@ -55,17 +59,23 @@ std::string PuaraFileSystem::read_file(std::string_view path)
 
 void PuaraFileSystem::write_file(const std::string& path, const std::string& contents) {
   mount();
-  LOG("littleFS: Writing file " << path);
+  LOG("littleFS: Writing file ");
+  LOG(path);
 
   File file = LittleFS.open(path.c_str(), FILE_WRITE);
   if (!file) {
-    LOG("LittleFS: failed to open file: " << path);
+    LOG("LittleFS: failed to open file: ");
+    LOG(path);
     return;
   }
   if (file.print(contents.c_str())) {
-    LOG("LittleFS: wrote "  << path << ", closing");
+    LOG("LittleFS: wrote ");
+    LOG(path);
+    LOG("closing");
   } else {
-    LOG("LittleFS: failed to write "  << path << ", closing");
+    LOG("LittleFS: failed to write ");
+    LOG(path);
+    LOG("closing");
   }
   file.close();
   unmount();

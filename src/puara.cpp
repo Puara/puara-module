@@ -14,6 +14,7 @@ Edu Meneses (2022) - https://www.edumeneses.com
 
 #include "puara_config.hpp"
 #include "puara_device.hpp"
+#include "puara_logger.hpp"
 #include "puara_filesystem.hpp"
 #include "puara_mdns.hpp"
 #include "puara_serial.hpp"

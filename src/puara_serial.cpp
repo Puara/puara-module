@@ -4,6 +4,7 @@
 #include "puara_device.hpp"
 #include "puara_filesystem.hpp"
 #include "puara_utils.hpp"
+#include "puara_logger.hpp"
 
 #if defined(PUARA_SPIFFS)
 #include "puara_spiffs.hpp"
@@ -118,7 +119,20 @@ void Serial::uart_monitor()
 
   // Install UART driver (we don't need an event queue here)
   // In this example we don't even use a buffer for sending data.
-  uart_driver_install(uart_num0, UART_FIFO_LEN + 1, 0, 0, NULL, 0);
+  if(uart_is_driver_installed(uart_num0))
+  {
+    LOG("UART driver already installed. Skipping installation.");
+  }
+  else
+  {
+    esp_err_t err = uart_driver_install(uart_num0, UART_FIFO_LEN + 1, 0, 0, NULL, 0);
+    if (err != ESP_OK)
+    {
+      LOG("Failed to install UART driver. Error code: ");
+      LOG(EspErr{err});
+      return;
+    }
+  }
 
   while(1)
   {
@@ -200,13 +214,7 @@ void Serial::usb_monitor()
 bool Serial::start_serial_listening()
 {
   if(module_monitor == UART_MONITOR)
-  {/*  // getting this e message everytime : E (20645) uart: UART driver already installed
-      // so looking for solution .. 
-    if(uart_is_driver_installed(UART_NUM_1))
-    {
-      LOG("UART driver already installed. Skipping initialization.");
-      return true;
-    } */
+  { 
     createTask<&Serial::uart_monitor>(this, "serial_monitor", 2048);
     createTask<&Serial::interpret_serial>(this, "interpret_serial", 4096);
   }
