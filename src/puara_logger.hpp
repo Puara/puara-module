@@ -59,7 +59,7 @@ inline void log(float v) {
 inline void log(double v) {
   fprintf(stderr, "%f\n", v);
 }
-
+/*
 #if defined(__XTENSA__)
 inline void log(int v){
   log(static_cast<int32_t>(v));
@@ -68,7 +68,7 @@ inline void log(unsigned int v){
   log(static_cast<uint32_t>(v));
 }
 #endif
-
+*/
 #if defined(__mips__)
 inline void log(size_t v){
   log(static_cast<uint32_t>(v));
