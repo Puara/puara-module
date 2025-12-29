@@ -6,9 +6,16 @@ Puara puara;
 // Dummy sensor data
 float sensor;
 
+void onPuaraSettingsChanged()
+{
+  // Process here any change of settings by the user, OSC port, etc.
+}
+
 void setup() {
   // put your setup code here, to run once:
     Serial.begin(115200);
+
+    puara.set_settings_changed_handler(onPuaraSettingsChanged);
       /*
      * the Puara start function initializes the filesystem, reads json configuration and
      * settings, start the wi-fi AP or connects to SSID, starts the webserver, inits serial 
