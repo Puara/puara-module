@@ -60,7 +60,7 @@ inline void log(double v) {
   fprintf(stderr, "%f\n", v);
 }
 
-#ifdef ESP32C3_VARIANT
+#if defined(__riscv)
 inline void log(size_t v) {
     if constexpr (sizeof(v) == sizeof(uint32_t)) {
         log(static_cast<uint32_t>(v)); 
@@ -69,7 +69,6 @@ inline void log(size_t v) {
     }
 }
 #endif
-
 
 }
 
