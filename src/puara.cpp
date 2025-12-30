@@ -130,6 +130,11 @@ void Puara::write_settings_json()
   return g_puara.settings.write_settings_json();
 }
 
+void set_settings_changed_handler(std::function<void()> func)
+{
+  return g_puara.settings.set_settings_changed_handler(std::move(func));
+}
+
 double Puara::getVarNumber(std::string varName)
 {
   return g_puara.settings.getVarNumber(varName);
