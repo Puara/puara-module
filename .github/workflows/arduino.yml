@@ -18,6 +18,7 @@ jobs:
         run: |
           mkdir -p $HOME/bin
           curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          export PATH="$HOME/bin:$PATH"
           echo "$HOME/bin" >> $GITHUB_PATH
           arduino-cli config init
           arduino-cli core update-index
