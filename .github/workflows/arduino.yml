@@ -16,8 +16,9 @@ jobs:
     steps:
       - name: Install Arduino CLI
         run: |
-          export PATH="/home/runner/work/puara-module/puara-module/bin:$PATH"
+          mkdir -p $HOME/bin
           curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          echo "$HOME/bin" >> $GITHUB_PATH
           arduino-cli config init
           arduino-cli core update-index
 
