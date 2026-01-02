@@ -46,3 +46,16 @@ jobs:
       - name: Compile for XIAO ESP32-S3
         run: |
           arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 examples/puara_basic_template/puara_basic_template.ino
+
+      # Compile Example Sketches for
+      - name: Compile for M5StickC 
+        run: |
+          arduino-cli compile --fqbn esp32:esp32:m5stack_stickc examples/puara_basic_template/puara_basic_template.ino
+
+      # Compile Example Sketches for Xiao ESP32-S3
+      - name: Compile for ESP32C3 Dev Module
+        run: |
+          arduino-cli compile --fqbn esp32:esp32:esp32c3 examples/puara_basic_template/puara_basic_template.ino
+
+  # to see all available boards, run the following command in a terminal : $ arduino-cli board listall esp32:esp32
+ 
