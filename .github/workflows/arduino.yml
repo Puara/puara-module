@@ -29,6 +29,14 @@ jobs:
         run: |
           arduino-cli core install esp32:esp32
 
+      # Install Library Dependencies
+      - name: Install Library Dependencies
+        run: |
+          arduino-cli lib list
+          mkdir -p $HOME/Arduino/libraries
+          ln -s $PWD $HOME/Arduino/libraries/puara
+          arduino-cli lib list
+
       # Compile Example Sketches for Tinypico
       - name: Compile for TinyPICO
         run: |
