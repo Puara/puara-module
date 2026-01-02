@@ -14,11 +14,13 @@ jobs:
   compile: # Step 2: Compile Examples for Multiple Boards
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Install Arduino CLI
         run: |
           curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-          export PATH="$HOME/runner/work/puara-module/puara-module/bin"
+          export PATH="$HOME/runner/work/puara-module/puara-module/bin:$PATH"
           echo "$HOME/runner/work/puara-module/puara-module/bin" >> $GITHUB_PATH
+          arduino-cli version
           arduino-cli config init
           arduino-cli core update-index
 
