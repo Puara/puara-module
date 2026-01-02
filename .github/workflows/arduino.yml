@@ -32,9 +32,9 @@ jobs:
       # Compile Example Sketches for Tinypico
       - name: Compile for TinyPICO
         run: |
-          arduino-cli compile --fqbn esp32:esp32:tintypico examples/puara_basic_template/puara_basic_template.ino
+          arduino-cli compile --fqbn esp32:esp32:tinypico examples/puara_basic_template/puara_basic_template.ino
 
       # Compile Example Sketches for Xiao ESP32-S3
       - name: Compile for XIAO ESP32-S3
         run: |
-          arduino-cli compile --fqbn esp32:esp32:xiao_seeed_s3 examples/puara_basic_template/puara_basic_template.ino
+          arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 examples/puara_basic_template/puara_basic_template.ino
