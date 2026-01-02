@@ -40,22 +40,22 @@ jobs:
       # Compile Example Sketches for Tinypico
       - name: Compile for TinyPICO
         run: |
-          arduino-cli compile --fqbn esp32:esp32:um_tinypico examples/puara_basic_template/puara_basic_template.ino
+          arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs,upload.maximum_size=1966080 examples/puara_basic_template/puara_basic_template.ino
 
       # Compile Example Sketches for Xiao ESP32-S3
       - name: Compile for XIAO ESP32-S3
         run: |
-          arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 examples/puara_basic_template/puara_basic_template.ino
+          arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs,upload.maximum_size=1966080 examples/puara_basic_template/puara_basic_template.ino
 
       # Compile Example Sketches for
       - name: Compile for M5StickC 
         run: |
-          arduino-cli compile --fqbn esp32:esp32:m5stack_stickc examples/puara_basic_template/puara_basic_template.ino
+          arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs,upload.maximum_size=1966080 examples/puara_basic_template/puara_basic_template.ino
 
       # Compile Example Sketches for Xiao ESP32-S3
       - name: Compile for ESP32C3 Dev Module
         run: |
-          arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-properties build.partitions=min_spiffs,upload.maximum_size=1966080 examples/puara_basic_template/puara_basic_template.ino
+          arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs,upload.maximum_size=1966080 examples/puara_basic_template/puara_basic_template.ino
 
   # to see all available boards, run the following command in a terminal : $ arduino-cli board listall esp32:esp32
  
