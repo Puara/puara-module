@@ -141,7 +141,7 @@ void Serial::uart_monitor()
         uart_num0, serial_data, PUARA_SERIAL_BUFSIZE, 500 / portTICK_RATE_MS);
     if(serial_data_length > 0)
     {
-      serial_data_str = convertToString(serial_data);
+      serial_data_str = serial_data;
       memset(serial_data, 0, sizeof serial_data);
       uart_flush(uart_num0);
     }
@@ -168,7 +168,7 @@ void Serial::jtag_monitor()
         serial_data, PUARA_SERIAL_BUFSIZE, 500 / portTICK_RATE_MS);
     if(serial_data_length > 0)
     {
-      serial_data_str = convertToString(serial_data);
+      serial_data_str = serial_data;
       // remove new line character at end
       if(serial_data_str[serial_data_str.size() - 1] == '\n')
         serial_data_str.erase(serial_data_str.size() - 1);
