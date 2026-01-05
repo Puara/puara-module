@@ -1,7 +1,9 @@
 #include "puara_filesystem.hpp"
 
+#include "puara_app.hpp"
 #include "puara_config.hpp"
 #include "puara_logger.hpp"
+#include "puara_settings.hpp"
 
 #include <cJSON.h>
 
@@ -220,38 +222,12 @@ void JSONSettings::write_config_json()
 
 void JSONSettings::write_settings_json()
 {
-  cJSON* root = cJSON_CreateObject();
-  cJSON* settings = cJSON_CreateArray();
-  cJSON* setting = NULL;
-  cJSON* data = NULL;
-  cJSON_AddItemToObject(root, "settings", settings);
-
-  for(auto it : variables)
-  {
-    setting = cJSON_CreateObject();
-    cJSON_AddItemToArray(settings, setting);
-    data = cJSON_CreateString(it.name.c_str());
-    cJSON_AddItemToObject(setting, "name", data);
-    if(it.type == "text")
-    {
-      data = cJSON_CreateString(it.textValue.c_str());
-    }
-    else if(it.type == "number")
-    {
-      data = cJSON_CreateNumber(it.numberValue);
-    }
-    cJSON_AddItemToObject(setting, "value", data);
-  }
-
   // Save to settings.json
   LOG("write_settings_json: Serializing json");
-  std::string contents = cJSON_Print(root);
+  std::string contents = as_json(::settings);
   LOG("Filesystem: Saving file");
 
   fs.write_file("/settings.json", contents);
-
-  LOG("write_settings_json: Delete json entity");
-  cJSON_Delete(root);
 
   if(this->on_settings_changed)
     this->on_settings_changed();

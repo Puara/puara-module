@@ -1,9 +1,11 @@
 #include "puara_web.hpp"
 
+#include "puara_app.hpp"
 #include "puara_config.hpp"
 #include "puara_device.hpp"
 #include "puara_filesystem.hpp"
 #include "puara_logger.hpp"
+#include "puara_settings.hpp"
 #include "puara_utils.hpp"
 #include "puara_wifi.hpp"
 
@@ -229,44 +231,14 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
       }
       return ESP_FAIL;
     }
-    std::string str_buf = buf;
-    std::string str_token;
-    std::string field;
-    size_t pos = 0;
-    size_t field_pos = 0;
-    std::string delimiter = "&";
-    std::string field_delimiter = "=";
-    // adding delimiter to process last variable in the loop
-    str_buf.append(delimiter);
 
     LOG("Settings stored:");
-    auto& variables = settings.variables;
-    auto& variables_fields = settings.variables_fields;
-    while((pos = str_buf.find(delimiter)) != std::string::npos)
-    {
-      str_token = str_buf.substr(0, pos);
-      field_pos = str_buf.find(field_delimiter);
-      field = str_token.substr(0, field_pos);
-      str_token.erase(0, field_pos + field_delimiter.length());
-      LOG(field);
-      if(variables.at(variables_fields.at(field)).type == "text")
-      {
-        variables.at(variables_fields.at(field)).textValue = urlDecode(str_token);
-      }
-      else if(variables.at(variables_fields.at(field)).type == "number")
-      {
-        variables.at(variables_fields.at(field)).numberValue = std::stod(str_token);
-      }
-      LOG(str_token);
-      str_buf.erase(0, pos + delimiter.length());
-    }
-    LOG("");
+    
+    settings_from_http_request(::settings, buf);
     remaining -= api_return;
   }
 
   settings.write_settings_json();
-  LOG("http : Reading saved.html file");
-  std::string contents = fs.read_file("/saved.html");
 
   return ESP_OK;
 }

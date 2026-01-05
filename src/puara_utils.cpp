@@ -64,7 +64,7 @@ void checkmark(std::string old_text, bool value, std::string& str)
   }
 }
 
-std::string urlDecode(std::string text)
+std::string urlDecode(std::string_view text)
 {
   std::string escaped;
   for(auto i = text.begin(), nd = text.end(); i < nd; ++i)
@@ -75,13 +75,15 @@ std::string urlDecode(std::string text)
       case '%':
         if(i[1] && i[2])
         {
-          char hs[]{i[1], i[2]};
+          char hs[]{i[1], i[2], 0};
           escaped += static_cast<char>(strtol(hs, nullptr, 16));
           i += 2;
         }
         break;
       case '+':
         escaped += ' ';
+        break;
+      case 0:
         break;
       default:
         escaped += c;
