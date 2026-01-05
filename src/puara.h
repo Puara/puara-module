@@ -12,6 +12,7 @@
 
 #include <string>
 #include <string_view>
+#include <functional>
 
 typedef void* httpd_handle_t;
 class Puara
@@ -49,6 +50,8 @@ public:
   void write_config_json();
   void read_settings_json();
   void write_settings_json();
+
+  void set_settings_changed_handler(std::function<void()>);
 
   bool start_serial_listening();
   void send_serial_data(std::string data);

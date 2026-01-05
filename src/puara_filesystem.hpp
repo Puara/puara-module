@@ -8,6 +8,7 @@
 
 #include <esp_err.h>
 
+#include <functional>
 #include <unordered_map>
 #include <vector>
 #include <string>
@@ -38,14 +39,18 @@ struct JSONSettings // TODO: remove from puara_filesystem
   void read_settings_json();
   void write_settings_json();
 
+  void set_settings_changed_handler(std::function<void()>);
+
   double getVarNumber(std::string varName);
   std::string getVarText(std::string varName);
 
   friend class Webserver;
   friend class Serial;
+
   // Private API used by puara_web
   std::vector<settingsVariables> variables;
   std::unordered_map<std::string, int> variables_fields;
+  std::function<void()> on_settings_changed;
 
   // Private API used by puara_serial
   void read_settings_json_internal(std::string& contents, bool merge = false);

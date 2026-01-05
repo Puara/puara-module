@@ -220,7 +220,6 @@ void JSONSettings::write_config_json()
 
 void JSONSettings::write_settings_json()
 {
-
   cJSON* root = cJSON_CreateObject();
   cJSON* settings = cJSON_CreateArray();
   cJSON* setting = NULL;
@@ -254,6 +253,13 @@ void JSONSettings::write_settings_json()
   LOG("write_settings_json: Delete json entity");
   cJSON_Delete(root);
 
+  if(this->on_settings_changed)
+    this->on_settings_changed();
+}
+
+void JSONSettings::set_settings_changed_handler(std::function<void()> func)
+{
+  this->on_settings_changed = std::move(func);
 }
 
 }

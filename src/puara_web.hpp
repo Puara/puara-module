@@ -4,6 +4,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <functional>
 
 typedef void* httpd_handle_t;
 struct httpd_req;
