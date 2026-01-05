@@ -8,6 +8,7 @@
 
 #include <esp_err.h>
 
+#include <functional>
 #include <unordered_map>
 #include <vector>
 #include <string>
