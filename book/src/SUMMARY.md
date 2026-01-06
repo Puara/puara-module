@@ -4,12 +4,15 @@
 
 ---
 
-- [Compiling](compiling.md)
-- [The `Puara` object](puara.md)
+## User's Corner
+- [Installing Library](library_installation.md)
+- [Filesystem](filesystem.md)
 - [Configuration](configuration.md)
+- [Examples](examples.md)
+
+## Developper's Corner
+- [The `Puara` object](puara.md)
 - [Webserver](web.md)
 - [WiFi](wifi.md)
-- [Filesystem](filesystem.md)
 - [Serial](serial.md)
 - [mDNS](mdns.md)
-- [Examples](examples.md)
