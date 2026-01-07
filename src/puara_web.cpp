@@ -182,27 +182,49 @@ esp_err_t Webserver::settings_get_handler(httpd_req_t* req)
   std::string settings;
   for(const auto& it : this->settings.variables)
   {
+    std::string chunk;
     if(it.type == "text")
     {
-      settings.append(
+      chunk =
           "<div class=\"row\"><div class=\"col-25\"><label "
           "for=\"%PARAMETER%\">%PARAMETER%</label></div><div class=\"col-75\"><input "
           "type=\"text\" "
           "id=\"%PARAMETER%\" name=\"%PARAMETER%\" "
-          "value=\"%PARAMETERVALUE%\"></div></div>");
-      find_and_replace("%PARAMETERVALUE%", it.textValue, settings);
-      find_and_replace("%PARAMETER%", it.name, settings);
+          "value=\"%PARAMETERVALUE%\"></div></div>";
+      find_and_replace("%PARAMETERVALUE%", it.textValue, chunk);
+      find_and_replace("%PARAMETER%", it.name, chunk);
     }
     else if(it.type == "number")
     {
-      settings.append(
+      // 1. Updated HTML: Changed step="0.000001" to step="any"
+      chunk =
           "<div class=\"row\"><div class=\"col-25\"><label "
           "for=\"%PARAMETER%\">%PARAMETER%</label></div><div class=\"col-75\"><input "
-          "type=\"number\" step=\"0.000001\" id=\"%PARAMETER%\" name=\"%PARAMETER%\" "
-          "value=\"%PARAMETERVALUE%\"></div></div>");
-      find_and_replace("%PARAMETERVALUE%", it.numberValue, settings);
-      find_and_replace("%PARAMETER%", it.name, settings);
+          "type=\"number\" step=\"any\" id=\"%PARAMETER%\" name=\"%PARAMETER%\" "
+          "value=\"%PARAMETERVALUE%\"></div></div>";
+      
+      // 2. Format the number manually
+      char numBuffer[32]; // Buffer large enough for double precision
+      // Print with high precision (e.g., 10 decimal places)
+      snprintf(numBuffer, sizeof(numBuffer), "%.10f", it.numberValue); 
+      
+      std::string valStr = numBuffer;
+
+      // 3. Remove trailing zeros
+      // Find the last character that is NOT a '0' and erase everything after it
+      valStr.erase(valStr.find_last_not_of('0') + 1, std::string::npos);
+
+      // 4. Remove trailing decimal point if it exists
+      // If the result is "15." (integer), remove the dot to make it "15"
+      if (valStr.back() == '.') {
+        valStr.pop_back();
+      }
+
+      // 5. Pass the formatted string, not the raw number
+      find_and_replace("%PARAMETERVALUE%", valStr, chunk);
+      find_and_replace("%PARAMETER%", it.name, chunk);
     }
+    settings.append(chunk);
   }
   find_and_replace("%DATAFROMMODULE%", settings, contents);
   httpd_resp_sendstr(req, contents.c_str());
@@ -248,15 +270,25 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
       field_pos = str_buf.find(field_delimiter);
       field = str_token.substr(0, field_pos);
       str_token.erase(0, field_pos + field_delimiter.length());
+      
+      // Decode the field name (key) to handle spaces/special chars
+      field = urlDecode(field);
       LOG(field);
-      if(variables.at(variables_fields.at(field)).type == "text")
-      {
-        variables.at(variables_fields.at(field)).textValue = urlDecode(str_token);
+      
+      if(variables_fields.find(field) != variables_fields.end()) {
+          if(variables.at(variables_fields.at(field)).type == "text")
+          {
+            variables.at(variables_fields.at(field)).textValue = urlDecode(str_token);
+          }
+          else if(variables.at(variables_fields.at(field)).type == "number")
+          {
+            variables.at(variables_fields.at(field)).numberValue = std::stod(str_token);
+          }
+      } else {
+          LOG("Field not found in settings: ");
+          LOG(field);
       }
-      else if(variables.at(variables_fields.at(field)).type == "number")
-      {
-        variables.at(variables_fields.at(field)).numberValue = std::stod(str_token);
-      }
+      
       LOG(str_token);
       str_buf.erase(0, pos + delimiter.length());
     }
