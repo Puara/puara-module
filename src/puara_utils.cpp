@@ -12,31 +12,31 @@ void find_and_replace(std::string old_text, std::string new_text, std::string& s
   while(old_text_position != std::string::npos)
   {
     str.replace(old_text_position, old_text.length(), new_text);
-    old_text_position = str.find(old_text);
+    old_text_position = str.find(old_text, old_text_position + new_text.length());
   }
   LOG("http (find_and_replace): Success");
 }
 
 void find_and_replace(std::string old_text, double new_number, std::string& str)
 {
+  std::string conversion = std::to_string(new_number);
   std::size_t old_text_position = str.find(old_text);
   while(old_text_position != std::string::npos)
   {
-    std::string conversion = std::to_string(new_number);
     str.replace(old_text_position, old_text.length(), conversion);
-    old_text_position = str.find(old_text);
+    old_text_position = str.find(old_text, old_text_position + conversion.length());
   }
   LOG("http (find_and_replace): Success");
 }
 
 void find_and_replace(std::string old_text, unsigned int new_number, std::string& str)
 {
+  std::string conversion = std::to_string(new_number);
   std::size_t old_text_position = str.find(old_text);
   while(old_text_position != std::string::npos)
   {
-    std::string conversion = std::to_string(new_number);
     str.replace(old_text_position, old_text.length(), conversion);
-    old_text_position = str.find(old_text);
+    old_text_position = str.find(old_text, old_text_position + conversion.length());
   }
   LOG("http (find_and_replace): Success");
 }
@@ -79,11 +79,15 @@ std::string urlDecode(std::string text)
     switch(c)
     {
       case '%':
-        if(i[1] && i[2])
+        if(i + 2 < nd)
         {
-          char hs[]{i[1], i[2]};
+          const char hs[]{i[1], i[2], '\0'};
           escaped += static_cast<char>(strtol(hs, nullptr, 16));
           i += 2;
+        }
+        else
+        {
+          escaped += c;
         }
         break;
       case '+':
