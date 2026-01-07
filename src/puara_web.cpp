@@ -270,15 +270,25 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
       field_pos = str_buf.find(field_delimiter);
       field = str_token.substr(0, field_pos);
       str_token.erase(0, field_pos + field_delimiter.length());
+      
+      // Decode the field name (key) to handle spaces/special chars
+      field = urlDecode(field);
       LOG(field);
-      if(variables.at(variables_fields.at(field)).type == "text")
-      {
-        variables.at(variables_fields.at(field)).textValue = urlDecode(str_token);
+      
+      if(variables_fields.find(field) != variables_fields.end()) {
+          if(variables.at(variables_fields.at(field)).type == "text")
+          {
+            variables.at(variables_fields.at(field)).textValue = urlDecode(str_token);
+          }
+          else if(variables.at(variables_fields.at(field)).type == "number")
+          {
+            variables.at(variables_fields.at(field)).numberValue = std::stod(str_token);
+          }
+      } else {
+          LOG("Field not found in settings: ");
+          LOG(field);
       }
-      else if(variables.at(variables_fields.at(field)).type == "number")
-      {
-        variables.at(variables_fields.at(field)).numberValue = std::stod(str_token);
-      }
+      
       LOG(str_token);
       str_buf.erase(0, pos + delimiter.length());
     }
