@@ -299,6 +299,7 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
   settings.write_settings_json();
   LOG("http : Reading saved.html file");
   std::string contents = fs.read_file("/saved.html");
+  httpd_resp_sendstr(req, contents.c_str());
 
   return ESP_OK;
 }
