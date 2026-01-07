@@ -44,12 +44,36 @@ For an Arduino install of the Puara Module ressources, follow the next steps :
 3.  The examples will be available in `File > Examples > puara-module`.
 
 
-This concludes the basic installation of Puara Modules and related dependencies for Arduino users. If you are using this approach, you may skip the following text in this document and go directly to [Configuring your board and network specifications](configuration.md) page. 
+This concludes the basic installation of Puara Modules and related dependencies for Arduino users. If you are using this approach, you may skip the following text in this document and go directly to [Configuring your board and network specifications](configuration.md) page and consult the Arduino specific steps. 
 
 
 
 
 ## 2. PlatformIO Approach
+
+In this approach, PlatformIO offers all the tools needed for finding the board, building the code and filesystem and uploading both of them. All steps have already been detailed in the Puara Module Templates [README](https://github.com/Puara/puara-module-templates/blob/main/README.md) but will be copied here for documentation purposes.
+
+
+### 2.1 VSCode and PlatformIO 
+
+We recommend using [Visual Studio Code](https://code.visualstudio.com/) as code editor with the [PlatformIO](https://platformio.org/install/ide?install=vscode) IDE extension. All necessary software tools will be packaged within PlatformIO for our purposes.
+
+### 2.2 Puara Module library and Puara Module Templates
+
+To run templates, you do not need to download or install the Puara Module library directly. By getting the templates repository instead, you will have templates that point directly to the library when you build.
+
+If you wish to build and upload templates, clone the `puara-module-templates` repository locally by using VSCode's repository cloning option by pressing `[Ctrl] + [Shift] + [E]` and selecting `Clone Repository`. You can then paste the proper github repository of [Puara-Module-Templates](https://github.com/Puara/puara-module-templates.git) and save it to your preferred location. 
+
+If you wish to expand on the current code base of Puara Modules, you may clone the [Puara Module](https://github.com/Puara/puara-module) repository by following the same steps as stated above. 
+
+
+3. **Open a puara template in VS Code**: Open VS Code, and select the platformIO extension on the left side. This will open the `PLATFORMIO` panel. From there select "Pick a folder", and navigate to one of the `puara-module-templates` subfolders, e.g., `puara-module-templates/basic/` (see below for a list of available templates). Click the "Select Folder" button. Wait for a bit while PlatformIO configures your project.
+<p align="center">
+  <img width="450" src="https://github.com/user-attachments/assets/1d87273a-c3e3-4d5b-890f-6fca498f09b5">
+</p>
+
+
+The configurations are slightly more granular than with Arduino IDE but will be detailed in the [Configuring your board and network specifications](configuration.md) in the PlatformIO section.  
 
 1.  Clone the `puara-module` repository:
     ```bash
