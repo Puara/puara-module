@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - 57-remove-all-arduino-related-ci-and-examples-from-current-repo
     tags:
       - v*
 
@@ -12,64 +13,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint: # Step 1 : Check if repository comformity to Arduino Library standards
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: arduino/arduino-lint-action@v2
-        with:
-            project-type: library
-            compliance: strict
-            library-manager: submit
 
-  compile: # Step 2: Compile Examples for Multiple Boards
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Arduino CLI
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-          export PATH="/home/runner/work/puara-module/puara-module/bin:$PATH"
-          echo "/home/runner/work/puara-module/puara-module/bin" >> $GITHUB_PATH
-          arduino-cli version
-          arduino-cli config init
-          arduino-cli core update-index
-
-      # Install Board Cores
-      - name: Install ESP32 Core
-        run: |
-          arduino-cli core install esp32:esp32
-
-      # Install Library Dependencies
-      - name: Install Library Dependencies
-        run: |
-          arduino-cli lib list
-          mkdir -p $HOME/Arduino/libraries
-          ln -s $PWD $HOME/Arduino/libraries/puara
-          arduino-cli lib list
-
-      # Compile Example Sketches for Tinypico
-      - name: Compile for TinyPICO
-        run: |
-          arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/puara_basic_template/puara_basic_template.ino
-
-      # Compile Example Sketches for Xiao ESP32-S3
-      - name: Compile for XIAO ESP32-S3
-        run: |
-          arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/puara_basic_template/puara_basic_template.ino
-
-      # Compile Example Sketches for
-      - name: Compile for M5StickC
-        run: |
-          arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/puara_basic_template/puara_basic_template.ino
-
-      # Compile Example Sketches for Xiao ESP32-S3
-      - name: Compile for ESP32C3 Dev Module
-        run: |
-          arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/puara_basic_template/puara_basic_template.ino
-
-  # to see all available boards, run the following command in a terminal : $ arduino-cli board listall esp32:esp32
-
+  # Step 1 : Update the puara_arduino repository
   update_arduino_repo:
     runs-on: ubuntu-latest
     steps:
@@ -91,3 +36,82 @@ jobs:
 
       - name: Generate puara-arduino repo
         run: puara-module/scripts/create-puara-arduino.sh
+     
+  lint: # Step 2 : Check repository comformity to Arduino Library standards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: arduino/arduino-lint-action@v2
+        with:
+          project-type: library
+          compliance: strict
+          library-manager: submit
+    
+  compile: # Step 3: Verify Build of various Examples for Multiple Boards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Arduino CLI
+        run: |
+            curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+            export PATH="/home/runner/work/puara-module/puara-module/bin:$PATH"
+            echo "/home/runner/work/puara-module/puara-module/bin" >> $GITHUB_PATH
+            arduino-cli version
+            arduino-cli config init
+            arduino-cli core update-index
+      
+      # Install Board Cores
+      - name: Install ESP32 Core
+        run: |
+          arduino-cli core install esp32:esp32
+      
+      # Install Library Dependencies
+      - name: Install Library Dependencies
+        run: |
+          arduino-cli lib list
+          mkdir -p $HOME/Arduino/libraries
+          ln -s $PWD $HOME/Arduino/libraries/puara
+          arduino-cli lib list
+      
+      # Compile Example Sketches for Tinypico
+      - name: Compile for TinyPICO
+        run: |
+          arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/basic/basic.ino 
+          arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/basic-osc/basic-osc.ino
+          arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/basic-gestures/basic-gestures.ino          
+          arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/ble-advertising/ble-advertising.ino
+          arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/button-osc/button-osc.ino
+          arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/libmapper-osc/libmapper-osc.ino
+                    
+      # Compile Example Sketches for Xiao ESP32-S3
+      - name: Compile for XIAO ESP32-S3
+        run: |
+          arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/basic/basic.ino 
+          arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/basic-osc/basic-osc.ino
+          arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/basic-gestures/basic-gestures.ino          
+          arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/ble-advertising/ble-advertising.ino
+          arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/button-osc/button-osc.ino
+          arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/libmapper-osc/libmapper-osc.ino
+      
+      # Compile Example Sketches for
+      - name: Compile for M5StickC
+        run: |
+          arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/basic/basic.ino 
+          arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/basic-osc/basic-osc.ino
+          arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/basic-gestures/basic-gestures.ino          
+          arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/ble-advertising/ble-advertising.ino
+          arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/button-osc/button-osc.ino
+          arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/libmapper-osc/libmapper-osc.ino
+      
+      # Compile Example Sketches for Xiao ESP32-S3
+      - name: Compile for ESP32C3 Dev Module
+        run: |
+          arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/basic/basic.ino 
+          arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/basic-osc/basic-osc.ino
+          arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/basic-gestures/basic-gestures.ino          
+          arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/ble-advertising/ble-advertising.ino
+          arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/button-osc/button-osc.ino
+          arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 puara-arduino/examples/libmapper-osc/libmapper-osc.ino        
+      
+      # to see all available boards, run the following command in a terminal : $ arduino-cli board listall esp32:esp32
+        
