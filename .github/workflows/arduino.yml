@@ -81,6 +81,11 @@ jobs:
         run: |
           arduino-cli core install esp32:esp32
       
+      # Install OSC Library
+      - name: Install OSC Library
+        run: |
+          arduino-cli lib install "OSC"
+
       # Install Library Dependencies
       - name: Install Library Dependencies
         run: |
