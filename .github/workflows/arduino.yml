@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - 57-remove-all-arduino-related-ci-and-examples-from-current-repo
     tags:
       - v*
 
