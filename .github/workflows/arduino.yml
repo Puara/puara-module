@@ -92,8 +92,8 @@ jobs:
           git clone https://github.com/Puara/puara-gestures.git $HOME/Arduino/libraries/puara-gestures
           mkdir -p $HOME/Arduino/libraries/nlohmann-json
           git clone https://github.com/nlohmann/json.git $HOME/Arduino/libraries/nlohmann-json
-          cp -rf $HOME/Arduino/libraries/nlohmann-json/include/nlohmann/* $HOME/Arduino/libraries/nlohmann-json/
-          ls -a $HOME/Arduino/libraries/nlohmann-json/
+          cp -Rf $HOME/Arduino/libraries/nlohmann-json/include/nlohmann/* $HOME/Arduino/libraries/nlohmann-json/
+          ls -R $HOME/Arduino/libraries/nlohmann-json/
           arduino-cli lib list
 
 
