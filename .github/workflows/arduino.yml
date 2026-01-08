@@ -36,6 +36,13 @@ jobs:
 
       - name: Generate puara-arduino repo
         run: puara-module/scripts/create-puara-arduino.sh
+      
+      - name: Upload puara-arduino artifact
+        uses: actions/upload-artifact@v3
+        with:
+            name: puara-arduino
+            path: puara-arduino
+            
      
   lint: # Step 2 : Check repository comformity to Arduino Library standards
     runs-on: ubuntu-latest
@@ -49,8 +56,17 @@ jobs:
     
   compile: # Step 3: Verify Build of various Examples for Multiple Boards
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    needs: update_arduino_repo
+    steps: 
+      - name: Download puara-arduino artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: puara-arduino
+
+      - name: Debug directory structure
+        run: |
+          ls -R ../
+
       - name: Install Arduino CLI
         run: |
             curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
@@ -72,10 +88,7 @@ jobs:
           mkdir -p $HOME/Arduino/libraries
           ln -s $PWD $HOME/Arduino/libraries/puara
           arduino-cli lib list
-      
-      - name: Debug directory structure
-        run: |
-          ls -R ../
+
 
       # Compile Example Sketches for Tinypico
       - name: Compile for TinyPICO
