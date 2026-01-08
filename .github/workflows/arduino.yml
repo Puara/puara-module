@@ -80,11 +80,6 @@ jobs:
       - name: Install ESP32 Core
         run: |
           arduino-cli core install esp32:esp32
-      
-      # Install OSC Library
-      - name: Install OSC Library
-        run: |
-          arduino-cli lib install "OSC"
 
       # Install Library Dependencies
       - name: Install Library Dependencies
@@ -92,6 +87,8 @@ jobs:
           arduino-cli lib list
           mkdir -p $HOME/Arduino/libraries
           ln -s $PWD $HOME/Arduino/libraries/puara
+          git clone https://github.com/Puara/puara-gestures.git $HOME/Arduino/libraries/puara-gestures
+          arduino-cli lib install "OSC"
           arduino-cli lib list
 
 
