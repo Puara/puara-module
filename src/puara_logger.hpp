@@ -72,7 +72,12 @@ inline void log(size_t v) {
 
 }
 
-#define PUARA_DEBUG  //uncomment this line to access all LOG statements for debug
+
+// Debugging messages can be activated by uncommenting the following line 
+// allowing the system to print all LOG statements across the code. 
+// For platformIO users, it is also possible to add -DPUARA_DEBUG to build flags.
+
+// #define PUARA_DEBUG  
 
 #ifdef PUARA_DEBUG
   #define LOG(x) do { ::PuaraAPI::log(x); } while(0)
