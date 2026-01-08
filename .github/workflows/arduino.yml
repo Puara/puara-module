@@ -75,7 +75,7 @@ jobs:
       
       - name: Debug directory structure
         run: |
-          ls -R 
+          ls -R ../
 
       # Compile Example Sketches for Tinypico
       - name: Compile for TinyPICO
