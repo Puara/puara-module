@@ -270,8 +270,7 @@ void WiFi::sta_event_handler(
     tempBuf << esp_ip4_addr3_16(&event->ip_info.ip) << ".";
     tempBuf << esp_ip4_addr4_16(&event->ip_info.ip);
     self.currentSTA_IP = tempBuf.str();
-    LOG("wifi/sta_event_handler: got ip:");
-    LOG(self.currentSTA_IP);
+    std::cout << "Connected to external AP With ip " << self.currentSTA_IP  << std::endl;
     self.connect_counter = 0;
     xEventGroupSetBits(self.s_wifi_event_group, self.wifi_connected_bit);
   }
@@ -281,4 +280,4 @@ bool WiFi::get_StaIsConnected()
 {
   return StaIsConnected;
 }
-} 
+}
