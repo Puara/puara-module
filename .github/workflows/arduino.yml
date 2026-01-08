@@ -85,10 +85,11 @@ jobs:
       - name: Install Library Dependencies
         run: |
           arduino-cli lib list
+          arduino-cli lib install "OSC"
           mkdir -p $HOME/Arduino/libraries
           ln -s $PWD $HOME/Arduino/libraries/puara
+          mkdir -p $HOME/Arduino/libraries/puara-gestures
           git clone https://github.com/Puara/puara-gestures.git $HOME/Arduino/libraries/puara-gestures
-          arduino-cli lib install "OSC"
           arduino-cli lib list
 
 
