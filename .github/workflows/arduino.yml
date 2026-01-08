@@ -85,7 +85,7 @@ jobs:
       - name: Install Library Dependencies
         run: |
           arduino-cli lib list
-          arduino-cli lib install "OSC"
+          arduino-cli lib install "OSC" "ArduinoBLE"
           mkdir -p $HOME/Arduino/libraries
           ln -s $PWD $HOME/Arduino/libraries/puara
           mkdir -p $HOME/Arduino/libraries/puara-gestures
