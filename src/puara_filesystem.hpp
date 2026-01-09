@@ -41,8 +41,11 @@ struct JSONSettings // TODO: remove from puara_filesystem
 
   void set_settings_changed_handler(std::function<void()>);
 
-  double getVarNumber(std::string varName);
-  std::string getVarText(std::string varName);
+  // Updates a variable from a string obtained from a web request
+  void update_variable_from_string(const std::string& field, const std::string& str_token);
+
+  double getVarNumber(const std::string& varName);
+  std::string getVarText(const std::string& varName);
 
   friend class Webserver;
   friend class Serial;
