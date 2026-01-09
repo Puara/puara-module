@@ -1,9 +1,8 @@
 name: Puara-Module Arduino Example CI
 on:
-  pull_request:
   push:
     branches:
-      - master
+      - main
     tags:
       - v*
 
@@ -35,14 +34,14 @@ jobs:
 
       - name: Generate puara-arduino repo
         run: puara-module/scripts/create-puara-arduino.sh
-      
+
       - name: Upload puara-arduino artifact
         uses: actions/upload-artifact@v4
         with:
             name: puara-arduino
             path: puara-arduino
-            
-     
+
+
   lint: # Step 2 : Check repository comformity to Arduino Library standards
     runs-on: ubuntu-latest
     steps:
@@ -52,11 +51,11 @@ jobs:
           project-type: library
           compliance: strict
           library-manager: submit
-    
+
   compile: # Step 3: Verify Build of various Examples for Multiple Boards
     runs-on: ubuntu-latest
     needs: update_arduino_repo
-    steps: 
+    steps:
       - name: Download puara-arduino artifact
         uses: actions/download-artifact@v4
         with:
@@ -64,7 +63,7 @@ jobs:
 
       - name: Debug directory structure
         run: |
-          ls -R 
+          ls -R
 
       - name: Install Arduino CLI
         run: |
@@ -74,7 +73,7 @@ jobs:
             arduino-cli version
             arduino-cli config init
             arduino-cli core update-index
-      
+
       # Install Board Cores
       - name: Install ESP32 Core
         run: |
@@ -98,43 +97,42 @@ jobs:
       # Compile Example Sketches for Tinypico
       - name: Compile for TinyPICO
         run: |
-          arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic/basic.ino 
+          arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic/basic.ino
           arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-osc/basic-osc.ino
         # arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/ble-advertising/ble-advertising.ino
-        # arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-gestures/basic-gestures.ino          
+        # arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-gestures/basic-gestures.ino
         #  arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/button-osc/button-osc.ino
         #  arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/libmapper-osc/libmapper-osc.ino
 
-                    
+
       # Compile Example Sketches for Xiao ESP32-S3
       - name: Compile for XIAO ESP32-S3
         run: |
-          arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic/basic.ino 
+          arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic/basic.ino
           arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-osc/basic-osc.ino
-        #  arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-gestures/basic-gestures.ino          
+        #  arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-gestures/basic-gestures.ino
         #  arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/ble-advertising/ble-advertising.ino
         #  arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/button-osc/button-osc.ino
         #  arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/libmapper-osc/libmapper-osc.ino
-      
+
       # Compile Example Sketches for
       - name: Compile for M5StickC
         run: |
-          arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic/basic.ino 
+          arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic/basic.ino
           arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-osc/basic-osc.ino
-        #  arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-gestures/basic-gestures.ino          
+        #  arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-gestures/basic-gestures.ino
         #  arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/ble-advertising/ble-advertising.ino
         #  arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/button-osc/button-osc.ino
         #  arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/libmapper-osc/libmapper-osc.ino
-      
+
       # Compile Example Sketches for Xiao ESP32-S3
       - name: Compile for ESP32C3 Dev Module
         run: |
-          arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic/basic.ino 
+          arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic/basic.ino
           arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-osc/basic-osc.ino
-        #  arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-gestures/basic-gestures.ino          
+        #  arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-gestures/basic-gestures.ino
         #  arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/ble-advertising/ble-advertising.ino
         #  arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/button-osc/button-osc.ino
-        #  arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/libmapper-osc/libmapper-osc.ino        
-      
+        #  arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/libmapper-osc/libmapper-osc.ino
+
       # to see all available boards, run the following command in a terminal : $ arduino-cli board listall esp32:esp32
-        
