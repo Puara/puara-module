@@ -1,0 +1,9 @@
+[book]
+authors = ["Société des Arts Technologiques"]
+language = "en"
+src = "src"
+title = "puara-module documentation"
+
+[output.html]
+default-theme = "Ayu"
+preferred-dark-theme = "Ayu"
