@@ -2,6 +2,7 @@
 
 #include "puara_config.hpp"
 #include "puara_logger.hpp"
+#include "puara_utils.hpp"
 
 #include <cJSON.h>
 
@@ -14,12 +15,12 @@ namespace PuaraAPI
 //// CONFIG ////
 
 // Can be improved
-double JSONSettings::getVarNumber(std::string varName)
+double JSONSettings::getVarNumber(const std::string& varName)
 {
   return variables.at(variables_fields.at(varName)).numberValue;
 }
 
-std::string JSONSettings::getVarText(std::string varName)
+std::string JSONSettings::getVarText(const std::string& varName)
 {
   return variables.at(variables_fields.at(varName)).textValue;
 }
@@ -262,4 +263,33 @@ void JSONSettings::set_settings_changed_handler(std::function<void()> func)
   this->on_settings_changed = std::move(func);
 }
 
+void JSONSettings::update_variable_from_string(const std::string& field, const std::string& str_token)
+{
+  auto it = variables_fields.find(field);
+  if(it == variables_fields.end())
+  {
+    LOG("Field not found in settings: ");
+    LOG(field);
+    return;
+  }
+
+  const int field_index = it->second;
+  if(field_index < 0 || field_index >= variables.size())
+  {
+    LOG("Field not in range: ");
+    LOG(variables.size());
+    LOG(field_index);
+    return;
+  }
+
+  auto& var = variables[field_index];
+  if(var.type == "text")
+  {
+    var.textValue = urlDecode(str_token);
+  }
+  else if(var.type == "number")
+  {
+    var.numberValue = std::stod(str_token);
+  }
+}
 }

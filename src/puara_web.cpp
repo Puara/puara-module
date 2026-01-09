@@ -202,12 +202,12 @@ esp_err_t Webserver::settings_get_handler(httpd_req_t* req)
           "for=\"%PARAMETER%\">%PARAMETER%</label></div><div class=\"col-75\"><input "
           "type=\"number\" step=\"any\" id=\"%PARAMETER%\" name=\"%PARAMETER%\" "
           "value=\"%PARAMETERVALUE%\"></div></div>";
-      
+
       // 2. Format the number manually
       char numBuffer[32]; // Buffer large enough for double precision
       // Print with high precision (e.g., 10 decimal places)
-      snprintf(numBuffer, sizeof(numBuffer), "%.10f", it.numberValue); 
-      
+      snprintf(numBuffer, sizeof(numBuffer), "%.10f", it.numberValue);
+
       std::string valStr = numBuffer;
 
       // 3. Remove trailing zeros
@@ -262,33 +262,20 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
     str_buf.append(delimiter);
 
     LOG("Settings stored:");
-    auto& variables = settings.variables;
-    auto& variables_fields = settings.variables_fields;
     while((pos = str_buf.find(delimiter)) != std::string::npos)
     {
       str_token = str_buf.substr(0, pos);
       field_pos = str_buf.find(field_delimiter);
       field = str_token.substr(0, field_pos);
       str_token.erase(0, field_pos + field_delimiter.length());
-      
+
       // Decode the field name (key) to handle spaces/special chars
       field = urlDecode(field);
       LOG(field);
-      
-      if(variables_fields.find(field) != variables_fields.end()) {
-          if(variables.at(variables_fields.at(field)).type == "text")
-          {
-            variables.at(variables_fields.at(field)).textValue = urlDecode(str_token);
-          }
-          else if(variables.at(variables_fields.at(field)).type == "number")
-          {
-            variables.at(variables_fields.at(field)).numberValue = std::stod(str_token);
-          }
-      } else {
-          LOG("Field not found in settings: ");
-          LOG(field);
-      }
-      
+
+      // Change the value in the backend
+      settings.update_variable_from_string(field, str_token);
+
       LOG(str_token);
       str_buf.erase(0, pos + delimiter.length());
     }
