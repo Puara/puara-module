@@ -51,6 +51,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: puara-arduino
+          path: ./puara-arduino
+
       - uses: arduino/arduino-lint-action@v2
         with:
           project-type: library
@@ -153,5 +155,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: puara-arduino
+          path: ./puara-arduino
       - name: Generate puara-arduino repo
         run: puara-module/scripts/push-puara-arduino.sh
