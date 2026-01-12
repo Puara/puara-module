@@ -11,6 +11,7 @@ PUARA_MODULE_SOURCES=(
   git config user.name "puara-bot"
   git config user.email "puara-bot@sat.qc.ca"
 
+  git fetch
   git branch
 
   git checkout origin/continuous
