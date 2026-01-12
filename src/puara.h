@@ -26,17 +26,6 @@ public:
   std::string dmi_name();
   unsigned int version();
   void set_version(unsigned int user_version);
-  std::string IP1();
-  std::string IP2();
-  bool IP1_ready();
-  bool IP2_ready();
-  int unsigned PORT1();
-  int unsigned PORT2();
-  std::string PORT1Str();
-  std::string PORT2Str();
-  int unsigned LocalPORT();
-  std::string LocalPORTStr();
-  unsigned int id();
   std::string apIP();
   std::string staIP();
 
