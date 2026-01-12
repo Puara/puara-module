@@ -11,9 +11,9 @@ PUARA_MODULE_SOURCES=(
   git config user.name "puara-bot"
   git config user.email "puara-bot@sat.qc.ca"
 
-  git checkout -b continuous
+  git checkout origin/continuous
 
-  git branch --set-upstream-to=origin/continuous
+  # git branch --set-upstream-to=origin/continuous
 
 
   git add "${PUARA_MODULE_SOURCES}" examples --ignore-errors
