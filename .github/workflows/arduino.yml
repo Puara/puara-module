@@ -14,7 +14,7 @@ concurrency:
 jobs:
 
   # Step 1 : create the puara_arduino artifact
-  creat_arduino_examples:
+  create_arduino_examples:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -45,7 +45,7 @@ jobs:
 
   lint: # Step 2 : Check repository comformity to Arduino Library standards
     runs-on: ubuntu-latest
-    needs: creat_arduino_examples
+    needs: create_arduino_examples
     steps:
       - name: Download puara-arduino artifact
         uses: actions/download-artifact@v4
@@ -60,7 +60,7 @@ jobs:
 
   compile: # Step 3: Verify Build of various Examples for Multiple Boards
     runs-on: ubuntu-latest
-    needs: creat_arduino_examples
+    needs: create_arduino_examples
     steps:
       - name: Download puara-arduino artifact
         uses: actions/download-artifact@v4
@@ -147,7 +147,7 @@ jobs:
     runs-on: ubuntu-latest
     # only runs this when we push on main
     if: github.ref != 'refs/heads/main'
-    needs: create_arduino_examples
+    needs: compile
     steps:
       - name: Download puara-arduino artifact
         uses: actions/download-artifact@v4
