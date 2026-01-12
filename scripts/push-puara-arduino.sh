@@ -1,8 +1,6 @@
 #!/bin/bash -eux
 PUARA_MODULE_SOURCES=(
-  src data
-  .clang-format .gitignore library.properties
-  LICENSE README.md
+  src/* data/* LICENSE README.md library.properties .clang-format .gitignore
 )
 
 (
@@ -11,7 +9,7 @@ PUARA_MODULE_SOURCES=(
   git config user.name "puara-bot"
   git config user.email "puara-bot@sat.qc.ca"
 
-  git add "${PUARA_MODULE_SOURCES}" examples --ignore-errors
+  git add "${PUARA_MODULE_SOURCES}" examples/* --ignore-errors
   git commit -am "$GITHUB_REF :: $GITHUB_SHA"
 
   # looks to see if there is something to commit.
