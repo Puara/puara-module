@@ -13,7 +13,8 @@ PUARA_MODULE_SOURCES=(
 
   git checkout -b continuous
 
-  git pull
+  git branch --set-upstream-to=origin/continuous
+
 
   git add "${PUARA_MODULE_SOURCES}" examples --ignore-errors
   git commit -am "$GITHUB_REF :: $GITHUB_SHA"
