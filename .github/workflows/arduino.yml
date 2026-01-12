@@ -69,10 +69,6 @@ jobs:
         with:
           name: puara-arduino
 
-      - name: Debug directory structure
-        run: |
-          ls -R
-
       - name: Install Arduino CLI
         run: |
             curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
@@ -148,13 +144,16 @@ jobs:
   push: # Step 4: Push the updated arduino repository.
     runs-on: ubuntu-latest
     # only runs this when we push on main
-    if: github.ref != 'refs/heads/main'
     needs: compile
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Download puara-arduino artifact
         uses: actions/download-artifact@v4
         with:
           name: puara-arduino
           path: ./puara-arduino
+      - name: Debug directory structure
+        run: |
+          ls -R
       - name: Generate puara-arduino repo
-        run: puara-module/scripts/push-puara-arduino.sh
+        run: ./scripts/push-puara-arduino.sh
