@@ -37,7 +37,12 @@ PUARA_TEMPLATES=(
   for template in "${PUARA_TEMPLATES[@]}"; do
     mkdir -p "../puara-arduino/examples/$template"
     cp -rf "$template/src/main.cpp" "../puara-arduino/examples/$template/$template.ino"
-    cp -rf "$template/src/"*.{h,hpp} "../puara-arduino/examples/$template/"
+    
+    headers=( "$template/src/"*.{h,hpp} )
+    if ((${#headers[@]})); then
+      cp -rf "${headers[@]}" "../puara-arduino/examples/$template/"
+    fi
+    
     cp -rf "$template/data" "../puara-arduino/examples/$template/data"
   done
 )
