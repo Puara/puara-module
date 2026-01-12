@@ -145,7 +145,7 @@ jobs:
     runs-on: ubuntu-latest
     # only runs this when we push on main
     needs: compile
-    if: github.ref == 'refs/heads/main'
+    #if: github.ref == 'refs/heads/main'
     steps:
       - name: Download puara-arduino artifact
         uses: actions/download-artifact@v4
