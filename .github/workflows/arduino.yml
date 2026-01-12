@@ -150,13 +150,18 @@ jobs:
           repository: puara/puara-module
           path: puara-module
 
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
+          repository: puara/puara-arduino
+          path: puara-arduino
+
+      # this should overwrite the changed files over the repository
       - name: Download puara-arduino artifact
         uses: actions/download-artifact@v4
         with:
           name: puara-arduino
           path: ./puara-arduino
-      - name: Debug directory structure
-        run: |
-          ls -R
+
       - name: Generate puara-arduino repo
         run: ./puara-module/scripts/push-puara-arduino.sh
