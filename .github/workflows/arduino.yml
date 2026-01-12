@@ -158,7 +158,7 @@ jobs:
 
       # setup the repository to checkout the continuous branch
       - name: push puara-arduino repo
-        run: ./puara-module/scripts/setup-puara-arduino.sh
+        run: ./puara-module/scripts/setup-puara-arduino-git.sh
 
       # this should overwrite the changed files over the repository
       - name: Download puara-arduino artifact
