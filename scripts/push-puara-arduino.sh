@@ -1,4 +1,10 @@
 #!/bin/bash -eux
+PUARA_MODULE_SOURCES=(
+  src data
+  .clang-format .gitignore library.properties
+  LICENSE README.md
+)
+
 (
   cd puara-arduino || exit 1
 
@@ -7,7 +13,7 @@
 
   git checkout -b continuous
 
-  git add examples/*
+  git add "${PUARA_MODULE_SOURCES}" --ignore-errors
   git commit -am "$GITHUB_REF :: $GITHUB_SHA"
 
   # looks to see if there is something to commit.
