@@ -6,7 +6,7 @@
   git config user.name "puara-bot"
   git config user.email "puara-bot@sat.qc.ca"
 
-  git add "${PUARA_MODULE_SOURCES}" src/* data/* examples/* LICENSE README.md library.properties .clang-format .gitignore --ignore-errors
+  git add src/* data/* examples/* LICENSE README.md library.properties .clang-format .gitignore --ignore-errors
   git commit -am "$GITHUB_REF :: $GITHUB_SHA"
 
   # looks to see if there is something to commit.
