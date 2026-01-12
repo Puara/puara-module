@@ -14,7 +14,7 @@ PUARA_TEMPLATES=(
 
 (
   cd puara-arduino || exit 1
-  
+
   git config user.name "puara-bot"
   git config user.email "puara-bot@sat.qc.ca"
 
@@ -36,13 +36,4 @@ PUARA_TEMPLATES=(
     cp -rf "$template/src/main.cpp" "../puara-arduino/examples/$template/$template.ino"
     cp -rf "$template/data" "../puara-arduino/examples/$template/data"
   done
-)
-
-# 4. Commit
-(
-  cd puara-arduino || exit 1
-  git add "${PUARA_MODULE_SOURCES[@]}" examples
-  git commit -m "$GITHUB_REF :: $GITHUB_SHA"
-
-  git push --set-upstream origin continuous --force
 )
