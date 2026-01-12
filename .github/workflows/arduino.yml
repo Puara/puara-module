@@ -143,6 +143,7 @@ jobs:
     runs-on: ubuntu-latest
     # only runs this when we push on main
     needs: compile
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
         with:
