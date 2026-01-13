@@ -7,7 +7,7 @@ PUARA_MODULE_SOURCES=(
 )
 
 PUARA_TEMPLATES=(
-  basic basic-gestures basic-osc ble-advertising button-osc libmapper-osc
+  basic basic-osc ble-advertising
 )
 
 # 1. Recreate repo
