@@ -64,12 +64,6 @@ void checkmark(std::string old_text, bool value, std::string& str)
   }
 }
 
-std::string convertToString(char* a)
-{
-  std::string s(a);
-  return s;
-}
-
 std::string urlDecode(std::string text)
 {
   std::string escaped;
@@ -99,4 +93,4 @@ std::string urlDecode(std::string text)
   }
   return escaped;
 }
-} 
+}
