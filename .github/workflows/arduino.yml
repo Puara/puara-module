@@ -44,4 +44,4 @@ jobs:
       - name: generate
         uses: puara/actions/push-arduino-library@main
         with:
-        puara-arduino-repo-token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
+          puara-arduino-repo-token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
