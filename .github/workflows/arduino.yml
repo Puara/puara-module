@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     # only runs this when we push on main
     needs: compile-arduino-library
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     steps:
       - name: generate
         uses: puara/actions/push-arduino-library@main
