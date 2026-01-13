@@ -17,8 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       uses: puara/actions/generate-arduino-library@main
-        with:
-          puara-arduino-repo-token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
+      with:
+        puara-arduino-repo-token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
 
   lint-arduino-library:
     runs-on: ubuntu-latest
@@ -39,5 +39,5 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       uses: puara/actions/push-arduino-library@main
-        with:
-          puara-arduino-repo-token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
+      with:
+        puara-arduino-repo-token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
