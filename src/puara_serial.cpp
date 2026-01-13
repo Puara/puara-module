@@ -45,7 +45,7 @@ void Serial::interpret_serial()
     {
       continue;
     }
-    if(serial_data_str.compare("reset") == 0 || d.compare("reboot") == 0)
+    if(serial_data_str.compare("reset") == 0 || serial_data_str.compare("reboot") == 0)
     {
       std::cout << "\nRebooting...\n" << std::endl;
       createTask<&Device::reboot_with_delay>(&device, "reboot_with_delay", 1024);
