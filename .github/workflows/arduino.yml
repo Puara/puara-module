@@ -13,147 +13,31 @@ concurrency:
 
 jobs:
 
-  # Step 1 : create the puara_arduino artifact
-  create_arduino_examples:
+  generate-arduino-library:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      uses: puara/actions/generate-arduino-library@main
         with:
-          repository: puara/puara-module
-          path: puara-module
+          puara-arduino-repo-token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
 
-      - uses: actions/checkout@v4
-        with:
-          repository: puara/puara-module-templates
-          path: puara-module-templates
-
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
-          repository: puara/puara-arduino
-          path: puara-arduino
-
-      - name: Generate puara-arduino repo
-        run: puara-module/scripts/create-puara-arduino.sh
-
-      - name: Upload puara-arduino artifact
-        uses: actions/upload-artifact@v4
-        with:
-            name: puara-arduino
-            path: puara-arduino
-
-
-  lint: # Step 2 : Check repository comformity to Arduino Library standards
+  lint-arduino-library:
     runs-on: ubuntu-latest
     needs: create_arduino_examples
     steps:
-      - name: Download puara-arduino artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: puara-arduino
+      uses: puara/actions/lint-arduino-library@main
 
-      - uses: arduino/arduino-lint-action@v2
-        with:
-          project-type: library
-          compliance: strict
-          library-manager: submit
-
-  compile: # Step 3: Verify Build of various Examples for Multiple Boards
+  compile-arduino-library:
     runs-on: ubuntu-latest
     needs: create_arduino_examples
     steps:
-      - name: Download puara-arduino artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: puara-arduino
+      uses: puara/actions/compile-arduino-library@main
 
-      - name: Install Arduino CLI
-        run: |
-            curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-            export PATH="/home/runner/work/puara-module/puara-module/bin:$PATH"
-            echo "/home/runner/work/puara-module/puara-module/bin" >> $GITHUB_PATH
-            arduino-cli version
-            arduino-cli config init
-            arduino-cli core update-index
-
-      # Install Board Cores
-      - name: Install ESP32 Core
-        run: |
-          arduino-cli core install esp32:esp32
-
-      # Install Library Dependencies
-      - name: Install Library Dependencies
-        run: |
-          arduino-cli lib list
-          arduino-cli lib install "OSC" "ArduinoBLE"
-          mkdir -p $HOME/Arduino/libraries
-          ln -s $PWD $HOME/Arduino/libraries/puara
-#          mkdir -p $HOME/Arduino/libraries/puara-gestures
-#          git clone https://github.com/Puara/puara-gestures.git $HOME/Arduino/libraries/puara-gestures
-#          mkdir -p $HOME/Arduino/libraries/nlohmann-json
-#          git clone https://github.com/nlohmann/json.git $HOME/Arduino/libraries/nlohmann-json
-#          cp -Rf $HOME/Arduino/libraries/nlohmann-json/include/* $HOME/Arduino/libraries/nlohmann-json/
-#          arduino-cli lib list
-
-
-      # Compile Example Sketches for Tinypico
-      - name: Compile for TinyPICO
-        run: |
-          arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic/basic.ino
-          arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-osc/basic-osc.ino
-          arduino-cli compile --fqbn esp32:esp32:um_tinypico --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/ble-advertising/ble-advertising.ino
-
-
-      # Compile Example Sketches for Xiao ESP32-S3
-      - name: Compile for XIAO ESP32-S3
-        run: |
-          arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic/basic.ino
-          arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-osc/basic-osc.ino
-          arduino-cli compile --fqbn esp32:esp32:XIAO_ESP32S3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/ble-advertising/ble-advertising.ino
-
-      # Compile Example Sketches for
-      - name: Compile for M5StickC
-        run: |
-          arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic/basic.ino
-          arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-osc/basic-osc.ino
-          arduino-cli compile --fqbn esp32:esp32:m5stack_stickc --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/ble-advertising/ble-advertising.ino
-
-      # Compile Example Sketches for Xiao ESP32-S3
-      - name: Compile for ESP32C3 Dev Module
-        run: |
-          arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic/basic.ino
-          arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/basic-osc/basic-osc.ino
-          arduino-cli compile --fqbn esp32:esp32:esp32c3 --build-property build.partitions=min_spiffs --build-property upload.maximum_size=1966080 examples/ble-advertising/ble-advertising.ino
-
-      # to see all available boards, run the following command in a terminal : $ arduino-cli board listall esp32:esp32
-
-  push: # Step 4: Push the updated arduino repository.
+  push-arduino-library:
     runs-on: ubuntu-latest
     # only runs this when we push on main
     needs: compile
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v4
+      uses: puara/actions/push-arduino-library@main
         with:
-          repository: puara/puara-module
-          path: puara-module
-
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
-          repository: puara/puara-arduino
-          path: puara-arduino
-
-      # setup the repository to checkout the continuous branch
-      - name: push puara-arduino repo
-        run: ./puara-module/scripts/setup-puara-arduino-git.sh
-
-      # this should overwrite the changed files over the repository
-      - name: Download puara-arduino artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: puara-arduino
-          path: ./puara-arduino
-
-      - name: push puara-arduino repo
-        run: ./puara-module/scripts/push-puara-arduino.sh
+          puara-arduino-repo-token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
