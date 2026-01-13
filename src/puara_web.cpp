@@ -251,7 +251,7 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
       }
       return ESP_FAIL;
     }
-    std::string str_buf = convertToString(buf);
+    std::string str_buf{buf};
     std::string str_token;
     std::string field;
     size_t pos = 0;
@@ -350,7 +350,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
       return ESP_FAIL;
     }
 
-    std::string str_buf = convertToString(buf);
+    std::string str_buf{buf};
     std::string str_token;
     std::string field;
     size_t pos = 0;
