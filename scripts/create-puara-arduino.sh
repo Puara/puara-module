@@ -31,9 +31,19 @@ PUARA_TEMPLATES=(
 # 3. Copy puara-module-templates
 (
   cd puara-module-templates || exit 1
+
+  shopt -s nullglob
+
   for template in "${PUARA_TEMPLATES[@]}"; do
     mkdir -p "../puara-arduino/examples/$template"
     cp -rf "$template/src/main.cpp" "../puara-arduino/examples/$template/$template.ino"
+    # remove main.cpp to avoid copying it again.
+    rm "$template/src/main.cpp"
+    headers=( "$template/src/"*.{c,cpp,h,hpp} )
+    if ((${#headers[@]})); then
+      cp -rf "${headers[@]}" "../puara-arduino/examples/$template/"
+    fi
+
     cp -rf "$template/data" "../puara-arduino/examples/$template/data"
   done
 )

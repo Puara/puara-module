@@ -26,11 +26,6 @@ public:
   std::string dmi_name();
   unsigned int version();
   void set_version(unsigned int user_version);
-  std::string apIP();
-  std::string staIP();
-
-  bool persistentAP();
-  bool set_persistentAP(bool uservalue);
 
   void mount();
   void unmount();
