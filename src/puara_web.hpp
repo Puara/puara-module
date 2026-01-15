@@ -54,7 +54,7 @@ struct Webserver
   std::string APpasswdVal2;
 
   httpd_handle_t webserver;
-  httpd_config_t webserver_config;
+  httpd_config_t webserver_config = HTTPD_DEFAULT_CONFIG();
 
   // FIXME frozen::hash_map
   std::unordered_map<std::string, int> config_fields
