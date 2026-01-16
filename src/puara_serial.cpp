@@ -2,9 +2,9 @@
 
 #include "puara_config.hpp"
 #include "puara_device.hpp"
+#include "puara_logger.hpp"
 #include "puara_filesystem.hpp"
 #include "puara_utils.hpp"
-#include "puara_logger.hpp"
 
 #if defined(PUARA_SPIFFS)
 #include "puara_spiffs.hpp"
@@ -121,15 +121,14 @@ void Serial::uart_monitor()
   // In this example we don't even use a buffer for sending data.
   if(uart_is_driver_installed(uart_num0))
   {
-    LOG("UART driver already installed. Skipping installation.");
+    ESP_LOGI(PUARA_TAG,"UART driver already installed. Skipping installation.");
   }
   else
   {
     esp_err_t err = uart_driver_install(uart_num0, UART_FIFO_LEN + 1, 0, 0, NULL, 0);
     if (err != ESP_OK)
     {
-      LOG("Failed to install UART driver. Error code: ");
-      LOG(EspErr{err});
+      ESP_LOGE(PUARA_TAG,"Failed to install UART driver. Error code: %d", err);
       return;
     }
   }
@@ -207,7 +206,7 @@ void Serial::usb_monitor()
   // // Setup USB interface
   // tinyusb_init(&usb_config);
   // TODO: Read from USB interface
-  LOG("USB OTG monitor not supported, use the USB Serial JTAG or UART interface");
+  ESP_LOGE(PUARA_TAG,"USB OTG monitor not supported, use the USB Serial JTAG or UART interface");
 #endif
 }
 
@@ -230,7 +229,7 @@ bool Serial::start_serial_listening()
   }
   else
   {
-    LOG("Invalid Monitor Type");
+    ESP_LOGW(PUARA_TAG,"Invalid Monitor Type");
   }
   return 1;
 }
