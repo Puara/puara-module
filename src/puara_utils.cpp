@@ -14,7 +14,7 @@ void find_and_replace(std::string old_text, std::string new_text, std::string& s
     str.replace(old_text_position, old_text.length(), new_text);
     old_text_position = str.find(old_text, old_text_position + new_text.length());
   }
-  LOG("http (find_and_replace): Success");
+  ESP_LOGV(PUARA_TAG,"http (find_and_replace): Success");
 }
 
 void find_and_replace(std::string old_text, double new_number, std::string& str)
@@ -26,7 +26,7 @@ void find_and_replace(std::string old_text, double new_number, std::string& str)
     str.replace(old_text_position, old_text.length(), conversion);
     old_text_position = str.find(old_text, old_text_position + conversion.length());
   }
-  LOG("http (find_and_replace): Success");
+  ESP_LOGV(PUARA_TAG,"http (find_and_replace): Success");
 }
 
 void find_and_replace(std::string old_text, unsigned int new_number, std::string& str)
@@ -38,7 +38,7 @@ void find_and_replace(std::string old_text, unsigned int new_number, std::string
     str.replace(old_text_position, old_text.length(), conversion);
     old_text_position = str.find(old_text, old_text_position + conversion.length());
   }
-  LOG("http (find_and_replace): Success");
+  ESP_LOGV(PUARA_TAG,"http (find_and_replace): Success");
 }
 
 void checkmark(std::string old_text, bool value, std::string& str)
@@ -56,11 +56,11 @@ void checkmark(std::string old_text, bool value, std::string& str)
       conversion = "";
     }
     str.replace(old_text_position, old_text.length(), conversion);
-    LOG("http (checkmark): Success");
+    ESP_LOGI(PUARA_TAG,"http (checkmark): Success");
   }
   else
   {
-    LOG("http (checkmark): Could not find the requested string");
+    ESP_LOGW(PUARA_TAG,"http (checkmark): Could not find the requested string");
   }
 }
 

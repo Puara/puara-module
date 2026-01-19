@@ -36,13 +36,11 @@ void WiFi::wifi_init()
   esp_err_t setname = esp_netif_set_hostname(ap_netif, config.dmiName.c_str());
   if(setname != ESP_OK)
   {
-    LOG("wifi_init: failed to set hostname: ");
-    LOG(config.dmiName);
+    ESP_LOGE(PUARA_TAG,"wifi_init: failed to set hostname: %s", config.dmiName);
   }
   else
   {
-    LOG("wifi_init: hostname: ");
-    LOG(config.dmiName);
+    ESP_LOGI(PUARA_TAG,"wifi_init: hostname: %s", config.dmiName);
   }
 
   esp_event_handler_instance_t instance_any_id;
@@ -52,25 +50,25 @@ void WiFi::wifi_init()
   ESP_ERROR_CHECK(esp_event_handler_instance_register(
       IP_EVENT, IP_EVENT_STA_GOT_IP, &WiFi::sta_event_handler, this, &instance_got_ip));
 
-  LOG("wifi_init: setting wifi mode");
+  ESP_LOGI(PUARA_TAG,"wifi_init: setting wifi mode");
   if(config.persistentAP)
   {
-    LOG("wifi_init:     AP-STA mode");
+    ESP_LOGI(PUARA_TAG,"wifi_init:     AP-STA mode");
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
-    LOG("wifi_init: loading AP config");
+    ESP_LOGI(PUARA_TAG,"wifi_init: loading AP config");
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &this->wifi_config_ap));
   }
   else
   {
-    LOG("wifi_init:     STA mode");
+    ESP_LOGI(PUARA_TAG,"wifi_init:     STA mode");
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
   }
-  LOG("wifi_init: loading STA config");
+  ESP_LOGI(PUARA_TAG,"wifi_init: loading STA config");
   ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &this->wifi_config_sta));
-  LOG("wifi_init: esp_wifi_start");
+  ESP_LOGI(PUARA_TAG,"wifi_init: esp_wifi_start");
   ESP_ERROR_CHECK(esp_wifi_start());
 
-  LOG("wifi_init: wifi_init finished.");
+  ESP_LOGI(PUARA_TAG,"wifi_init: wifi_init finished.");
 
   /* Waiting until either the connection is established (this->wifi_connected_bit)
    * or connection failed for the maximum number of re-tries (this->wifi_fail_bit).
@@ -83,24 +81,21 @@ void WiFi::wifi_init()
    * can test which event actually happened. */
   if(bits & this->wifi_connected_bit)
   {
-    LOG("wifi_init: Connected to SSID: ");
-    LOG(config.wifiSSID);
+    ESP_LOGI(PUARA_TAG,"wifi_init: Connected to SSID: %s", config.wifiSSID);
     currentSSID = config.wifiSSID;
     this->StaIsConnected = true;
   }
   else if(bits & this->wifi_fail_bit)
   {
-    LOG("wifi_init: Failed to connect to SSID: ");
-    LOG(config.wifiSSID);
+    ESP_LOGW(PUARA_TAG,"wifi_init: Failed to connect to SSID: %s", config.wifiSSID);
     if(!config.persistentAP)
     {
-      LOG("wifi_init: Failed to connect to SSID: ");
-      LOG(config.wifiSSID);
-      LOG("Switching to AP/STA mode");
+      ESP_LOGW(PUARA_TAG,"wifi_init: Failed to connect to SSID: %s", config.wifiSSID);
+      ESP_LOGI(PUARA_TAG,"Switching to AP/STA mode");
       ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
-      LOG("wifi_init: loading AP config");
+      ESP_LOGI(PUARA_TAG,"wifi_init: loading AP config");
       ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &this->wifi_config_ap));
-      LOG("wifi_init: Trying to connect one more time to SSID before giving up.");
+      ESP_LOGW(PUARA_TAG,"wifi_init: Trying to connect one more time to SSID before giving up.");
       ESP_ERROR_CHECK(esp_wifi_start());
     }
     else
@@ -110,7 +105,7 @@ void WiFi::wifi_init()
   }
   else
   {
-    LOG("wifi_init: UNEXPECTED EVENT");
+    ESP_LOGE(PUARA_TAG,"wifi_init: UNEXPECTED EVENT");
   }
 
   /* The event will not be processed after unregister */
@@ -163,8 +158,7 @@ void WiFi::wifi_scan(void)
   esp_wifi_scan_start(NULL, true);
   ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&number, ap_info));
   ESP_ERROR_CHECK(esp_wifi_scan_get_ap_num(&ap_count));
-  LOG("wifi_scan: Total APs scanned = ");
-  LOG(ap_count);
+  ESP_LOGI(PUARA_TAG,"wifi_scan: Total APs scanned = %d", ap_count);
   wifiAvailableSsid.clear();
   for(int i = 0; (i < PuaraAPI::wifiScanSize) && (i < ap_count); i++)
   {
@@ -185,23 +179,23 @@ void WiFi::start_wifi()
   // Check if wifiSSID is empty and wifiPSK have less than 8 characteres
   if(config.dmiName.empty())
   {
-    LOG("start_wifi: Module name unpopulated. Using default name: Puara");
+    ESP_LOGW(PUARA_TAG,"start_wifi: Module name unpopulated. Using default name: Puara");
     config.dmiName = "Puara";
   }
   if(config.APpasswd.empty() || config.APpasswd.length() < 8
      || config.APpasswd == "password")
   {
-    LOG("startWifi: AP password error. Possible causes:");
-    LOG("startWifi:   - no AP password");
-    LOG("startWifi:   - password is less than 8 characters long");
-    LOG("startWifi:   - password is set to \"password\"");
-    LOG("startWifi: Using default AP password: password");
-    LOG("startWifi: It is strongly recommended to change the password");
+    ESP_LOGW(PUARA_TAG,"startWifi: AP password error. Possible causes:");
+    ESP_LOGW(PUARA_TAG,"startWifi:   - no AP password");
+    ESP_LOGW(PUARA_TAG,"startWifi:   - password is less than 8 characters long");
+    ESP_LOGW(PUARA_TAG,"startWifi:   - password is set to \"password\"");
+    ESP_LOGW(PUARA_TAG,"startWifi: Using default AP password: password");
+    ESP_LOGW(PUARA_TAG,"startWifi: It is strongly recommended to change the password");
     config.APpasswd = "password";
   }
   if(config.wifiSSID.empty())
   {
-    LOG("start_wifi: No blank SSID allowed. Using default name: Puara");
+    ESP_LOGW(PUARA_TAG,"start_wifi: No blank SSID allowed. Using default name: Puara");
     config.wifiSSID = "Puara";
   }
 
@@ -231,7 +225,7 @@ void WiFi::start_wifi()
   }
   ESP_ERROR_CHECK(ret);
 
-  LOG("startWifi: Starting WiFi config");
+  ESP_LOGI(PUARA_TAG,"startWifi: Starting WiFi config");
   this->connect_counter = 0;
   wifi_init();
   this->ApStarted = true;

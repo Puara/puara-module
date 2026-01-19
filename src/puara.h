@@ -18,7 +18,7 @@ typedef void* httpd_handle_t;
 class Puara
 {
 public:
-  void start(PuaraAPI::Monitors monitor = PuaraAPI::UART_MONITOR);
+  void start(PuaraAPI::Monitors monitor = PuaraAPI::UART_MONITOR, esp_log_level_t debug_level=ESP_LOG_WARN);
 
   httpd_handle_t start_webserver(void);
   void stop_webserver(void);
