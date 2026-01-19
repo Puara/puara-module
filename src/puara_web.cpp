@@ -264,7 +264,7 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
     // adding delimiter to process last variable in the loop
     str_buf.append(delimiter);
 
-    ESP_LOGI(PUARA_TAG,"Settings stored:");
+    ESP_LOGD(PUARA_TAG,"Settings stored:");
     while((pos = str_buf.find(delimiter)) != std::string::npos)
     {
       str_token = str_buf.substr(0, pos);
@@ -274,15 +274,15 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
 
       // Decode the field name (key) to handle spaces/special chars
       field = urlDecode(field);
-      ESP_LOGI(PUARA_TAG, "%s", field);
+      ESP_LOGD(PUARA_TAG, "%s", field);
 
       // Change the value in the backend
       settings.update_variable_from_string(field, str_token);
 
-      ESP_LOGI(PUARA_TAG, "%s", str_token);
+      ESP_LOGD(PUARA_TAG, "%s", str_token);
       str_buf.erase(0, pos + delimiter.length());
     }
-    ESP_LOGI(PUARA_TAG,"");
+    ESP_LOGD(PUARA_TAG,"");
     remaining -= api_return;
   }
 

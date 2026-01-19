@@ -54,8 +54,8 @@ void PuaraFileSystem::mount()
     else
     {
 
-      ESP_LOGI(PUARA_TAG,"spiffs: Partition size: total: %d", total);
-      ESP_LOGI(PUARA_TAG,"used: %d", used);
+      ESP_LOGD(PUARA_TAG,"spiffs: Partition size: total: %d", total);
+      ESP_LOGD(PUARA_TAG,"used: %d", used);
     }
   }
   else
