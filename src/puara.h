@@ -49,7 +49,7 @@ public:
   /**
    * returns current IP address on external wifi access point
    */
-  std::string Puara::staIP();
+  std::string staIP();
 
   double getVarNumber(std::string varName);
   std::string getVarText(std::string varName);
