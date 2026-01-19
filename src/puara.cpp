@@ -42,9 +42,10 @@ struct PuaraGlobal
 
   PuaraGlobal() { }
 
-  void start(PuaraAPI::Monitors monitor)
+  void start(PuaraAPI::Monitors monitor, esp_log_level_t debug_level)
   {
-    esp_log_level_set("puara-module", ESP_LOG_WARN);
+    // Defaults to ESP_LOG_WARNING so that only warnings and errors are printed.
+    esp_log_level_set("puara-module", debug_level);
     std::cout << "\n"
               << "Puara Module Manager                                   \n"
               << "Innovation - Société des Arts Technologiques (SAT)     \n"
@@ -78,9 +79,9 @@ struct PuaraGlobal
 static PuaraGlobal g_puara;
 
 // Defining static members
-void Puara::start(PuaraAPI::Monitors monitor)
+void Puara::start(PuaraAPI::Monitors monitor, esp_log_level_t debug_level)
 {
-  g_puara.start(monitor);
+  g_puara.start(monitor, debug_level);
 }
 
 httpd_handle_t Puara::start_webserver(void)
