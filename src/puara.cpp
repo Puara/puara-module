@@ -106,6 +106,11 @@ void Puara::set_version(unsigned int user_version)
   g_puara.config.version = user_version;
 }
 
+std::string Puara::staIP()
+{
+  return g_puara.wifi.currentSTA_IP;
+}
+
 void Puara::mount()
 {
   return g_puara.fs.mount();
