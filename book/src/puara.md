@@ -26,7 +26,7 @@ The `start()` method initializes the filesystem, reads the configuration and set
 
 The `Puara` object has several methods for interacting with the different modules of the library. Here are some of the most important ones:
 
-*   `start(PuaraAPI::Monitors monitor = PuaraAPI::UART_MONITOR)`: Initializes the `puara-module`. You can specify the monitor to be used for logging. The default is `UART_MONITOR`.
+*   `start(PuaraAPI::Monitors monitor = PuaraAPI::UART_MONITOR, esp_log_level_t debug_level=ESP_LOG_WARN)`: Initializes the `puara-module`. You can specify the monitor to be used for logging. The default is `UART_MONITOR`. You can also specify the logging level with the second parameter.
 *   `start_webserver()`: Starts the webserver.
 *   `stop_webserver()`: Stops the webserver.
 *   `dmi_name()`: Returns the DMI name of the device.
