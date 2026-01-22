@@ -12,10 +12,26 @@ This pseudo-library currently has the following dependencies:
 
 Use the [template](https://github.com/Puara/puara-module-template) to start using the Puara Module.
 
-## Known Issues
-- With esp32s3 boards, after flashing puara-module for the first time it is often necessary to hold the boot button and to press reset to be able to flash anything else.
+## Tested boards and known issues
 
-- Still with esp32s3 boards, serial monitors typically do not work.
+Generally, try to avoid esp32s3. We have seen the most issues with them.
+
+### M5StickC
+All good
+
+### tinypico
+All good
+
+### Adafruit esp32s3 feather and TFT variant
+- You will have to press the reset button while holding the boot button to be able to flash another firmware after flashing puara-module for the first time
+- It can take a long time to get serial messages to print on the serial monitor.
+
+### seeed xiao s3
+- You will have to press the reset button while holding the boot button to be able to flash another firmware after flashing puara-module for the first time
+- It can take a long time to get serial messages to print on the serial monitor.
+
+These issues seem to be less frequent then on the esp32 feathers.
+
 
 ## More Info on the related [GuitarAMI](https://github.com/Puara/GuitarAMI) and [Puara](https://github.com/Puara) research
 
