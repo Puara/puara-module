@@ -1,43 +1,63 @@
 # Puara Module
 
-Library for creating music controllers using the Puara framework
+[![Build](https://github.com/Puara/puara-module/actions/workflows/build.yml/badge.svg)](https://github.com/Puara/puara-module/actions/workflows/build.yml)
 
-It includes a Wi-Fi manager (set SSID/password for wireless networks), a [OSC](https://en.wikipedia.org/wiki/Open_Sound_Control) manager (set addresses to send OSC messages), setup tools, and [libmapper](http://libmapper.github.io/) compatibility*.
+This repository contains the source code for Puara Module library which offers the fundamentals to create ESP32-based devices that can be controlled over the network.
 
-This pseudo-library currently has the following dependencies:
+## Why Use This?
 
-- [libmapper-arduino](https://github.com/puara/libmapper-arduino.git) (cloned from the [original library](https://github.com/mathiasbredholt/libmapper-arduino)).
+This project is designed for artists and creators interested in developing distributed systems, interactive installations, network-based projects, innovative digital instruments, and new forms of creative interfaces.
 
-## How to use
+## Overview
 
-Use the [template](https://github.com/Puara/puara-module-template) to start using the Puara Module.
+Puara Module facilitates embedded system development by providing a set of pre-defined modules that manage filesystem, web server, and network connections so users can focus on prototyping the rest of their system.
 
-## Tested boards and known issues
+### PlatformIO 
+Refer to the [PlatformIO templates and documentation](https://github.com/Puara/puara-module-template) to start prototyping with the Puara Module.
 
-Generally, try to avoid esp32s3. We have seen the most issues with them.
-
-### M5StickC
-All good
-
-### tinypico
-All good
-
-### Adafruit esp32s3 feather and TFT variant
-- You will have to press the reset button while holding the boot button to be able to flash another firmware after flashing puara-module for the first time
-- It can take a long time to get serial messages to print on the serial monitor.
-
-### seeed xiao s3
-- You will have to press the reset button while holding the boot button to be able to flash another firmware after flashing puara-module for the first time
-- It can take a long time to get serial messages to print on the serial monitor.
-
-These issues seem to be less frequent then on the esp32 feathers.
+### Arduino 2.0 IDE
+Download the `puara-module` library directly from the Arduino 2.0 IDE library manager to start prototyping with Puara Module in Arduino 2.0 IDE. 
+Find more information about this approach in the [Arduino examples and documentation](https://github.com/Puara/puara-arduino) .
 
 
-## More Info on the related [GuitarAMI](https://github.com/Puara/GuitarAMI) and [Puara](https://github.com/Puara) research
+## Tested Boards and Known Issues
 
-[https://www.edumeneses.com](https://www.edumeneses.com)
+| ✅ | Board                          | Notes                                                                                           |
+|----|--------------------------------|-------------------------------------------------------------------------------------------------|
+| ✅ | M5StickC                       | All good                                                                                       |
+| ✅ | tinypico                       | All good                                                                                       |
+| ⚠️ | Adafruit ESP32-S3 Feather     | - Hold Boot button and press Reset to enter serial flash mode. <br> - Serial messages may take a long time to appear on the serial monitor. |
+| ⚠️ | Seeed Xiao S3                 | - Hold Boot button and press Reset to enter serial flash mode. <br> - Serial messages may take a long time to appear on the serial monitor. |
+| ✅ | ESP32-C3-WROOM-02             | All good                                                                                       |
 
-[http://www-new.idmil.org/project/guitarami/](http://www-new.idmil.org/project/guitarami/)
+
+## How It Works
+
+ ⚠️ **Note:** Every template related to Puara Module has a different set of options, but all generally respct the following explanation.
+
+
+When initiating the program, the module manager will try to connect to the WiFi Network (SSID) defined in `config.json`. 
+
+If you want the board to connect to a specific WiFi network, modify the `wifiSSID` and `wifiPSK` values in `config.json` with your network name and password respectively and then build/upload the filesystem. 
+
+After the board connects to an external SSID, it will also create its own WiFi Access Point **(STA-AP mode)**. 
+
+If the process cannot connect to a valid SSID, it will still create its own WiFi Access Point **(AP mode)** to which users may connect and communicate with the board.
+
+User may modify/add custom values in `settings.json` and access them in their program at any moment by using the **puara.getVarText("name")** and/or **puara.getVarNumber("name")** for text or number fields respectively; make sure to respect the JSON *name/value* pairing. 
+
+User may modify said values via the web server settings page and the defined values will persist even after shutting down/rebooting the system. 
+This is very useful if you wish to have easily configurable variables without having to rebuild/reflash your entire system.
+
+To access the web server, connect to the same network/SSID as the board is connected to, or connect to the board's WiFi access point, and enter the board's IP address in any web browser. 
+
+User may also type the network name followed by `.local` in the browser's address bar. Default network name is `device`_`id` (see `config.json file`) : **Puara_001**. Hence type `puara_001.local` in the browser's address bar to access web server pages.
+
+
+## More Info on the research related with [Puara](https://github.com/Puara)
+
+- [SAT](http://www.sat.qc.ca)
+- [IDMIL](http://www.idmil.org)
 
 ## Licensing
 
