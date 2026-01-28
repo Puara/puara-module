@@ -16,6 +16,28 @@ Refer to the [PlatformIO templates and documentation](https://github.com/Puara/p
 Download the `puara-module` library directly from the Arduino 2.0 IDE library manager to start prototyping with Puara Module in Arduino 2.0 IDE. 
 Refer to the [Puara-Arduino repository](https://github.com/Puara/puara-arduino) for extra documentation and .ino examples.
 
+## Tested boards and known issues
+
+Generally, try to avoid esp32s3. We have seen the most issues with them.
+
+### M5StickC
+All good
+
+### tinypico
+All good
+
+### Adafruit esp32s3 feather and TFT variant
+- You will have to press the reset button while holding the boot button to be able to flash another firmware after flashing puara-module for the first time
+- It can take a long time to get serial messages to print on the serial monitor.
+
+### seeed xiao s3
+- You will have to press the reset button while holding the boot button to be able to flash another firmware after flashing puara-module for the first time
+- It can take a long time to get serial messages to print on the serial monitor.
+
+These issues seem to be less frequent then on the esp32 feathers.
+
+
+## More Info on the related [GuitarAMI](https://github.com/Puara/GuitarAMI) and [Puara](https://github.com/Puara) research
 
 ## How It Works
 

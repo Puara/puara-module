@@ -46,6 +46,11 @@ public:
   void wifi_scan(void);
   bool get_StaIsConnected();
 
+  /**
+   * returns current IP address on external wifi access point
+   */
+  std::string staIP();
+
   double getVarNumber(std::string varName);
   std::string getVarText(std::string varName);
 };
