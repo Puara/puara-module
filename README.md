@@ -3,7 +3,10 @@
 [![Build](https://github.com/Puara/puara-module/actions/workflows/build.yml/badge.svg)](https://github.com/Puara/puara-module/actions/workflows/build.yml)
 
 This repository contains the source code for Puara Module library which offers the fundamentals to create ESP32-based devices that can be controlled over the network.
-Why would I use this / Example projects : For artists wanting to create distibute systems, interactive systems, network based installations, new instrument/digital interfaces, etc..
+
+## Why Use This?
+
+This project is designed for artists and creators interested in developing distributed systems, interactive installations, network-based projects, innovative digital instruments, and new forms of creative interfaces.
 
 ## Overview
 
@@ -14,34 +17,23 @@ Refer to the [PlatformIO templates and documentation](https://github.com/Puara/p
 
 ### Arduino 2.0 IDE
 Download the `puara-module` library directly from the Arduino 2.0 IDE library manager to start prototyping with Puara Module in Arduino 2.0 IDE. 
-Refer to the [Puara-Arduino repository](https://github.com/Puara/puara-arduino) for extra documentation and .ino examples.
-
-## Tested boards and known issues
-
-Generally, try to avoid esp32s3. We have seen the most issues with them.
-
-### M5StickC
-All good
-
-### tinypico
-All good
-
-### Adafruit esp32s3 feather and TFT variant
-- You will have to press the reset button while holding the boot button to be able to flash another firmware after flashing puara-module for the first time
-- It can take a long time to get serial messages to print on the serial monitor.
-
-### seeed xiao s3
-- You will have to press the reset button while holding the boot button to be able to flash another firmware after flashing puara-module for the first time
-- It can take a long time to get serial messages to print on the serial monitor.
-
-These issues seem to be less frequent then on the esp32 feathers.
+Find more information about this approach in the [Arduino examples and documentation](https://github.com/Puara/puara-arduino) .
 
 
-## More Info on the related [GuitarAMI](https://github.com/Puara/GuitarAMI) and [Puara](https://github.com/Puara) research
+## Tested Boards and Known Issues
+
+| ✅ | Board                          | Notes                                                                                           |
+|----|--------------------------------|-------------------------------------------------------------------------------------------------|
+| ✅ | M5StickC                       | All good                                                                                       |
+| ✅ | tinypico                       | All good                                                                                       |
+| ⚠️ | Adafruit ESP32-S3 Feather     | - Hold Boot button and press Reset to enter serial flash mode. <br> - Serial messages may take a long time to appear on the serial monitor. |
+| ⚠️ | Seeed Xiao S3                 | - Hold Boot button and press Reset to enter serial flash mode. <br> - Serial messages may take a long time to appear on the serial monitor. |
+| ✅ | ESP32-C3-WROOM-02             | All good                                                                                       |
+
 
 ## How It Works
 
-N.B. : Every template related to Puara Module has a different set of options, but all generally respct the following explanation.
+ ⚠️ **Note:** Every template related to Puara Module has a different set of options, but all generally respct the following explanation.
 
 
 When initiating the program, the module manager will try to connect to the WiFi Network (SSID) defined in `config.json`. 
