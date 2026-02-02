@@ -4,19 +4,30 @@
 
 This repository contains the source code for Puara Module library which offers the fundamentals to create ESP32-based devices that can be controlled over the network.
 
+---
+
 ## Table of Contents
 - [Why Use This?](#why-use-this)
 - [Overview](#overview)
 - [Prototyping Options](#prototyping-options)
 - [Tested Boards and Known Issues](#tested-boards-and-known-issues)
 - [How It Works](#how-it-works)
-- [More Info](#more-info)
+- [References](#references)
 - [Licensing](#licensing)
 
+---
 
 ## Why Use This?
 
-This project is designed for artists and creators interested in developing distributed systems, interactive installations, network-based projects, innovative digital instruments, and new forms of creative interfaces.
+This project is designed for artists and creators interested in:
+- Developing distributed systems
+- Creating interactive installations
+- Building network-based projects
+- Innovating digital instruments
+- Designing new forms of creative interfaces
+
+
+---
 
 ## Overview
 
@@ -81,10 +92,15 @@ To access the web server:
     Default network name is `device`_`id` (see `config.json file`) : **Puara_001**. Hence type `puara_001.local` in the browser's address bar to access web server pages.
 
 
-## More info on the research related with [Puara](https://github.com/Puara)
+## References
 
-- [SAT](http://www.sat.qc.ca)
+Learn more about the research related to Puara: 
+
+- [Puara GitHub Repository](https://github.com/Puara)
+- [SAT](http://www.sat.qc.ca) // [SAT-R&D](https://sat.qc.ca/fr/recherche/)
 - [IDMIL](http://www.idmil.org)
+
+---
 
 ## Licensing
 
