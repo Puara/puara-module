@@ -10,12 +10,16 @@ This project is designed for artists and creators interested in developing distr
 
 ## Overview
 
-Puara Module facilitates embedded system development by providing a set of pre-defined modules that manage filesystem, web server, and network connections so users can focus on prototyping the rest of their system.
+Puara Module facilitates embedded system development by providing a set of pre-defined modules that manage filesystem, web server, and network connections so users can focus on prototyping the rest of their system. 
 
-### PlatformIO 
-Refer to the [PlatformIO templates and documentation](https://github.com/Puara/puara-module-template) to start prototyping with the Puara Module.
+## Prototyping Options
 
-### Arduino 2.0 IDE
+Choose one of the following methods to start prototyping with the Puara Module :
+
+### Option 1 : PlatformIO 
+Refer to the [PlatformIO templates and documentation](https://github.com/Puara/puara-module-template) to start prototyping with PlatformIO.
+
+### Option 2 : Arduino 2.0 IDE
 Download the `puara-module` library directly from the Arduino 2.0 IDE library manager to start prototyping with Puara Module in Arduino 2.0 IDE. 
 Find more information about this approach in the [Arduino examples and documentation](https://github.com/Puara/puara-arduino) .
 
