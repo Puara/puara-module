@@ -117,3 +117,4 @@ jobs:
           cd ./${{ matrix.template.name }}-${{ matrix.template.fs }}
           pio settings set force_verbose 1
           pio run --environment template --project-conf platformioTemp.ini
+#  ʕノ•ᴥ•ʔノ ︵ ┻━┻
