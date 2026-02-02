@@ -1,14 +1,12 @@
 # Puara Module
+---
 
-[![Build](https://github.com/Puara/puara-module/actions/workflows/build.yml/badge.svg)](https://github.com/Puara/puara-module/actions/workflows/build.yml)
-
-This repository contains the source code for Puara Module library which offers the fundamentals to create ESP32-based devices that can be controlled over the network.
-
+Puara Module is a library for the ESP32 boards that provides a simplified interface for managing WiFi, a web server, and a filesystem in order to facilitate the creation of distributed interactive systems, networked controllers and other similar applications so users can focus on prototyping the rest of their system. 
+ 
 ---
 
 ## Table of Contents
 - [Why Use This?](#why-use-this)
-- [Overview](#overview)
 - [Prototyping Options](#prototyping-options)
 - [How It Works](#how-it-works)
 - [Tested Boards and Known Issues](#tested-boards-and-known-issues)
@@ -25,13 +23,6 @@ This project is designed for artists and creators interested in:
 - Building network-based projects
 - Innovating digital instruments
 - Designing new forms of creative interfaces
-
-
----
-
-## Overview
-
-Puara Module facilitates embedded system development by providing a set of pre-defined modules that manage filesystem, web server, and network connections so users can focus on prototyping the rest of their system. 
 
 ---
 
