@@ -92,10 +92,9 @@ To access the web server:
 | ✅ | tinypico                       | All good                                                                                       | tinypico | UM TinyPico |
 | ⚠️ | Adafruit ESP32-S3 Feather     | Hold Boot button and press Reset to enter serial flash mode. <br> Serial messages may take a long time to appear on the serial monitor. | adafruit_feather_esp32s3| Adafruit Feather ESP32-S3 2MB PSRAM | 
 | ⚠️ | Adafruit ESP32-S3 TFT Feather | Hold Boot button and press Reset to enter serial flash mode. <br> Serial messages may take a long time to appear on the serial monitor. | adafruit_feather_esp32s3_tft| Adafruit Feather ESP32-S3 TFT|
-
 | ⚠️ | Seeed Xiao S3                 | Hold Boot button and press Reset to enter serial flash mode. <br> Serial messages may take a long time to appear on the serial monitor. | seeed_xiao_esp32s3 | XIAO_ESP32S3 |
-
 | ✅ | ESP32-C3-WROOM-02 // ESP32-C3-DevKitC-02  | All good                                      | esp32-c3-devkitc-02 | ESP32C3 Dev Module |
+| ⚠️ | DOIT ESP32 DevKit V1  | Arduino IDE : Tools/Partition Scheme options simply unavailable hence build impossible. <br> Function with PlatformIO however    | esp32doit-devkit-v1 | DOIT ESP32 DEVKIT V1 |
 
 ---
 
