@@ -4,6 +4,16 @@
 
 This repository contains the source code for Puara Module library which offers the fundamentals to create ESP32-based devices that can be controlled over the network.
 
+## Table of Contents
+- [Why Use This?](#why-use-this)
+- [Overview](#overview)
+- [Prototyping Options](#prototyping-options)
+- [Tested Boards and Known Issues](#tested-boards-and-known-issues)
+- [How It Works](#how-it-works)
+- [More Info](#more-info)
+- [Licensing](#licensing)
+
+
 ## Why Use This?
 
 This project is designed for artists and creators interested in developing distributed systems, interactive installations, network-based projects, innovative digital instruments, and new forms of creative interfaces.
@@ -37,28 +47,41 @@ Find more information about this approach in the [Arduino examples and documenta
 
 ## How It Works
 
- ⚠️ **Note:** Every template related to Puara Module has a different set of options, but all generally respct the following explanation.
+ ⚠️ **Note:** Every template related to Puara Module has a different set of options but they all generally respect the following explanation.
 
+### Connecting to WiFi
 
 When initiating the program, the module manager will try to connect to the WiFi Network (SSID) defined in `config.json`. 
 
-If you want the board to connect to a specific WiFi network, modify the `wifiSSID` and `wifiPSK` values in `config.json` with your network name and password respectively and then build/upload the filesystem. 
+To connect to a specific WiFi network: 
+    - modify the `wifiSSID` and `wifiPSK` values in `config.json` with your network name and password
+    - build/upload the filesystem. 
 
-After the board connects to an external SSID, it will also create its own WiFi Access Point **(STA-AP mode)**. 
+After connecting to an external SSID: 
+    - The board will create its own WiFi Access Point **(STA-AP mode)**. 
 
-If the process cannot connect to a valid SSID, it will still create its own WiFi Access Point **(AP mode)** to which users may connect and communicate with the board.
+If the board cannot connect to a valid SSID:
+    - It will still create its own WiFi Access Point **(AP mode)** for user connection
 
-User may modify/add custom values in `settings.json` and access them in their program at any moment by using the **puara.getVarText("name")** and/or **puara.getVarNumber("name")** for text or number fields respectively; make sure to respect the JSON *name/value* pairing. 
+### Modifying Settings
 
-User may modify said values via the web server settings page and the defined values will persist even after shutting down/rebooting the system. 
-This is very useful if you wish to have easily configurable variables without having to rebuild/reflash your entire system.
+Users can : 
+    - Modify/add custom values in `settings.json`
+    - Access these values in their program by using:
+        - `puara.getVarText("name")` for text fields.
+        - `puara.getVarNumber("name")` for number fields.
+    - Modify values via the web server settings page, with changes persisting after reboot.
 
-To access the web server, connect to the same network/SSID as the board is connected to, or connect to the board's WiFi access point, and enter the board's IP address in any web browser. 
+### Accessing the Web Server
 
-User may also type the network name followed by `.local` in the browser's address bar. Default network name is `device`_`id` (see `config.json file`) : **Puara_001**. Hence type `puara_001.local` in the browser's address bar to access web server pages.
+To access the web server:
+    - Connect to the same network/SSID as the board or connect to the board's WiFi access point. 
+    - Enter the board's IP address in any web browser. 
+    - Alternatively, type the network name followed by `.local` in the browser's address bar.
+    Default network name is `device`_`id` (see `config.json file`) : **Puara_001**. Hence type `puara_001.local` in the browser's address bar to access web server pages.
 
 
-## More Info on the research related with [Puara](https://github.com/Puara)
+## More info on the research related with [Puara](https://github.com/Puara)
 
 - [SAT](http://www.sat.qc.ca)
 - [IDMIL](http://www.idmil.org)
