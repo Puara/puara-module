@@ -33,6 +33,8 @@ This project is designed for artists and creators interested in:
 
 Puara Module facilitates embedded system development by providing a set of pre-defined modules that manage filesystem, web server, and network connections so users can focus on prototyping the rest of their system. 
 
+---
+
 ## Prototyping Options
 
 Choose one of the following methods to start prototyping with the Puara Module :
@@ -44,17 +46,7 @@ Refer to the [PlatformIO templates and documentation](https://github.com/Puara/p
 Download the `puara-module` library directly from the Arduino 2.0 IDE library manager to start prototyping with Puara Module in Arduino 2.0 IDE. 
 Find more information about this approach in the [Arduino examples and documentation](https://github.com/Puara/puara-arduino) .
 
-
-## Tested Boards and Known Issues
-
-| ✅ | Board                          | Notes                                                                                           |
-|----|--------------------------------|-------------------------------------------------------------------------------------------------|
-| ✅ | M5StickC                       | All good                                                                                       |
-| ✅ | tinypico                       | All good                                                                                       |
-| ⚠️ | Adafruit ESP32-S3 Feather     | - Hold Boot button and press Reset to enter serial flash mode. <br> - Serial messages may take a long time to appear on the serial monitor. |
-| ⚠️ | Seeed Xiao S3                 | - Hold Boot button and press Reset to enter serial flash mode. <br> - Serial messages may take a long time to appear on the serial monitor. |
-| ✅ | ESP32-C3-WROOM-02             | All good                                                                                       |
-
+---
 
 ## How It Works
 
@@ -91,6 +83,19 @@ To access the web server:
     - Alternatively, type the network name followed by `.local` in the browser's address bar.
     Default network name is `device`_`id` (see `config.json file`) : **Puara_001**. Hence type `puara_001.local` in the browser's address bar to access web server pages.
 
+--- 
+
+## Tested Boards and Known Issues
+
+| ✅ | Board                          | Notes                                                                                           |
+|----|--------------------------------|-------------------------------------------------------------------------------------------------|
+| ✅ | M5StickC                       | All good                                                                                       |
+| ✅ | tinypico                       | All good                                                                                       |
+| ⚠️ | Adafruit ESP32-S3 Feather     | - Hold Boot button and press Reset to enter serial flash mode. <br> - Serial messages may take a long time to appear on the serial monitor. |
+| ⚠️ | Seeed Xiao S3                 | - Hold Boot button and press Reset to enter serial flash mode. <br> - Serial messages may take a long time to appear on the serial monitor. |
+| ✅ | ESP32-C3-WROOM-02             | All good                                                                                       |
+
+---
 
 ## References
 
