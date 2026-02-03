@@ -1,5 +1,17 @@
 # Puara Module
+
 ---
+
+**Société des Arts Technologiques (SAT)**  
+**Input Devices and Music Interaction Laboratory (IDMIL)**
+
+--- 
+
+This repository contains the Puara Module source code used to facilitate the creation of connected devices. For applied templates, see either the [PlatformIO approach](https://github.com/Puara/puara-module-templates) or the [Arduino approach](https://github.com/Puara/puara-arduino).
+
+--- 
+
+## Overview
 
 Puara Module is a library for the ESP32 boards that provides a simplified interface for managing WiFi, a web server, and a filesystem in order to facilitate the creation of distributed interactive systems, networked controllers and other similar applications so users can focus on prototyping the rest of their system. 
  

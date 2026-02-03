@@ -1,33 +1,58 @@
-# WiFi
+# WiFi Considerations
 
-The `puara-module` library provides a simple interface for managing WiFi connections.
+The `puara-module` library provides a simple and flexible interface for managing WiFi connections. This document outlines the key WiFi-related features, modes, and public API functions available in the library.
 
-## AP and STA modes
+## WiFi Modes 
 
-The `puara-module` can work in two modes:
+The `puara-module` supports three modes of operation:
 
-*   **Access Point (AP) mode**: The device creates its own WiFi network. This is useful for initial configuration.
-*   **Station (STA) mode**: The device connects to an existing WiFi network.
+1. **Station - Access Point (STA-AP) Mode**:
+   - The device connects to an existing WiFi network (station). 
+   - The device creates its own WiFi network (access point).
+   
+2. **Access Point (AP) Mode**:
+   - The device does not connect to an existing WiFi network. 
+   - The device creates its own WiFi network (access point).
 
-By default, the `puara-module` will start in AP mode if it cannot connect to a known WiFi network. You can force the device to always start in AP mode by setting the `persistent_AP` option to `true` in the `config.json` file.
+   - Useful for initial configuration or when no external WiFi network is available.
 
-## WiFi scan
+3. **Station (STA) Mode**:
+   - The device connects to an existing WiFi network.
+   - The Access Point is turned off with `persistent_AP=0`
+   - Useful to limit Wifi pollution and securing device.
 
-You can scan for available WiFi networks using the `wifi_scan()` method:
+### Default Behavior
+Device is STA-AP by default: 
+  - The `puara-module` will attempt to connect to a known WiFi network. If the connection succeeds or fails, the device will then activate it's AP mode.
 
-```cpp
-puara.wifi_scan();
-```
+To deactivate STA, leave useless connection information (SSID, PSK) in `config.json`. 
+To deactivate AP mode, set the `persistent_AP` option to `0` in the `config.json` file or access the config page through the web server and tick the proper option about AP mode.
 
-The results of the scan will be shown in the `scan.html` page of the web interface.
+---
 
-## IP addresses
 
-You can get the IP addresses of the device using the `IP1()` and `IP2()` methods:
+## Public API Functions
 
-```cpp
-std::string ip1 = puara.IP1();
-std::string ip2 = puara.IP2();
-```
+The `puara-module` exposes the following public API functions for managing WiFi:
 
-The `IP1()` method returns the IP address of the STA interface, while the `IP2()` method returns the IP address of the AP interface.
+### `void start_wifi()`
+- **Description**: Initializes the WiFi configuration and starts the WiFi service.
+- **Behavior**:
+  - Configures the device to operate in either STA-AP, STA or AP mode based on the `config.json` settings.
+  - Ensures default values for SSID and passwords if they are missing or invalid.
+
+
+  ### `void wifi_scan()`
+- **Description**: Scans for available WiFi networks and stores the results.
+- **Behavior**:
+  - The scan results include SSID, RSSI (signal strength), and channel information for each network.
+  - Results are displayed on the scan.html page of the web interface.
+
+### `bool get_StaIsConnected()`
+- **Description**: Checks whether the device is connected to an external WiFi network in STA mode.
+- **Returns**: Returns true if the device is connected, false otherwise.
+
+### `std::string staIP()`
+- **Description**: Retrieves the current IP address of the device when connected to an external WiFi network in STA-IP or STA modes.
+
+- **Returns**: The IP address as a string.

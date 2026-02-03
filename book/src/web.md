@@ -1,6 +1,7 @@
-# Webserver
+# Web Server
 
-The `puara-module` library includes an integrated webserver that allows you to configure your device from a web browser.
+The `puara-module` library includes an integrated webserver that allows you to configure your device from a web browser. 
+For more details on browser pages from a user perspective, see [Browser Pages](browser.md).
 
 ## Starting the webserver
 
@@ -19,11 +20,11 @@ The web pages are stored in the `data` directory of your project. The `puara-mod
 
 The default web pages are:
 
-*   `index.html`: The main page of the web interface.
+*   `index.html`: The main page of the web interface where user may find SSID configurations.
 *   `scan.html`: Shows the available WiFi networks.
-*   `settings.html`: Allows you to configure the settings of your device.
-*   `update.html`: Allows you to update the firmware of your device.
-*   `factory.html`: Allows you to reset your device to factory settings.
-*   `reboot.html`: Allows you to reboot your device.
+*   `settings.html`: Allows user to configure the custom variable values of the device. 
+*   `update.html`: Currently unused. Contains legacy code for `Over the Air` updates.
+*   `reboot.html`: Landing page confirming the reboot process.
+*   `saved.html`: Landing page confirming the values were saved. This triggers the `onSettingsChanged()` if   `puara.set_settings_changed_handler(onSettingsChanged);` is defined in the setup routine.
 
-You can edit these files to change the appearance and functionality of the web interface. The web pages use a simple template system that allows you to insert values from your code into the HTML. For example, you can use `{{dmi_name}}` to insert the DMI name of your device.
+You can edit these files to change the appearance and functionality of the web interface. The web pages use a simple template system that allows you to insert values from your code into the HTML. 
