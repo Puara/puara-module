@@ -7,7 +7,8 @@
 
 --- 
 
-This repository contains the Puara Module source code used to facilitate the creation of connected devices. For applied templates, see either the [PlatformIO approach](https://github.com/Puara/puara-module-templates) or the [Arduino approach](https://github.com/Puara/puara-arduino).
+This repository contains the Puara Module source code used to facilitate the creation of connected devices. 
+For applid usage, see either the [PlatformIO templates](https://github.com/Puara/puara-module-templates) or the [Arduino examples](https://github.com/Puara/puara-arduino).
 
 --- 
 
@@ -41,13 +42,9 @@ This project is designed for artists and creators interested in:
 ## Prototyping Options
 
 Choose one of the following methods to start prototyping with the Puara Module :
+- For beginners and intermediate level developpers, refer to [Arduino examples and documentation](https://github.com/Puara/puara-arduino) to start prototyping with Arduino 2.0 IDE.
 
-### Option 1 : PlatformIO 
-Refer to the [PlatformIO templates and documentation](https://github.com/Puara/puara-module-template) to start prototyping with PlatformIO.
-
-### Option 2 : Arduino 2.0 IDE
-Download the `puara-module` library directly from the Arduino 2.0 IDE library manager to start prototyping with Puara Module in Arduino 2.0 IDE. 
-Find more information about this approach in the [Arduino examples and documentation](https://github.com/Puara/puara-arduino) .
+- For intermediate and advanced developpers, refer to the [PlatformIO templates](https://github.com/Puara/puara-module-template) to start prototyping with PlatformIO and VS Code.
 
 ---
 

@@ -181,3 +181,18 @@ You can customize the BLE advertising behavior:
 
 For more information, see the [BLE-CBOR-to-OSC script documentation](https://gitlab.com/sat-mtl/collaborations/2024-iot/ble-cbor-to-osc).
 
+
+
+
+
+i
+- [Installing Puara Module library and related dependencies](library_installation.md)
+- [Configuring your board and network specifications](configuration.md)
+- [Building and uploading the firwmare and filesystem](examples.md)
+- [Using the browser to modify settings](browser.md)
+
+> ##### **Important detail for users**
+> Most Arduino or embedded projects only upload the **code** that runs on the device. However, in this project, the device also needs a **filesystem** to store important data, such as configuration files, templates, or other resources that the code relies on. These two parts—**code** and **filesystem**—serve different purposes and must be built and uploaded separately.
+> The **executable code** tells the device what to do, includes the logic, instructions, and behavior of the device such as how to read a sensor, process data, or send information over Wi-Fi.
+> The **filesystem** is like a "hard drive" for the device, where additional files are stored and can include configuration files, templates, or other resources that the code needs to function properly. In our approach, the filesystem stores a JSON file with user settings for the network configurations and some global variables that can be modified through the browser without needing to reflash the whole system.
+> 
