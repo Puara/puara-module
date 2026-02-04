@@ -43,7 +43,7 @@ public:
   void start_mdns_service(std::string_view device_name, std::string_view instance_name);
 
   void start_wifi();
-  void wifi_scan(void);
+  void wifi_scan();
   bool get_StaIsConnected();
 
   /**
