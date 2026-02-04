@@ -7,7 +7,7 @@
 
 --- 
 
-This documentation covers the applied usage of the Puara Module library and it also details the various modules found in the current repository.
+This documentation covers the applied usage of the Puara Module library and details the various modules found in the current repository.
 
 ## Overview
 
@@ -15,10 +15,10 @@ Puara Module is a library for the ESP32 boards that provides a simplified interf
 
 ## Documentation
 This documentation is divided into two main sections:
-- Building and compiling Puara Modules:
+- [Building and compiling Puara Module templates/examples](#1-building-puara-module-templatesexamples):
   - Using the Arduino 2.0 IDE examples;
   - Using the PlatformIO templates in VS Code;
-- Technical details about the code aimed at helping developpers understand the codebase.
+- [Technical details about the code aimed at helping developpers understand the codebase](#2-useful-information-for-developpers).
 
 
 ## 1. Building Puara Module Templates/Examples
@@ -37,9 +37,9 @@ Using the web server to modify your network configurations and program variables
 - [`Puara` object and API](puara.md) : Use of the `Puara` object to manage your device.
 - [Filesystem](filesystem.md) : Configuration differences between SPIFFS and LITTLEFS. 
 - [Webserver](web.md) : Use the integrated webserver.
- - See [Browser Pages](browser.md) for user facing web server considerations.
+ - See [Browser Pages](browser.md) for user-facing web server considerations.
 - [WiFi](wifi.md) : Manage WiFi connections.
-- [Serial](serial.md) : Communicate over serial.
+- [Serial and Debug Printing](serial.md) : Communicate over serial and printing puara debug messages.
 - [mDNS](mdns.md) :  Use of the mDNS service.
 
 

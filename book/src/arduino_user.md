@@ -2,11 +2,13 @@
 
 ## Dependencies
 
- ⚠️ Arduino 2.0 IDE for building and uploading of code AND filesystem.
+ ⚠️ Download [Arduino 2.0 IDE](https://www.arduino.cc/en/software/) for build/upload of program.
 
- ⚠️ [Arduino-LittleFS-Upload](https://github.com/earlephilhower/arduino-littlefs-upload) for the filesystem uploading.
+ ⚠️ Install [Arduino-LittleFS-Upload](https://github.com/earlephilhower/arduino-littlefs-upload) for filesystem uploading.
 
- ⚠️ User must absolutely select any options that offer minimal filesystem config before buidling program. These options vary depending on board and can be found here : `/Tools/Partition Scheme/`. A common option is `Minimal SPIFFS` such as  : `/Tools/Partition Scheme/Minimal SPIFFS`. 
+ ⚠️ ESP32 board library : Open **Boards Manager** icon in Arduino 2.0 IDE, type **esp32** in the Boars Manager **search bar** and install *esp32* by *Espressif Systems*.
+
+ ⚠️ Partition size options : Select any options that offer minimal partition before building program. These options vary depending on board capabilities and can be found here : `/Tools/Partition Scheme/`. A common option is `Minimal SPIFFS` such as  : `/Tools/Partition Scheme/Minimal SPIFFS`. 
  Warning, some boards simply do not have such options.
 
 ## How to Use
@@ -28,68 +30,109 @@ Select `Minimal Spiffs` or similar option. Different boards have different possi
 7. **Edit the filesystem**: To modify network configurations, add or modify the available variables in the settings, got to :
 - `Sketch/Show Sketch Folder` which will open your local project folder
 - Enter `data/` folder:
-  - Modify netwrok SSID and PSK configurations in config.json;
+  - Modify network name (SSID) and password (PSK) configurations in config.json;
   - Modify/Add variables in settings.json;
   - Save your modifications.
 
-8. **Build and upload the file system and firmware**: Once ready, you can:
+8. **Build and upload the filesystem and firmware**: Once ready, you can:
 - Use Arduino IDE to build and upload the firmware to your board.
-- Use [Arduino-LittleFS-Upload](https://github.com/earlephilhower/arduino-littlefs-upload) for the filesystem uploading. 
+- Use [Arduino-LittleFS-Upload](https://github.com/earlephilhower/arduino-littlefs-upload) for the filesystem uploading:
+`[Ctrl]` + `[Shift]` + `[P]`, then "`Upload LittleFS to Pico/ESP8266/ESP32`".
+
+On macOS, press `[⌘]` + `[Shift]` + `[P]` to open the Command Palette in the Arduino IDE, then "`Upload LittleFS to Pico/ESP8266/ESP32`".
 
 9. **Test your IoT device and validate communication between systems**: At this point your board should either connect to your specified network if it can find it. In either case, if it does or doesn't connect, your board will create an Access Point you can connect to directly. Use the board's IP address to communicate with it when needed. More details below.
 
+> #####  ⚠️ **Important detail for users**
+> Most Arduino or embedded projects only upload the **code** that runs on the device. However, in this project, the device also needs a **filesystem** to store important data, such as configuration files, templates, or other resources that the code relies on. These two parts—**code** and **filesystem**—serve different purposes and must be built and uploaded separately.
+> The **executable code** tells the device what to do, includes the logic, instructions, and behavior of the device such as how to read a sensor, process data, or send information over Wi-Fi.
+> The **filesystem** is like a "hard drive" for the device, where additional files are stored and can include configuration files, templates, or other resources that the code needs to function properly. In our approach, the filesystem stores a JSON file with user settings for the network configurations and some global variables that can be modified through the browser without needing to reflash the whole system.
+> 
+
+---
 
 ## How It Works
 
- ⚠️ **Note:** Every template related to Puara Module has a different set of options but they all generally respect the following explanation.
+ ⚠️ 
+**Every template related to Puara Module has a different set of options but they all generally respect the following explanation.**
+The following sections are detailed more thoroughly in the [Puara Module](https://github.com/Puara/puara-module) doumentation.
 
-### Connecting to WiFi
+### 1. Establishing WiFi 
 
 When initiating the program, the module manager will try to connect to the WiFi Network (SSID) defined in `config.json`. 
+The `puara-module` supports three modes of operation:
 
-To connect to a specific WiFi network: 
-- modify the `wifiSSID` and `wifiPSK` values in `config.json` with your network name and password
-- build/upload the filesystem. 
+1. **Station - Access Point (STA-AP) Mode** (Default):
+   - The device connects to an existing WiFi network (station). 
+   - The device creates its own WiFi network (access point).
+   - User has two ways to communicate with the board.
+   
+2. **Access Point (AP) Mode**:
+   - The device does not connect to an existing WiFi network. 
+   - The device creates its own WiFi network (access point).
 
-After connecting to an external SSID: 
-- The board will create its own WiFi Access Point **(STA-AP mode)**. 
+3. **Station (STA) Mode**:
+   - The device connects to an existing WiFi network.
+   - The Access Point is turned off with `persistent_AP=0`
+   - Useful to limit Wifi pollution and securing device.
 
-If the board cannot connect to a valid SSID:
-- It will still create its own WiFi Access Point **(AP mode)** for user connection
 
-### Modifying Settings
+### 2. Making the Web Server Accessible
 
-Users can : 
-- Modify/add custom values in `settings.json`
-- Access these values in their program by using:
-  - `puara.getVarText("name")` for text fields.
-  - `puara.getVarNumber("name")` for number fields.
-- Modify values via the web server settings page, with changes persisting after reboot.
+Browser-accessible pages available for configuring, scanning, and managing settings on your device are made availabe through Puara Module.
 
-### Accessing the Web Server
+Once the web server is running, you can access it in two ways:
 
-To access the web server:
-- Connect to the same network/SSID as the board or connect to the board's WiFi access point. 
-- Enter the board's IP address in any web browser. 
-- Alternatively, type the network name followed by `.local` in the browser's address bar. Default network name is `device`_`id` (see `config.json file`) : **Puara_001**. Hence type `puara_001.local` in the browser's address bar to access web server pages.
+1. **Via IP Address**: Navigate to the device's IP address in your web browser (e.g., `http://192.168.4.1` for AP mode, or the assigned IP in STA/STA-AP modes which can be retrieved using `puara.staIP()`).
+
+2. **Via mDNS Hostname**: If mDNS is enabled, you can access the device using its hostname (e.g., `http://your-device-name.local`). Default `config.json`values enable mDNS with the Puara_001, and browser is accessible with `puara_001.local`. 
+
+Using the web browser, users can modify variables that keep their value after reboot/shutdown of device without needing to rebuild/upload their program.
+Access these values in the program by using:
+
+```cpp
+// For text fields
+std::string my_string = puara.getVarText("variable_name");
+
+// For number fields (all numbers are `doubles` -- see JSON documentation for explanation)
+double my_number = puara.getVarNumber("variable_name");
+```
+
+#### Making of Custom Variables in `settings.json`
+
+The `/data/settings.json` file stores custom application settings as an array of name-value pairs:
+
+```json
+{
+    "settings": [
+        {
+            "name": "user_defined_text",
+            "value": "user defined value"
+        },
+        {
+            "name": "variable3",
+            "value": 12.345
+        }
+    ]
+}
+```
+User may add/modify fields in this file and then upload the new filesystem in order to have a more custom device.
+
+--- 
+
+For more detailed documentation, please refer to the mdBook in the puara-module's github repository.
 
 --- 
 
 
-
-
 ## Examples
 
-This repository includes five Arduino example sketches that demonstrate different use cases and functionalities. 
+The [puara-arduino](https://github.com/Puara/puara-arduino) repository includes five Arduino sketches that demonstrate different use cases and functionalities. 
 All examples are identical to the PlatformIO templates available in [puara-module-templates](https://github.com/Puara/puara-module-templates).
 
 Each example includes a `data/` folder containing configuration files (`config.json`, `settings.json`) and web interface files (HTML and CSS). 
 
-**After building and uploading the firmware to your board, you must also upload the filesystem** using the [arduino-littlefs-upload](https://github.com/earlephilhower/arduino-littlefs-upload):
-
-1. Make sure the arduino-littlefs-upload tool is [installed](https://github.com/earlephilhower/arduino-littlefs-upload?tab=readme-ov-file#installation)
-2. Press **[Ctrl] + [Shift] + [P]** (Windows/Linux) or **[⌘] + [Shift] + [P]** (macOS) to open the Command Palette in the Arduino IDE
-3. Select **"Upload LittleFS to Pico/ESP8266/ESP32"**
+ ⚠️ **After building and uploading the firmware to your board, you must also upload the filesystem**.
 
 
 ### 1. Basic Example
@@ -184,15 +227,3 @@ For more information, see the [BLE-CBOR-to-OSC script documentation](https://git
 
 
 
-
-i
-- [Installing Puara Module library and related dependencies](library_installation.md)
-- [Configuring your board and network specifications](configuration.md)
-- [Building and uploading the firwmare and filesystem](examples.md)
-- [Using the browser to modify settings](browser.md)
-
-> ##### **Important detail for users**
-> Most Arduino or embedded projects only upload the **code** that runs on the device. However, in this project, the device also needs a **filesystem** to store important data, such as configuration files, templates, or other resources that the code relies on. These two parts—**code** and **filesystem**—serve different purposes and must be built and uploaded separately.
-> The **executable code** tells the device what to do, includes the logic, instructions, and behavior of the device such as how to read a sensor, process data, or send information over Wi-Fi.
-> The **filesystem** is like a "hard drive" for the device, where additional files are stored and can include configuration files, templates, or other resources that the code needs to function properly. In our approach, the filesystem stores a JSON file with user settings for the network configurations and some global variables that can be modified through the browser without needing to reflash the whole system.
-> 

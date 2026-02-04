@@ -170,7 +170,7 @@ void Puara::start_wifi()
 {
   return g_puara.wifi.start_wifi();
 }
-void Puara::wifi_scan(void)
+void Puara::wifi_scan()
 {
   return g_puara.wifi.wifi_scan();
 }
