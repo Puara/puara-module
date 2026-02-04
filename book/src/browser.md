@@ -1,40 +1,31 @@
 # Browser Pages
 
-This document explains the different browser-accessible pages available to the user for configuring, scanning, and managing settings for their project.
-
----
-
-## Accessing the Web Server
-
-To access the web server:
-
-1. **Connect to the Network**:
-   - Connect to the same network/SSID as the board, or connect to the board's WiFi access point.
-2. **Open the Web Server**:
-   - Enter the board's IP address in any web browser.
-   - Alternatively, type the device's network name followed by `.local` in the browser's address bar.  
-     - The default device network name is `device_id` (as defined in the `config.json` file).  
-     - Example: If the network name is **Puara_001**, type `puara_001.local` in the browser's address bar.
+This document explains the browser-accessible pages available for configuring, scanning, and managing settings on your device. For technical details on the web server itself, see [Web Server](web.md).
 
 ---
 
 ## Config Page
 
-The **Config Page** allows you to manage the network and device configuration parameters.
+The **Config Page** is the main page of the web interface, allowing you to manage network and device configuration parameters.
 
 ![Config Page](../media/browser_config.png)
 
-### Key Parameters:
-- **Network SSID and Password**: These are for the external WiFi network you wish to connect to.
-- **Puara Password**: This is the password for your device/board's WiFi network, which you can update.
+### Key Parameters
 
-### Important Notes:
-- After making changes to these parameters, click the **"Close and Reboot"** button to restart your system and apply the changes.
-- See the code parameters in the [config.json](../../data/config.json) file for more details.
+| Parameter | Description |
+|-----------|-------------|
+| **Network SSID** | The external WiFi network name you want to connect to. |
+| **Network Password** | The password for the external WiFi network. |
+| **Puara Password** | The password for your device's own WiFi access point. |
+
+### Important Notes
+
+- After making changes, click **"Close and Reboot"** to restart the device and apply the changes.
+- See the [config.json](../../data/config.json) file for all available parameters.
 
 ### `config.json`
 
-You may modify these values directly in the source files, then build/upload the filesystem. The `/data/config.json` file is used to store the main configuration of your device. Here is an example of a `config.json` file:
+You can modify configuration values directly in the source file, then build and upload the filesystem. The `/data/config.json` file stores the main configuration of your device:
 
 ```json
 {
@@ -49,55 +40,61 @@ You may modify these values directly in the source files, then build/upload the 
 }
 ```
 
-*   `device`: User chosen name for the device.
-*   `id`: User defined device ID (useful if using multiple devices).
-*   `author`: User defined project author.
-*   `APpasswd`: password to for your device's WiFi network.
-*   `wifiSSID`: Network name you want your device to connect to.
-*   `wifiPSK`: Network password you want your device to connect to.
-*   `persistent_AP`: If `true`, the device will always create it's own Access Point. Deactivate if you are not using this option to limit radio pollution and increase stability of other signals.
+| Field | Description |
+|-------|-------------|
+| `device` | User-defined name for the device. |
+| `id` | User-defined device ID (useful when using multiple devices). |
+| `author` | Project author name. |
+| `institution` | Institution or organization name. |
+| `APpasswd` | Password for your device's WiFi access point. |
+| `wifiSSID` | Name of the external WiFi network to connect to. |
+| `wifiPSK` | Password for the external WiFi network. |
+| `persistentAP` | If `1` (true), the device always creates its own access point. Set to `0` to disable and reduce radio interference. |
 
 ---
 
 ## Scan Page
 
-The **Scan Page** displays the WiFi networks detected by your device. 
+The **Scan Page** displays WiFi networks detected by your device, helping you identify available networks to connect to.
 
 ![Scan Page](../media/browser_scan.png)
 
-### Features:
-- View a list of available WiFi networks.
-- Use the information to update the configuration of your board.
-- After updating, reboot the device to apply the changes.
+### Features
+
+- View a list of available WiFi networks with signal strength.
+- Use this information to select a network for the Config Page.
+- After updating the configuration, reboot the device to apply changes.
 
 ---
 
 ## Settings Page
 
-The **Settings Page** allows you to view and modify predefined text or number variables.
-
-### Features:
-- Add or delete fields in the [settings.json](../../data/settings.json) file. Ensure the `name:value` structure is respected. Rebuild/Upload filesystem after doing this.
-- Modify values directly via the web server settings page. Changes persist after reboot.
-
-### Accessing Variables in Your Program:
-- Use `puara.getVarText("name")` for text fields.
-- Use `puara.getVarNumber("name")` for number fields.
-
-### Examples:
-
-#### Random Settings (Basic Template)
-Example of placeholder names and values found in the basic template:
+The **Settings Page** allows you to view and modify custom application variables defined in your project.
 
 ![Settings Page](../media/browser_settings_rndm.png)
 
-#### OSC Settings (OSC Templates)
-Example of OSC settings for the OSC templates, including IP and port addresses:
+### Features
 
-![Settings Page](../media/browser_settings_osc.png)
+- **View variables**: See all user-defined settings from `settings.json`.
+- **Modify values**: Change values directly via the web interface. Changes persist after reboot.
+- **Add/remove fields**: Edit the [settings.json](../../data/settings.json) file directly, maintaining the `name:value` structure, then rebuild and upload the filesystem.
+
+### Accessing Variables in Code
+
+Use the following methods to retrieve variable values in your program:
+
+```cpp
+// For text fields
+std::string my_string = puara.getVarText("variable_name");
+
+// For number fields (integers or floats)
+int my_int = puara.getVarNumber("variable_name");
+float my_float = puara.getVarNumber("variable_name");
+```
 
 ### `settings.json`
-The `settings.json` file is used to store the settings of your application. You can add any key-value pairs to this file. Here is an example of a `settings.json` file:
+
+The `/data/settings.json` file stores custom application settings as an array of name-value pairs:
 
 ```json
 {
@@ -117,15 +114,9 @@ The `settings.json` file is used to store the settings of your application. You 
     ]
 }
 ```
-You can access the values of these variables from your code using the `getVarNumber()` and `getVarText()` methods of the `Puara` object:
 
-```cpp
-std::string my_string_var = puara.getVarText("user_defined_name");
-int my_int_var = puara.getVarNumber("user_defined_variable");
-float my_float_var = puara.getVarNumber("variable3");
-```
+### Example: OSC Settings
 
+For projects using OSC communication, the settings page can be used to configure IP addresses and ports:
 
----
-
-This document provides an overview of the browser-accessible pages for configuring, scanning, and managing your device's settings. For more details, refer to the respective JSON files or templates.
+![OSC Settings Page](../media/browser_settings_osc.png)

@@ -1,18 +1,24 @@
 # Serial
 
-The `puara-module` library provides a simple interface for serial communication.
+The `puara-module` library provides a simple interface for serial communication, allowing you to send data and receive commands via the serial port.
 
-## Starting serial listening
+---
 
-The serial listening is started automatically when you call the `puara.start()` method. You can also start it manually using the `start_serial_listening()` method:
+## Starting Serial Listening
+
+Serial listening is started automatically when you call `puara.start()`. You can also start it manually:
 
 ```cpp
-puara.start_serial_listening();
+bool success = puara.start_serial_listening();
 ```
 
-When serial listening is active, the `puara-module` will listen for incoming data on the serial port.
+**Returns:** `true` if serial listening was successfully started, `false` otherwise.
 
-## Sending serial data
+When serial listening is active, the device will listen for incoming commands on the serial port, allowing you to interact with and configure the device via a serial terminal.
+
+---
+
+## Sending Serial Data
 
 You can send data over the serial port using the `send_serial_data()` method:
 
@@ -20,12 +26,34 @@ You can send data over the serial port using the `send_serial_data()` method:
 puara.send_serial_data("Hello, world!");
 ```
 
-## Monitor
+---
 
-You can specify the monitor to be used for logging when you call the `start()` method. The available monitors are:
+## Monitor Types
 
-*   `PuaraAPI::UART_MONITOR`: Logs to the serial port.
-*   `PuaraAPI::TELNET_MONITOR`: Logs to a Telnet server.
-*   `PuaraAPI::NO_MONITOR`: Disables logging.
+You can specify the serial monitor type when calling the `start()` method:
 
-The default monitor is `PuaraAPI::UART_MONITOR`.
+```cpp
+// Use JTAG monitor with debug-level logging
+puara.start(PuaraAPI::JTAG_MONITOR, ESP_LOG_DEBUG);
+```
+
+### Available Monitors
+
+| Monitor | Description |
+|---------|-------------|
+| `PuaraAPI::UART_MONITOR` | Standard UART serial monitor (default). |
+| `PuaraAPI::JTAG_MONITOR` | JTAG-based debugging monitor. |
+| `PuaraAPI::USB_MONITOR` | USB serial monitor. |
+
+### Debug Levels
+
+The second parameter of `start()` sets the ESP-IDF logging level:
+
+| Level | Description |
+|-------|-------------|
+| `ESP_LOG_NONE` | No logging output. |
+| `ESP_LOG_ERROR` | Only error messages. |
+| `ESP_LOG_WARN` | Warnings and errors (default). |
+| `ESP_LOG_INFO` | Informational messages, warnings, and errors. |
+| `ESP_LOG_DEBUG` | Debug messages and all above. |
+| `ESP_LOG_VERBOSE` | All messages including verbose output. |

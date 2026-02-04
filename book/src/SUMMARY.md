@@ -34,7 +34,7 @@ Using the web server to modify your network configurations and program variables
 
 
 #### 2. Useful information for developpers 
-- [The `Puara` object](puara.md) : Use of the `Puara` object to manage your device.
+- [`Puara` object and API](puara.md) : Use of the `Puara` object to manage your device.
 - [Filesystem](filesystem.md) : Configuration differences between SPIFFS and LITTLEFS. 
 - [Webserver](web.md) : Use the integrated webserver.
  - See [Browser Pages](browser.md) for user facing web server considerations.
