@@ -22,8 +22,6 @@ jobs:
           mdbook-version: 'latest'
 
       - run: mdbook build book/ -d $PWD/output
-      - run: cp -rf $PWD/.well-known $PWD/output/
-      - run: touch .nojekyll
       - run: touch ./output/.nojekyll
 
       - name: Deploy
