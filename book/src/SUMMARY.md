@@ -15,10 +15,10 @@ Puara Module is a library for the ESP32 boards that provides a simplified interf
 
 ## Documentation
 This documentation is divided into two main sections:
-- [Building and compiling Puara Module templates/examples](#1-building-puara-module-templatesexamples):
+- Building and compiling Puara Module templates/examples:
   - Using the Arduino 2.0 IDE examples;
   - Using the PlatformIO templates in VS Code;
-- [Technical details about the code aimed at helping developpers understand the codebase](#2-useful-information-for-developpers).
+- Technical details about the code aimed at helping developpers understand the codebase.
 
 
 ## 1. Building Puara Module Templates/Examples
