@@ -13,11 +13,7 @@ This documentation covers the applied usage of the Puara Module library and deta
 
 Puara Module is a library for the ESP32 boards that provides a simplified interface for managing WiFi, a web server, and a filesystem in order to facilitate the creation of distributed interactive systems, networked controllers and other similar applications so users can focus on prototyping the rest of their system.
 
-## Documentation
-This documentation is divided into two main sections:
-- Building and compiling Puara Module templates/examples:
-- Technical details about the code aimed at helping developpers understand the codebase.
-
+---
 
 ## 1. Building Puara Module Templates/Examples
 
@@ -31,7 +27,7 @@ Using the web server to modify your network configurations and program variables
 - [Browser Pages](browser.md)
 
 
-#### 2. Useful information for developpers 
+## 2. Useful Information for Developers 
 - [`Puara` object and API](puara.md) : Use of the `Puara` object to manage your device.
 - [Filesystem](filesystem.md) : Configuration differences between SPIFFS and LITTLEFS. 
 - [Webserver](web.md) : Use the integrated webserver.
