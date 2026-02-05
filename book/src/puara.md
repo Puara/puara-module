@@ -23,7 +23,7 @@ void setup() {
 }
 ```
 
-The `start()` method initializes the following : 
+The `start()` method initializes the following:
 *   Filesystem
 *   Configuration and settings (from the JSON files)
 *   WiFi (in STA-AP, AP or STA mode)

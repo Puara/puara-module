@@ -18,5 +18,5 @@
 - [Filesystem](filesystem.md)
 - [Web Server](web.md)
 - [WiFi](wifi.md)
-- [Serial](serial.md)
+- [Serial and Debug Logging](serial.md)
 - [mDNS](mdns.md)

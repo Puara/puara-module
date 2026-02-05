@@ -6,28 +6,28 @@
 
  ⚠️ Install [Arduino-LittleFS-Upload](https://github.com/earlephilhower/arduino-littlefs-upload) for filesystem uploading.
 
- ⚠️ ESP32 board library : Open **Boards Manager** icon in Arduino 2.0 IDE, type **esp32** in the Boars Manager **search bar** and install *esp32* by *Espressif Systems*.
+ ⚠️ ESP32 board library: Open **Boards Manager** icon in Arduino 2.0 IDE, type **esp32** in the Boards Manager **search bar** and install *esp32* by *Espressif Systems*.
 
- ⚠️ Partition size options : Select any options that offer minimal partition before building program. These options vary depending on board capabilities and can be found here : `/Tools/Partition Scheme/`. A common option is `Minimal SPIFFS` such as  : `/Tools/Partition Scheme/Minimal SPIFFS`. 
- Warning, some boards simply do not have such options.
+ ⚠️ Partition size options: Select any options that offer minimal partition before building the program. These options vary depending on board capabilities and can be found here: `/Tools/Partition Scheme/`. A common option is `Minimal SPIFFS` such as: `/Tools/Partition Scheme/Minimal SPIFFS`. 
+ Warning: some boards simply do not have such options.
 
 ## How to Use
 
 1. **Install Arduino 2.0 IDE**
 
-2. **Dowload the `puara-module` library from library manager**
+2. **Download the `puara-module` library from Library Manager**
 
 3. **Open a puara template in Arduino IDE**: Open Arduino IDE, go to File/Examples/puara-module/ and select the template of your choice. 
 
 4. **Configure the board**: Ensure the `board` and `port` variables in the IDE match your board. 
 
-5. **Edit partition scheme** : Allow more space for your programs. Go to :
+5. **Edit partition scheme**: Allow more space for your programs. Go to:
 - Tools/Partition Scheme/
 Select `Minimal Spiffs` or similar option. Different boards have different possibilities but generally the `Minimal Spiffs:...` option should be present.
 
 6. **Edit the template**: You are now ready to edit the template according to your board/needs.
 
-7. **Edit the filesystem**: To modify network configurations, add or modify the available variables in the settings, got to :
+7. **Edit the filesystem**: To modify network configurations, add or modify the available variables in the settings, go to:
 - `Sketch/Show Sketch Folder` which will open your local project folder
 - Enter `data/` folder:
   - Modify network name (SSID) and password (PSK) configurations in config.json;
@@ -55,7 +55,8 @@ On macOS, press `[⌘]` + `[Shift]` + `[P]` to open the Command Palette in the A
 
  ⚠️ 
 **Every template related to Puara Module has a different set of options but they all generally respect the following explanation.**
-The following sections are detailed more thoroughly in the [Puara Module](https://github.com/Puara/puara-module) doumentation.
+If needed, the following sections are detailed more thoroughly in the [Puara Module Book](https://puara.github.io/puara-module/introduction.html#2-developer-reference)
+
 
 ### 1. Establishing WiFi 
 
@@ -74,12 +75,12 @@ The `puara-module` supports three modes of operation:
 3. **Station (STA) Mode**:
    - The device connects to an existing WiFi network.
    - The Access Point is turned off with `persistent_AP=0`
-   - Useful to limit Wifi pollution and securing device.
+   - Useful to limit WiFi pollution and secure the device.
 
 
 ### 2. Making the Web Server Accessible
 
-Browser-accessible pages available for configuring, scanning, and managing settings on your device are made availabe through Puara Module.
+Browser-accessible pages available for configuring, scanning, and managing settings on your device are made available through Puara Module.
 
 Once the web server is running, you can access it in two ways:
 
@@ -120,7 +121,7 @@ User may add/modify fields in this file and then upload the new filesystem in or
 
 --- 
 
-For more detailed documentation, please refer to the mdBook in the puara-module's github repository.
+For more detailed documentation, please refer to the Puara Module [developer documents](https://puara.github.io/puara-module/introduction.html#2-developer-reference)
 
 --- 
 
@@ -134,6 +135,7 @@ Each example includes a `data/` folder containing configuration files (`config.j
 
  ⚠️ **After building and uploading the firmware to your board, you must also upload the filesystem**.
 
+---
 
 ### 1. Basic Example
 
@@ -147,6 +149,9 @@ A minimal example demonstrating core Puara Module functionality. This example:
 
 This is the best starting point for learning how to use the Puara framework.
 
+
+---
+
 ### 2. OSC-Send Example
 
 **File**: `examples/OSC-Send/OSC-Send.ino`
@@ -158,6 +163,9 @@ Demonstrates how to set up a basic OSC transmitter. This example:
 - Includes example code for reading analog sensors and digital signals
 
 **Note**: Please refer to [CNMAT's OSC repository](https://github.com/CNMAT/OSC) on GitHub for more details on OSC.
+
+---
+
 
 ### 3. OSC-Receive Example
 
@@ -173,6 +181,9 @@ The example expects a float between [0,1] on the OSC address `/led/brightness` w
 
 **Note**: Please refer to [CNMAT's OSC repository](https://github.com/CNMAT/OSC) on GitHub for more details on OSC.
 
+---
+
+
 ### 4. OSC-Duplex Example
 
 **File**: `examples/OSC-Duplex/OSC-Duplex.ino`
@@ -184,6 +195,9 @@ Combines both OSC-Send and OSC-Receive functionality in a single sketch. This ex
 - Useful for bidirectional device communication scenarios
 
 **Note**: Please refer to [CNMAT's OSC repository](https://github.com/CNMAT/OSC) on GitHub for more details on OSC.
+
+---
+
 
 ### 5. BLE Advertising Example
 
@@ -223,6 +237,9 @@ You can customize the BLE advertising behavior:
 - **Sensor Data**: Replace dummy `sensor1` and `sensor2` with actual pin readings
 
 For more information, see the [BLE-CBOR-to-OSC script documentation](https://gitlab.com/sat-mtl/collaborations/2024-iot/ble-cbor-to-osc).
+
+---
+
 
 
 

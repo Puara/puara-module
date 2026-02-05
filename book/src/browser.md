@@ -8,7 +8,7 @@ This document explains the browser-accessible pages available for configuring, s
 
 The **Config Page** is the main page of the web interface, allowing you to manage network and device configuration parameters.
 
-![Config Page](../media/browser_config.png)
+![Config Page](media/browser_config.png)
 
 ### Key Parameters
 
@@ -57,7 +57,7 @@ You can modify configuration values directly in the source file, then build and 
 
 The **Scan Page** displays WiFi networks detected by your device, helping you identify available networks to connect to.
 
-![Scan Page](../media/browser_scan.png)
+![Scan Page](media/browser_scan.png)
 
 ### Features
 
@@ -71,7 +71,7 @@ The **Scan Page** displays WiFi networks detected by your device, helping you id
 
 The **Settings Page** allows you to view and modify custom application variables defined in your project.
 
-![Settings Page](../media/browser_settings_rndm.png)
+![Settings Page](media/browser_settings_rndm.png)
 
 ### Features
 
@@ -119,4 +119,4 @@ The `/data/settings.json` file stores custom application settings as an array of
 
 For projects using OSC communication, the settings page can be used to configure IP addresses and ports:
 
-![OSC Settings Page](../media/browser_settings_osc.png)
+![OSC Settings Page](media/browser_settings_osc.png)

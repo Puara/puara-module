@@ -40,7 +40,7 @@ This [repository](https://github.com/Puara/puara-module-templates) contains seve
 
 
 **Every template related to Puara Module has a different set of options but they all generally respect the following explanation.**
-The following sections are detailed more thoroughly in the [Puara Module](https://github.com/Puara/puara-module) doumentation.
+The following sections are detailed more thoroughly in the [Puara Module Book](https://puara.github.io/puara-module/introduction.html).
 
 ### 1. Establishing WiFi 
 
@@ -59,12 +59,12 @@ The `puara-module` supports three modes of operation:
 3. **Station (STA) Mode**:
    - The device connects to an existing WiFi network.
    - The Access Point is turned off with `persistent_AP=0`
-   - Useful to limit Wifi pollution and securing device.
+   - Useful to limit WiFi pollution and secure the device.
 
 
 ### 2. Making the Web Server Accessible
 
-Browser-accessible pages available for configuring, scanning, and managing settings on your device are made availabe through Puara Module.
+Browser-accessible pages available for configuring, scanning, and managing settings on your device are made available through Puara Module.
 
 Once the web server is running, you can access it in two ways:
 
@@ -116,7 +116,6 @@ Each example includes a `data/` folder containing configuration files (`config.j
 
 ---
 
-
 ### 1. Basic Example
 
 A minimal example demonstrating core Puara Module functionality. This template:
@@ -127,6 +126,9 @@ A minimal example demonstrating core Puara Module functionality. This template:
 
 This is the best starting point for learning how to use the Puara framework.
 
+---
+
+
 ### 2. OSC-Send Example
 
 Demonstrates how to set up a basic OSC transmitter. This template:
@@ -136,6 +138,9 @@ Demonstrates how to set up a basic OSC transmitter. This template:
 - Includes example code for reading analog sensors and digital signals
 
 **Note**: Please refer to [CNMAT's OSC repository](https://github.com/CNMAT/OSC) on GitHub for more details on OSC.
+
+---
+
 
 ### 3. OSC-Receive Example
 
@@ -149,6 +154,9 @@ The example expects a float between [0,1] on the OSC address `/led/brightness` w
 
 **Note**: Please refer to [CNMAT's OSC repository](https://github.com/CNMAT/OSC) on GitHub for more details on OSC.
 
+---
+
+
 ### 4. OSC-Duplex Example
 
 Combines both OSC-Send and OSC-Receive functionality in a single sketch. This template:
@@ -158,6 +166,9 @@ Combines both OSC-Send and OSC-Receive functionality in a single sketch. This te
 - Useful for bidirectional device communication scenarios
 
 **Note**: Please refer to [CNMAT's OSC repository](https://github.com/CNMAT/OSC) on GitHub for more details on OSC.
+
+---
+
 
 ### 5. BLE Advertising Example
 
@@ -169,6 +180,9 @@ Demonstrates BLE (Bluetooth Low Energy) advertising without requiring device con
 
 For detailed setup instructions and configuration options, refer to the template's README file.
 
+---
+
+
 ### 6. Basic Gestures Example
 
 Extends the basic template with gesture recognition capabilities using an IMU (Inertial Measurement Unit). This template:
@@ -176,13 +190,19 @@ Extends the basic template with gesture recognition capabilities using an IMU (I
 - Includes gesture detection logic
 - Shows integration with the Puara module system
 
+---
+
+
 ### 7. Button OSC Example
 
-Demonstrates how to use button inputs with puara gestures and OSC messaging. This template:
-- Reads digital button inputs (simulated button in template cas be replaced a real button)
+Demonstrates how to use button inputs with Puara gestures and OSC messaging. This template:
+- Reads digital button inputs (simulated button in template can be replaced with a real button)
 - Shows event-driven communication patterns
-- Evaluates the user interaction with button to determine if button is being held, pressed once, twice, or three times in a row, and such...
+- Evaluates the user interaction with the button to determine if it is being held, pressed once, twice, or three times in a row, and so on
 - Sends button state changes as OSC messages
+
+
+---
 
 
 ### 8. Libmapper OSC Example
