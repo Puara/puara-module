@@ -16,6 +16,7 @@ Edu Meneses (2022) - https://www.edumeneses.com
 #include "puara_device.hpp"
 #include "puara_logger.hpp"
 #include "puara_filesystem.hpp"
+#include "puara_ftm.hpp"
 #include "puara_mdns.hpp"
 #include "puara_serial.hpp"
 #include "puara_web.hpp"
@@ -39,6 +40,7 @@ struct PuaraGlobal
   PuaraAPI::WiFi wifi{config};
   PuaraAPI::Webserver webserver{config, device, fs, settings, wifi};
   PuaraAPI::MDNSService mdns;
+  PuaraAPI::FTM ftm{wifi};
 
   PuaraGlobal() { }
 
@@ -59,6 +61,7 @@ struct PuaraGlobal
     webserver.start_webserver();
     mdns.start(config.dmiName, config.dmiName);
     wifi.wifi_scan();
+    ftm.initiateFTM();  // all FTM is handled here right now.. 
 
     serial.module_monitor = monitor;
 

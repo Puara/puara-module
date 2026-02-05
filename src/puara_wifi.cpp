@@ -267,7 +267,47 @@ void WiFi::sta_event_handler(
     std::cout << "Connected to external AP With ip " << self.currentSTA_IP  << std::endl;
     self.connect_counter = 0;
     xEventGroupSetBits(self.s_wifi_event_group, self.wifi_connected_bit);
+  
+
+    // FTM implementation
+    wifi_ap_record_t ap_info;
+    if(esp_wifi_sta_get_ap_info(&ap_info) == ESP_OK){
+      std::copy(std::begin(ap_info.bssid), std::end(ap_info.bssid), std::begin(self.currentRouter_BSSID));
+      self.ftm_channel = ap_info.primary;
+      self.ftm_responder_state = ap_info.ftm_responder;
+      self.ftm_initiator_state = ap_info.ftm_initiator;
+
+      std::cout << "ap_info.primary / Channel of AP: " << ap_info.primary << std::endl;
+      std::cout << "flag to identify if FTM is supported in responder mode: " << ap_info.ftm_responder << std::endl;
+      std::cout << "flag to identify if FTM is supported in initiator mode: " << ap_info.ftm_initiator << std::endl;
+
+  //Print string MAC for proof of concept
+      self.router_BSSID.clear();
+      std::stringstream mac_stream;
+      mac_stream << std::hex << std::setfill('0')
+          << std::setw(2) << (int)ap_info.bssid[0] << ":"
+          << std::setw(2) << (int)ap_info.bssid[1] << ":"
+          << std::setw(2) << (int)ap_info.bssid[2] << ":"
+          << std::setw(2) << (int)ap_info.bssid[3] << ":"
+          << std::setw(2) << (int)ap_info.bssid[4] << ":"
+          << std::setw(2) << (int)ap_info.bssid[5];
+       self.router_BSSID = mac_stream.str();
+       std::cout << "Responder MAC: " << self.router_BSSID << std::endl;
+       mac_stream.str("");
+       mac_stream.clear();
+  //end proof of concept print
+    }
+    //end FTM implementation tests to get active Router MAC address
   }
+  else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_FTM_REPORT){
+
+    wifi_event_ftm_report_t* report = (wifi_event_ftm_report_t*) event_data;
+    std::cout<<"FTM Report received! rtt: "<< report->rtt_est <<", distance: "<< report->dist_est << std::endl;
+//    	memcpy(&arduino_event.event_info.wifi_ftm_report, event_data, sizeof(wifi_event_ftm_report_t));
+  }
+ else {
+    std::cout<<"how did you get here-print event info"<< std::endl;
+}
 }
 
 bool WiFi::get_StaIsConnected()
