@@ -35,10 +35,10 @@
             const path_to_root = "";
             const default_light_theme = "ayu";
             const default_dark_theme = "ayu";
-            window.path_to_searchindex_js = "searchindex-3e6889f9.js";
+            window.path_to_searchindex_js = "searchindex-68ef5567.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-90aef21a.js"></script>
+        <script src="toc-18862a05.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -216,7 +216,7 @@ The <strong>filesystem</strong> is like a “hard drive” for the device, where
 <hr>
 <h2 id="how-it-works"><a class="header" href="#how-it-works">How It Works</a></h2>
 <p><strong>Every template related to Puara Module has a different set of options but they all generally respect the following explanation.</strong>
-The following sections are detailed more thoroughly in the <a href="https://github.com/Puara/puara-module">Puara Module</a> doumentation.</p>
+The following sections are detailed more thoroughly in the <a href="https://puara.github.io/puara-module/introduction.html">Puara Module Book</a>.</p>
 <h3 id="1-establishing-wifi"><a class="header" href="#1-establishing-wifi">1. Establishing WiFi</a></h3>
 <p>When initiating the program, the module manager will try to connect to the WiFi Network (SSID) defined in <code>config.json</code>.
 The <code>puara-module</code> supports three modes of operation:</p>
@@ -241,12 +241,12 @@ The <code>puara-module</code> supports three modes of operation:</p>
 <ul>
 <li>The device connects to an existing WiFi network.</li>
 <li>The Access Point is turned off with <code>persistent_AP=0</code></li>
-<li>Useful to limit Wifi pollution and securing device.</li>
+<li>Useful to limit WiFi pollution and secure the device.</li>
 </ul>
 </li>
 </ol>
 <h3 id="2-making-the-web-server-accessible"><a class="header" href="#2-making-the-web-server-accessible">2. Making the Web Server Accessible</a></h3>
-<p>Browser-accessible pages available for configuring, scanning, and managing settings on your device are made availabe through Puara Module.</p>
+<p>Browser-accessible pages available for configuring, scanning, and managing settings on your device are made available through Puara Module.</p>
 <p>Once the web server is running, you can access it in two ways:</p>
 <ol>
 <li>
@@ -295,6 +295,7 @@ Each example includes a <code>data/</code> folder containing configuration files
 <li>Demonstrates how to access custom configuration variables using <code>getVarText()</code> and <code>getVarNumber()</code></li>
 </ul>
 <p>This is the best starting point for learning how to use the Puara framework.</p>
+<hr>
 <h3 id="2-osc-send-example"><a class="header" href="#2-osc-send-example">2. OSC-Send Example</a></h3>
 <p>Demonstrates how to set up a basic OSC transmitter. This template:</p>
 <ul>
@@ -304,6 +305,7 @@ Each example includes a <code>data/</code> folder containing configuration files
 <li>Includes example code for reading analog sensors and digital signals</li>
 </ul>
 <p><strong>Note</strong>: Please refer to <a href="https://github.com/CNMAT/OSC">CNMAT’s OSC repository</a> on GitHub for more details on OSC.</p>
+<hr>
 <h3 id="3-osc-receive-example"><a class="header" href="#3-osc-receive-example">3. OSC-Receive Example</a></h3>
 <p>Demonstrates how to receive and process OSC messages. This template:</p>
 <ul>
@@ -314,6 +316,7 @@ Each example includes a <code>data/</code> folder containing configuration files
 </ul>
 <p>The example expects a float between [0,1] on the OSC address <code>/led/brightness</code> with the format: <code>/led/brightness f 0.34</code></p>
 <p><strong>Note</strong>: Please refer to <a href="https://github.com/CNMAT/OSC">CNMAT’s OSC repository</a> on GitHub for more details on OSC.</p>
+<hr>
 <h3 id="4-osc-duplex-example"><a class="header" href="#4-osc-duplex-example">4. OSC-Duplex Example</a></h3>
 <p>Combines both OSC-Send and OSC-Receive functionality in a single sketch. This template:</p>
 <ul>
@@ -323,6 +326,7 @@ Each example includes a <code>data/</code> folder containing configuration files
 <li>Useful for bidirectional device communication scenarios</li>
 </ul>
 <p><strong>Note</strong>: Please refer to <a href="https://github.com/CNMAT/OSC">CNMAT’s OSC repository</a> on GitHub for more details on OSC.</p>
+<hr>
 <h3 id="5-ble-advertising-example"><a class="header" href="#5-ble-advertising-example">5. BLE Advertising Example</a></h3>
 <p>Demonstrates BLE (Bluetooth Low Energy) advertising without requiring device connections. This template:</p>
 <ul>
@@ -332,6 +336,7 @@ Each example includes a <code>data/</code> folder containing configuration files
 <li>Works seamlessly with the <a href="https://gitlab.com/sat-mtl/collaborations/2024-iot/ble-cbor-to-osc">BLE-CBOR-to-OSC script</a></li>
 </ul>
 <p>For detailed setup instructions and configuration options, refer to the template’s README file.</p>
+<hr>
 <h3 id="6-basic-gestures-example"><a class="header" href="#6-basic-gestures-example">6. Basic Gestures Example</a></h3>
 <p>Extends the basic template with gesture recognition capabilities using an IMU (Inertial Measurement Unit). This template:</p>
 <ul>
@@ -339,14 +344,16 @@ Each example includes a <code>data/</code> folder containing configuration files
 <li>Includes gesture detection logic</li>
 <li>Shows integration with the Puara module system</li>
 </ul>
+<hr>
 <h3 id="7-button-osc-example"><a class="header" href="#7-button-osc-example">7. Button OSC Example</a></h3>
-<p>Demonstrates how to use button inputs with puara gestures and OSC messaging. This template:</p>
+<p>Demonstrates how to use button inputs with Puara gestures and OSC messaging. This template:</p>
 <ul>
-<li>Reads digital button inputs (simulated button in template cas be replaced a real button)</li>
+<li>Reads digital button inputs (simulated button in template can be replaced with a real button)</li>
 <li>Shows event-driven communication patterns</li>
-<li>Evaluates the user interaction with button to determine if button is being held, pressed once, twice, or three times in a row, and such…</li>
+<li>Evaluates the user interaction with the button to determine if it is being held, pressed once, twice, or three times in a row, and so on</li>
 <li>Sends button state changes as OSC messages</li>
 </ul>
+<hr>
 <h3 id="8-libmapper-osc-example"><a class="header" href="#8-libmapper-osc-example">8. Libmapper OSC Example</a></h3>
 <p>Demonstrates integration with libmapper, a distributed signal mapping system. This template:</p>
 <ul>

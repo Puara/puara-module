@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "ayu";
             const default_dark_theme = "ayu";
-            window.path_to_searchindex_js = "searchindex-3e6889f9.js";
+            window.path_to_searchindex_js = "searchindex-68ef5567.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-90aef21a.js"></script>
+        <script src="toc-18862a05.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -204,7 +204,7 @@
 <li><a href="#filesystem-1">Filesystem</a> - LittleFS vs SPIFFS configuration</li>
 <li><a href="#web-server-1">Web Server</a> - Integrated web server for device configuration</li>
 <li><a href="#wifi-considerations">WiFi</a> - WiFi connection management</li>
-<li><a href="#serial">Serial</a> - Serial communication and debug output</li>
+<li><a href="#serial-and-debug-logging">Serial and Debug Logging</a> - Serial communication and debug output</li>
 <li><a href="#mdns">mDNS</a> - Local network device discovery</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -212,16 +212,16 @@
 <h2 id="dependencies"><a class="header" href="#dependencies">Dependencies</a></h2>
 <p>⚠️ Download <a href="https://www.arduino.cc/en/software/">Arduino 2.0 IDE</a> for build/upload of program.</p>
 <p>⚠️ Install <a href="https://github.com/earlephilhower/arduino-littlefs-upload">Arduino-LittleFS-Upload</a> for filesystem uploading.</p>
-<p>⚠️ ESP32 board library : Open <strong>Boards Manager</strong> icon in Arduino 2.0 IDE, type <strong>esp32</strong> in the Boars Manager <strong>search bar</strong> and install <em>esp32</em> by <em>Espressif Systems</em>.</p>
-<p>⚠️ Partition size options : Select any options that offer minimal partition before building program. These options vary depending on board capabilities and can be found here : <code>/Tools/Partition Scheme/</code>. A common option is <code>Minimal SPIFFS</code> such as  : <code>/Tools/Partition Scheme/Minimal SPIFFS</code>.
-Warning, some boards simply do not have such options.</p>
+<p>⚠️ ESP32 board library: Open <strong>Boards Manager</strong> icon in Arduino 2.0 IDE, type <strong>esp32</strong> in the Boards Manager <strong>search bar</strong> and install <em>esp32</em> by <em>Espressif Systems</em>.</p>
+<p>⚠️ Partition size options: Select any options that offer minimal partition before building the program. These options vary depending on board capabilities and can be found here: <code>/Tools/Partition Scheme/</code>. A common option is <code>Minimal SPIFFS</code> such as: <code>/Tools/Partition Scheme/Minimal SPIFFS</code>.
+Warning: some boards simply do not have such options.</p>
 <h2 id="how-to-use"><a class="header" href="#how-to-use">How to Use</a></h2>
 <ol>
 <li>
 <p><strong>Install Arduino 2.0 IDE</strong></p>
 </li>
 <li>
-<p><strong>Dowload the <code>puara-module</code> library from library manager</strong></p>
+<p><strong>Download the <code>puara-module</code> library from Library Manager</strong></p>
 </li>
 <li>
 <p><strong>Open a puara template in Arduino IDE</strong>: Open Arduino IDE, go to File/Examples/puara-module/ and select the template of your choice.</p>
@@ -230,7 +230,7 @@ Warning, some boards simply do not have such options.</p>
 <p><strong>Configure the board</strong>: Ensure the <code>board</code> and <code>port</code> variables in the IDE match your board.</p>
 </li>
 <li>
-<p><strong>Edit partition scheme</strong> : Allow more space for your programs. Go to :</p>
+<p><strong>Edit partition scheme</strong>: Allow more space for your programs. Go to:</p>
 </li>
 </ol>
 <ul>
@@ -242,7 +242,7 @@ Select <code>Minimal Spiffs</code> or similar option. Different boards have diff
 <p><strong>Edit the template</strong>: You are now ready to edit the template according to your board/needs.</p>
 </li>
 <li>
-<p><strong>Edit the filesystem</strong>: To modify network configurations, add or modify the available variables in the settings, got to :</p>
+<p><strong>Edit the filesystem</strong>: To modify network configurations, add or modify the available variables in the settings, go to:</p>
 </li>
 </ol>
 <ul>
@@ -277,7 +277,7 @@ The <strong>filesystem</strong> is like a “hard drive” for the device, where
 <h2 id="how-it-works"><a class="header" href="#how-it-works">How It Works</a></h2>
 <p>⚠️
 <strong>Every template related to Puara Module has a different set of options but they all generally respect the following explanation.</strong>
-The following sections are detailed more thoroughly in the <a href="https://github.com/Puara/puara-module">Puara Module</a> doumentation.</p>
+If needed, the following sections are detailed more thoroughly in the <a href="https://puara.github.io/puara-module/introduction.html#2-developer-reference">Puara Module Book</a></p>
 <h3 id="1-establishing-wifi"><a class="header" href="#1-establishing-wifi">1. Establishing WiFi</a></h3>
 <p>When initiating the program, the module manager will try to connect to the WiFi Network (SSID) defined in <code>config.json</code>.
 The <code>puara-module</code> supports three modes of operation:</p>
@@ -302,12 +302,12 @@ The <code>puara-module</code> supports three modes of operation:</p>
 <ul>
 <li>The device connects to an existing WiFi network.</li>
 <li>The Access Point is turned off with <code>persistent_AP=0</code></li>
-<li>Useful to limit Wifi pollution and securing device.</li>
+<li>Useful to limit WiFi pollution and secure the device.</li>
 </ul>
 </li>
 </ol>
 <h3 id="2-making-the-web-server-accessible"><a class="header" href="#2-making-the-web-server-accessible">2. Making the Web Server Accessible</a></h3>
-<p>Browser-accessible pages available for configuring, scanning, and managing settings on your device are made availabe through Puara Module.</p>
+<p>Browser-accessible pages available for configuring, scanning, and managing settings on your device are made available through Puara Module.</p>
 <p>Once the web server is running, you can access it in two ways:</p>
 <ol>
 <li>
@@ -342,13 +342,14 @@ double my_number = puara.getVarNumber("variable_name");
 </code></pre>
 <p>User may add/modify fields in this file and then upload the new filesystem in order to have a more custom device.</p>
 <hr>
-<p>For more detailed documentation, please refer to the mdBook in the puara-module’s github repository.</p>
+<p>For more detailed documentation, please refer to the Puara Module <a href="https://puara.github.io/puara-module/introduction.html#2-developer-reference">developer documents</a></p>
 <hr>
 <h2 id="examples"><a class="header" href="#examples">Examples</a></h2>
 <p>The <a href="https://github.com/Puara/puara-arduino">puara-arduino</a> repository includes five Arduino sketches that demonstrate different use cases and functionalities.
 All examples are identical to the PlatformIO templates available in <a href="https://github.com/Puara/puara-module-templates">puara-module-templates</a>.</p>
 <p>Each example includes a <code>data/</code> folder containing configuration files (<code>config.json</code>, <code>settings.json</code>) and web interface files (HTML and CSS).</p>
 <p>⚠️ <strong>After building and uploading the firmware to your board, you must also upload the filesystem</strong>.</p>
+<hr>
 <h3 id="1-basic-example"><a class="header" href="#1-basic-example">1. Basic Example</a></h3>
 <p><strong>File</strong>: <code>examples/basic/basic.ino</code></p>
 <p>A minimal example demonstrating core Puara Module functionality. This example:</p>
@@ -359,6 +360,7 @@ All examples are identical to the PlatformIO templates available in <a href="htt
 <li>Demonstrates how to access custom configuration variables using <code>getVarText()</code> and <code>getVarNumber()</code></li>
 </ul>
 <p>This is the best starting point for learning how to use the Puara framework.</p>
+<hr>
 <h3 id="2-osc-send-example"><a class="header" href="#2-osc-send-example">2. OSC-Send Example</a></h3>
 <p><strong>File</strong>: <code>examples/OSC-Send/OSC-Send.ino</code></p>
 <p>Demonstrates how to set up a basic OSC transmitter. This example:</p>
@@ -369,6 +371,7 @@ All examples are identical to the PlatformIO templates available in <a href="htt
 <li>Includes example code for reading analog sensors and digital signals</li>
 </ul>
 <p><strong>Note</strong>: Please refer to <a href="https://github.com/CNMAT/OSC">CNMAT’s OSC repository</a> on GitHub for more details on OSC.</p>
+<hr>
 <h3 id="3-osc-receive-example"><a class="header" href="#3-osc-receive-example">3. OSC-Receive Example</a></h3>
 <p><strong>File</strong>: <code>examples/OSC-Receive/OSC-Receive.ino</code></p>
 <p>Demonstrates how to receive and process OSC messages. This example:</p>
@@ -380,6 +383,7 @@ All examples are identical to the PlatformIO templates available in <a href="htt
 </ul>
 <p>The example expects a float between [0,1] on the OSC address <code>/led/brightness</code> with the format: <code>/led/brightness f 0.34</code></p>
 <p><strong>Note</strong>: Please refer to <a href="https://github.com/CNMAT/OSC">CNMAT’s OSC repository</a> on GitHub for more details on OSC.</p>
+<hr>
 <h3 id="4-osc-duplex-example"><a class="header" href="#4-osc-duplex-example">4. OSC-Duplex Example</a></h3>
 <p><strong>File</strong>: <code>examples/OSC-Duplex/OSC-Duplex.ino</code></p>
 <p>Combines both OSC-Send and OSC-Receive functionality in a single sketch. This example:</p>
@@ -390,6 +394,7 @@ All examples are identical to the PlatformIO templates available in <a href="htt
 <li>Useful for bidirectional device communication scenarios</li>
 </ul>
 <p><strong>Note</strong>: Please refer to <a href="https://github.com/CNMAT/OSC">CNMAT’s OSC repository</a> on GitHub for more details on OSC.</p>
+<hr>
 <h3 id="5-ble-advertising-example"><a class="header" href="#5-ble-advertising-example">5. BLE Advertising Example</a></h3>
 <p><strong>File</strong>: <code>examples/ble-advertising/ble-advertising.ino</code></p>
 <p>Demonstrates BLE (Bluetooth Low Energy) advertising without requiring device connections. This template:</p>
@@ -430,7 +435,7 @@ All examples are identical to the PlatformIO templates available in <a href="htt
 <li><strong>Sensor Data</strong>: Replace dummy <code>sensor1</code> and <code>sensor2</code> with actual pin readings</li>
 </ul>
 <p>For more information, see the <a href="https://gitlab.com/sat-mtl/collaborations/2024-iot/ble-cbor-to-osc">BLE-CBOR-to-OSC script documentation</a>.</p>
-<div style="break-before: page; page-break-before: always;"></div>
+<hr><div style="break-before: page; page-break-before: always;"></div>
 <h1 id="puara-module-template-module-manager"><a class="header" href="#puara-module-template-module-manager">Puara Module Template (Module Manager)</a></h1>
 <p>This <a href="https://github.com/Puara/puara-module-templates">repository</a> contains several templates to be used as a base to create devices that can be controlled over the network.</p>
 <h2 id="how-to-use-puara-module-templates-with-platformio"><a class="header" href="#how-to-use-puara-module-templates-with-platformio">How to Use Puara Module Templates with PlatformIO</a></h2>
@@ -473,7 +478,7 @@ The <strong>filesystem</strong> is like a “hard drive” for the device, where
 <hr>
 <h2 id="how-it-works-1"><a class="header" href="#how-it-works-1">How It Works</a></h2>
 <p><strong>Every template related to Puara Module has a different set of options but they all generally respect the following explanation.</strong>
-The following sections are detailed more thoroughly in the <a href="https://github.com/Puara/puara-module">Puara Module</a> doumentation.</p>
+The following sections are detailed more thoroughly in the <a href="https://puara.github.io/puara-module/introduction.html">Puara Module Book</a>.</p>
 <h3 id="1-establishing-wifi-1"><a class="header" href="#1-establishing-wifi-1">1. Establishing WiFi</a></h3>
 <p>When initiating the program, the module manager will try to connect to the WiFi Network (SSID) defined in <code>config.json</code>.
 The <code>puara-module</code> supports three modes of operation:</p>
@@ -498,12 +503,12 @@ The <code>puara-module</code> supports three modes of operation:</p>
 <ul>
 <li>The device connects to an existing WiFi network.</li>
 <li>The Access Point is turned off with <code>persistent_AP=0</code></li>
-<li>Useful to limit Wifi pollution and securing device.</li>
+<li>Useful to limit WiFi pollution and secure the device.</li>
 </ul>
 </li>
 </ol>
 <h3 id="2-making-the-web-server-accessible-1"><a class="header" href="#2-making-the-web-server-accessible-1">2. Making the Web Server Accessible</a></h3>
-<p>Browser-accessible pages available for configuring, scanning, and managing settings on your device are made availabe through Puara Module.</p>
+<p>Browser-accessible pages available for configuring, scanning, and managing settings on your device are made available through Puara Module.</p>
 <p>Once the web server is running, you can access it in two ways:</p>
 <ol>
 <li>
@@ -552,6 +557,7 @@ Each example includes a <code>data/</code> folder containing configuration files
 <li>Demonstrates how to access custom configuration variables using <code>getVarText()</code> and <code>getVarNumber()</code></li>
 </ul>
 <p>This is the best starting point for learning how to use the Puara framework.</p>
+<hr>
 <h3 id="2-osc-send-example-1"><a class="header" href="#2-osc-send-example-1">2. OSC-Send Example</a></h3>
 <p>Demonstrates how to set up a basic OSC transmitter. This template:</p>
 <ul>
@@ -561,6 +567,7 @@ Each example includes a <code>data/</code> folder containing configuration files
 <li>Includes example code for reading analog sensors and digital signals</li>
 </ul>
 <p><strong>Note</strong>: Please refer to <a href="https://github.com/CNMAT/OSC">CNMAT’s OSC repository</a> on GitHub for more details on OSC.</p>
+<hr>
 <h3 id="3-osc-receive-example-1"><a class="header" href="#3-osc-receive-example-1">3. OSC-Receive Example</a></h3>
 <p>Demonstrates how to receive and process OSC messages. This template:</p>
 <ul>
@@ -571,6 +578,7 @@ Each example includes a <code>data/</code> folder containing configuration files
 </ul>
 <p>The example expects a float between [0,1] on the OSC address <code>/led/brightness</code> with the format: <code>/led/brightness f 0.34</code></p>
 <p><strong>Note</strong>: Please refer to <a href="https://github.com/CNMAT/OSC">CNMAT’s OSC repository</a> on GitHub for more details on OSC.</p>
+<hr>
 <h3 id="4-osc-duplex-example-1"><a class="header" href="#4-osc-duplex-example-1">4. OSC-Duplex Example</a></h3>
 <p>Combines both OSC-Send and OSC-Receive functionality in a single sketch. This template:</p>
 <ul>
@@ -580,6 +588,7 @@ Each example includes a <code>data/</code> folder containing configuration files
 <li>Useful for bidirectional device communication scenarios</li>
 </ul>
 <p><strong>Note</strong>: Please refer to <a href="https://github.com/CNMAT/OSC">CNMAT’s OSC repository</a> on GitHub for more details on OSC.</p>
+<hr>
 <h3 id="5-ble-advertising-example-1"><a class="header" href="#5-ble-advertising-example-1">5. BLE Advertising Example</a></h3>
 <p>Demonstrates BLE (Bluetooth Low Energy) advertising without requiring device connections. This template:</p>
 <ul>
@@ -589,6 +598,7 @@ Each example includes a <code>data/</code> folder containing configuration files
 <li>Works seamlessly with the <a href="https://gitlab.com/sat-mtl/collaborations/2024-iot/ble-cbor-to-osc">BLE-CBOR-to-OSC script</a></li>
 </ul>
 <p>For detailed setup instructions and configuration options, refer to the template’s README file.</p>
+<hr>
 <h3 id="6-basic-gestures-example"><a class="header" href="#6-basic-gestures-example">6. Basic Gestures Example</a></h3>
 <p>Extends the basic template with gesture recognition capabilities using an IMU (Inertial Measurement Unit). This template:</p>
 <ul>
@@ -596,14 +606,16 @@ Each example includes a <code>data/</code> folder containing configuration files
 <li>Includes gesture detection logic</li>
 <li>Shows integration with the Puara module system</li>
 </ul>
+<hr>
 <h3 id="7-button-osc-example"><a class="header" href="#7-button-osc-example">7. Button OSC Example</a></h3>
-<p>Demonstrates how to use button inputs with puara gestures and OSC messaging. This template:</p>
+<p>Demonstrates how to use button inputs with Puara gestures and OSC messaging. This template:</p>
 <ul>
-<li>Reads digital button inputs (simulated button in template cas be replaced a real button)</li>
+<li>Reads digital button inputs (simulated button in template can be replaced with a real button)</li>
 <li>Shows event-driven communication patterns</li>
-<li>Evaluates the user interaction with button to determine if button is being held, pressed once, twice, or three times in a row, and such…</li>
+<li>Evaluates the user interaction with the button to determine if it is being held, pressed once, twice, or three times in a row, and so on</li>
 <li>Sends button state changes as OSC messages</li>
 </ul>
+<hr>
 <h3 id="8-libmapper-osc-example"><a class="header" href="#8-libmapper-osc-example">8. Libmapper OSC Example</a></h3>
 <p>Demonstrates integration with libmapper, a distributed signal mapping system. This template:</p>
 <ul>
@@ -617,7 +629,7 @@ Each example includes a <code>data/</code> folder containing configuration files
 <hr>
 <h2 id="config-page"><a class="header" href="#config-page">Config Page</a></h2>
 <p>The <strong>Config Page</strong> is the main page of the web interface, allowing you to manage network and device configuration parameters.</p>
-<p><img src="../media/browser_config.png" alt="Config Page"></p>
+<p><img src="media/browser_config.png" alt="Config Page"></p>
 <h3 id="key-parameters"><a class="header" href="#key-parameters">Key Parameters</a></h3>
 <div class="table-wrapper">
 <table>
@@ -669,7 +681,7 @@ Each example includes a <code>data/</code> folder containing configuration files
 <hr>
 <h2 id="scan-page"><a class="header" href="#scan-page">Scan Page</a></h2>
 <p>The <strong>Scan Page</strong> displays WiFi networks detected by your device, helping you identify available networks to connect to.</p>
-<p><img src="../media/browser_scan.png" alt="Scan Page"></p>
+<p><img src="media/browser_scan.png" alt="Scan Page"></p>
 <h3 id="features"><a class="header" href="#features">Features</a></h3>
 <ul>
 <li>View a list of available WiFi networks with signal strength.</li>
@@ -679,7 +691,7 @@ Each example includes a <code>data/</code> folder containing configuration files
 <hr>
 <h2 id="settings-page"><a class="header" href="#settings-page">Settings Page</a></h2>
 <p>The <strong>Settings Page</strong> allows you to view and modify custom application variables defined in your project.</p>
-<p><img src="../media/browser_settings_rndm.png" alt="Settings Page"></p>
+<p><img src="media/browser_settings_rndm.png" alt="Settings Page"></p>
 <h3 id="features-1"><a class="header" href="#features-1">Features</a></h3>
 <ul>
 <li><strong>View variables</strong>: See all user-defined settings from <code>settings.json</code>.</li>
@@ -716,7 +728,7 @@ float my_float = puara.getVarNumber("variable_name");
 </code></pre>
 <h3 id="example-osc-settings"><a class="header" href="#example-osc-settings">Example: OSC Settings</a></h3>
 <p>For projects using OSC communication, the settings page can be used to configure IP addresses and ports:</p>
-<p><img src="../media/browser_settings_osc.png" alt="OSC Settings Page"></p>
+<p><img src="media/browser_settings_osc.png" alt="OSC Settings Page"></p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="puara-api-documentation"><a class="header" href="#puara-api-documentation">Puara API Documentation</a></h1>
 <p>The <code>Puara</code> object is the main entry point for using the <code>puara-module</code> library. It provides a simple interface for managing the different modules of the library, including WiFi, filesystem, web server, and more.</p>
@@ -732,7 +744,7 @@ Puara puara;
     puara.start();
 }
 </code></pre>
-<p>The <code>start()</code> method initializes the following :</p>
+<p>The <code>start()</code> method initializes the following:</p>
 <ul>
 <li>Filesystem</li>
 <li>Configuration and settings (from the JSON files)</li>
@@ -1024,7 +1036,7 @@ puara.stop_webserver();
 <ul>
 <li>The device connects to an existing WiFi network.</li>
 <li>The Access Point is turned off with <code>persistent_AP=0</code></li>
-<li>Useful to limit Wifi pollution and securing device.</li>
+<li>Useful to limit WiFi pollution and secure the device.</li>
 </ul>
 </li>
 </ol>
@@ -1077,7 +1089,7 @@ To deactivate AP mode, set the <code>persistent_AP</code> option to <code>0</cod
 </li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="serial"><a class="header" href="#serial">Serial</a></h1>
+<h1 id="serial-and-debug-logging"><a class="header" href="#serial-and-debug-logging">Serial and Debug Logging</a></h1>
 <p>The <code>puara-module</code> library provides a simple interface for serial communication, allowing you to send data and receive commands via the serial port.</p>
 <hr>
 <h2 id="starting-serial-listening"><a class="header" href="#starting-serial-listening">Starting Serial Listening</a></h2>
