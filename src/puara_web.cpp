@@ -18,12 +18,11 @@
 namespace PuaraAPI
 {
 
-httpd_handle_t Webserver::start_webserver(void)
+httpd_handle_t Webserver::start_webserver()
 {
   if(!wifi.ApStarted)
   {
-    std::cout << "start_webserver: Cannot start webserver: AP and STA not initializated"
-              << std::endl;
+    ESP_LOGE(PUARA_TAG,"Start_webserver: Cannot start webserver: AP and STA not initializated");
     return NULL;
   }
   this->webserver = NULL;
@@ -124,7 +123,7 @@ httpd_handle_t Webserver::start_webserver(void)
   return NULL;
 }
 
-void Webserver::stop_webserver(void)
+void Webserver::stop_webserver()
 {
   // Stop the httpd server
   httpd_stop(webserver);

@@ -27,8 +27,8 @@ struct Webserver
   WiFi& wifi;
 
   // public API
-  httpd_handle_t start_webserver(void);
-  void stop_webserver(void);
+  httpd_handle_t start_webserver();
+  void stop_webserver();
 
   // private API
   esp_err_t index_get_handler(httpd_req_t* req);
