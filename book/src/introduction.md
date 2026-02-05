@@ -34,5 +34,5 @@ Technical documentation for understanding and extending the codebase:
 - [Filesystem](filesystem.md) - LittleFS vs SPIFFS configuration
 - [Web Server](web.md) - Integrated web server for device configuration
 - [WiFi](wifi.md) - WiFi connection management
-- [Serial](serial.md) - Serial communication and debug output
+- [Serial and Debug Logging](serial.md) - Serial communication and debug output
 - [mDNS](mdns.md) - Local network device discovery

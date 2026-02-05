@@ -19,7 +19,7 @@ The `puara-module` supports three modes of operation:
 3. **Station (STA) Mode**:
    - The device connects to an existing WiFi network.
    - The Access Point is turned off with `persistent_AP=0`
-   - Useful to limit Wifi pollution and securing device.
+   - Useful to limit WiFi pollution and secure the device.
 
 ### Default Behavior
 Device is STA-AP by default: 

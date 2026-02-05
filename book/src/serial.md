@@ -1,4 +1,4 @@
-# Serial
+# Serial and Debug Logging
 
 The `puara-module` library provides a simple interface for serial communication, allowing you to send data and receive commands via the serial port.
 
