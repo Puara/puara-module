@@ -56,7 +56,13 @@ public:
    * Call this only on devices acting as FTM initiators (STAs connected to a responder AP).
    * Do NOT call this on devices acting as solely as FTM responders (APs).
    */
-  void initiateFTM();
+  void configureFTM();
+
+  /**
+   * Trigger an FTM procedure and get the report in the event handler. Call this only on devices acting as FTM initiators (STAs connected to a responder AP). Do NOT call this on devices acting as solely as FTM responders (APs).
+   */
+
+  void requestFTM();
 
   double getVarNumber(std::string varName);
   std::string getVarText(std::string varName);

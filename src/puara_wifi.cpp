@@ -111,11 +111,12 @@ void WiFi::wifi_init()
     ESP_LOGE(PUARA_TAG,"wifi_init: UNEXPECTED EVENT");
   }
 
-  /* The event will not be processed after unregister */
+  // Unregister only IP event handler, keep WIFI event handler for FTM reports
+  /*
   ESP_ERROR_CHECK(esp_event_handler_instance_unregister(
       IP_EVENT, IP_EVENT_STA_GOT_IP, instance_got_ip));
-  ESP_ERROR_CHECK(esp_event_handler_instance_unregister(
-      WIFI_EVENT, ESP_EVENT_ANY_ID, instance_any_id));
+  */
+      // Note: WIFI_EVENT handler kept registered to receive WIFI_EVENT_FTM_REPORT
   
   // Small delay to ensure any in-flight event handlers complete before deleting the event group
   vTaskDelay(pdMS_TO_TICKS(100));
@@ -312,14 +313,20 @@ void WiFi::sta_event_handler(
     }
     //end FTM implementation tests to get active Router MAC address
 
-/*
+
   }
   else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_FTM_REPORT){
-
     wifi_event_ftm_report_t* report = (wifi_event_ftm_report_t*) event_data;
-    std::cout<<"FTM Report received! rtt: "<< report->rtt_est <<", distance: "<< report->dist_est << std::endl;
-//    	memcpy(&arduino_event.event_info.wifi_ftm_report, event_data, sizeof(wifi_event_ftm_report_t));
-*/  }
+
+    if(report->status == FTM_STATUS_SUCCESS){
+      // rtt_est is in nano seconds, dist_est is in centimeters
+      ESP_LOGI(PUARA_TAG, "FTM Report: RTT: %u ns, Distance: %u cm", report->rtt_est, report->dist_est);
+
+    }else{
+      ESP_LOGW(PUARA_TAG, "FTM Report received with non-success status: %d", report->status);
+    }
+  
+  }
   else {
     // Debug: print unhandled events
     ESP_LOGD(PUARA_TAG, "Unhandled WiFi event - base: %s, id: %ld", event_base, event_id);

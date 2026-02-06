@@ -19,8 +19,11 @@ struct WiFi; // forward declaration
 struct FTM
 {
     WiFi& wifi;
+    int32_t last_rtt_ns = 0;
+    int32_t last_distance_cm = 0;
 
-    wifi_ftm_initiator_cfg_t wifi_ftm_cfg;
+
+    wifi_ftm_initiator_cfg_t wifi_ftm_cfg = {};
   /*  FTM Initiator configuration                 confirm these values with esp-idf docs 5.5.2
     typedef struct {
       uint8_t resp_mac[6];        // MAC address of the FTM Responder 
@@ -66,18 +69,10 @@ typedef struct {
 } wifi_event_ftm_report_t;
 */
 
-
-
     std::string TAG_STA = "ftm_station";
-    //uint32_t s_rtt_est, s_dist_est;
 
-    //wifi_ftm_initiator_cfg_t ftm_initiator; // struct for esp_wifi_ftm_initiate_session(*ftm_initiator)
-    //static uint32_t s_rtt_est, s_dist_est;
-
-
-    void initiateFTM(); //new finite time measurement (ftm) function for calculation of distance from router trialing
-    //void ftm_monitor(void *prParameters); // function for xTaskCreate for FTM recurrent analysis
-    void getFTMReport();
+    void configureFTM(); //new finite time measurement (ftm) function for calculation of distance from router trialing
+    void requestFTM(); // function to trigger FTM procedure and get report in event handler
 
 };
 } 

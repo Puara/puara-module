@@ -184,7 +184,12 @@ bool Puara::get_StaIsConnected()
   return g_puara.wifi.get_StaIsConnected();
 }
 
-void Puara::initiateFTM()
+void Puara::configureFTM()
 {
-  return g_puara.ftm.initiateFTM();
+  return g_puara.ftm.configureFTM();
+}
+
+void Puara::requestFTM()
+{
+  return g_puara.ftm.requestFTM();
 }
