@@ -51,6 +51,13 @@ public:
    */
   std::string staIP();
 
+  /**
+   * Initiate an FTM (Fine Timing Measurement) session with the connected AP.
+   * Call this only on devices acting as FTM initiators (STAs connected to a responder AP).
+   * Do NOT call this on devices acting as solely as FTM responders (APs).
+   */
+  void initiateFTM();
+
   double getVarNumber(std::string varName);
   std::string getVarText(std::string varName);
 };

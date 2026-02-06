@@ -20,6 +20,9 @@ static constexpr int wifiScanSize = 20;
 
 void WiFi::wifi_init()
 {
+// Set device as FTM responder capable
+  this->wifi_config_ap.ap.ftm_responder = true;
+//
   this->s_wifi_event_group = xEventGroupCreate();
 
   ESP_ERROR_CHECK(esp_netif_init());
@@ -279,6 +282,7 @@ void WiFi::sta_event_handler(
 
       std::cout << "ap_info.primary / Channel of AP: " << ap_info.primary << std::endl;
       std::cout << "flag to identify if FTM is supported in responder mode: " << ap_info.ftm_responder << std::endl;
+      std::cout << "if responder mode flag is 0, it does not support FTM " << std::endl;
       std::cout << "flag to identify if FTM is supported in initiator mode: " << ap_info.ftm_initiator << std::endl;
 
   //Print string MAC for proof of concept
@@ -305,9 +309,10 @@ void WiFi::sta_event_handler(
     std::cout<<"FTM Report received! rtt: "<< report->rtt_est <<", distance: "<< report->dist_est << std::endl;
 //    	memcpy(&arduino_event.event_info.wifi_ftm_report, event_data, sizeof(wifi_event_ftm_report_t));
   }
- else {
-    std::cout<<"how did you get here-print event info"<< std::endl;
-}
+  else {
+    // Debug: print unhandled events
+    std::cout << "Unhandled WiFi event - base: " << event_base << ", id: " << event_id << std::endl;
+  }
 }
 
 bool WiFi::get_StaIsConnected()

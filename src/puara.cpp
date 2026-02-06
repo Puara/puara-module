@@ -61,7 +61,8 @@ struct PuaraGlobal
     webserver.start_webserver();
     mdns.start(config.dmiName, config.dmiName);
     wifi.wifi_scan();
-    ftm.initiateFTM();  // all FTM is handled here right now.. 
+    // FTM initiation removed - users should call puara.initiateFTM() explicitly
+    // if their device is meant to be an FTM initiator (STA connecting to a responder) 
 
     serial.module_monitor = monitor;
 
@@ -180,4 +181,9 @@ void Puara::wifi_scan()
 bool Puara::get_StaIsConnected()
 {
   return g_puara.wifi.get_StaIsConnected();
+}
+
+void Puara::initiateFTM()
+{
+  return g_puara.ftm.initiateFTM();
 }
