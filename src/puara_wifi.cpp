@@ -36,11 +36,11 @@ void WiFi::wifi_init()
   esp_err_t setname = esp_netif_set_hostname(ap_netif, config.dmiName.c_str());
   if(setname != ESP_OK)
   {
-    ESP_LOGE(PUARA_TAG,"wifi_init: failed to set hostname: %s", config.dmiName);
+    ESP_LOGE(PUARA_TAG,"wifi_init: failed to set hostname: %s", config.dmiName.c_str());
   }
   else
   {
-    ESP_LOGI(PUARA_TAG,"wifi_init: hostname: %s", config.dmiName);
+    ESP_LOGI(PUARA_TAG,"wifi_init: hostname: %s", config.dmiName.c_str());
   }
 
   esp_event_handler_instance_t instance_any_id;
@@ -81,16 +81,16 @@ void WiFi::wifi_init()
    * can test which event actually happened. */
   if(bits & this->wifi_connected_bit)
   {
-    ESP_LOGI(PUARA_TAG,"wifi_init: Connected to SSID: %s", config.wifiSSID);
+    ESP_LOGI(PUARA_TAG,"wifi_init: Connected to SSID: %s", config.wifiSSID.c_str());
     currentSSID = config.wifiSSID;
     this->StaIsConnected = true;
   }
   else if(bits & this->wifi_fail_bit)
   {
-    ESP_LOGW(PUARA_TAG,"wifi_init: Failed to connect to SSID: %s", config.wifiSSID);
+    ESP_LOGW(PUARA_TAG,"wifi_init: Failed to connect to SSID: %s", config.wifiSSID.c_str());
     if(!config.persistentAP)
     {
-      ESP_LOGW(PUARA_TAG,"wifi_init: Failed to connect to SSID: %s", config.wifiSSID);
+      ESP_LOGW(PUARA_TAG,"wifi_init: Failed to connect to SSID: %s", config.wifiSSID.c_str());
       ESP_LOGI(PUARA_TAG,"Switching to AP/STA mode");
       ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
       ESP_LOGI(PUARA_TAG,"wifi_init: loading AP config");
