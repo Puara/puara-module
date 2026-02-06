@@ -268,7 +268,7 @@ void JSONSettings::update_variable_from_string(const std::string& field, const s
   auto it = variables_fields.find(field);
   if(it == variables_fields.end())
   {
-    ESP_LOGW(PUARA_TAG,"Field not found in settings: %s", field);
+    ESP_LOGW(PUARA_TAG,"Field not found in settings: %s", field.c_str());
     return;
   }
 
