@@ -57,17 +57,17 @@ std::string PuaraFileSystem::read_file(std::string_view path)
 
 void PuaraFileSystem::write_file(const std::string& path, const std::string& contents) {
   mount();
-  ESP_LOGI(PUARA_TAG,"littleFS: Writing file %s", path);
+  ESP_LOGI(PUARA_TAG,"littleFS: Writing file %s", path.c_str());
 
   File file = LittleFS.open(path.c_str(), FILE_WRITE);
   if (!file) {
-    ESP_LOGE(PUARA_TAG,"LittleFS: failed to open file: %s", path);
+    ESP_LOGE(PUARA_TAG,"LittleFS: failed to open file: %s", path.c_str());
     return;
   }
   if (file.print(contents.c_str())) {
-    ESP_LOGI(PUARA_TAG,"LittleFS: wrote %s", path);
+    ESP_LOGI(PUARA_TAG,"LittleFS: wrote %s", path.c_str());
   } else {
-    ESP_LOGE(PUARA_TAG,"LittleFS: failed to write %s", path);
+    ESP_LOGE(PUARA_TAG,"LittleFS: failed to write %s", path.c_str());
   }
   ESP_LOGI(PUARA_TAG,"closing");
   file.close();

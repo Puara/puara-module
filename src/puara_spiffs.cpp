@@ -86,10 +86,10 @@ std::string PuaraFileSystem::read_file(std::string_view path)
   std::ifstream in(full_path);
   if(!in)
   {
-    ESP_LOGE(PUARA_TAG,"spiffs: Failed to open %s", full_path);
+    ESP_LOGE(PUARA_TAG,"spiffs: Failed to open %s", full_path.c_str());
     return "";
   }
-  ESP_LOGI(PUARA_TAG,"spiffs: Reading %s", full_path);
+  ESP_LOGI(PUARA_TAG,"spiffs: Reading %s", full_path.c_str());
   std::string content((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
   unmount();
   return content;
@@ -99,16 +99,16 @@ std::string PuaraFileSystem::read_file(std::string_view path)
 void PuaraFileSystem::write_file(const std::string& path, const std::string& contents)
 {
   mount();
-  ESP_LOGI(PUARA_TAG,"SPIFFS: Opening %s", path);
+  ESP_LOGI(PUARA_TAG,"SPIFFS: Opening %s", path.c_str());
   FILE* f = fopen((spiffs_base_path + path).c_str(), "w");
   if(!f)
   {
-    ESP_LOGE(PUARA_TAG,"SPIFFS: Failed to open %s", path);
+    ESP_LOGE(PUARA_TAG,"SPIFFS: Failed to open %s", path.c_str());
     return;
   }
 
   fprintf(f, "%s", contents.c_str());
-  ESP_LOGI(PUARA_TAG,"SPIFFS: wrote %s", path);
+  ESP_LOGI(PUARA_TAG,"SPIFFS: wrote %s", path.c_str());
   ESP_LOGI(PUARA_TAG,"closing");
   fclose(f);
   unmount();

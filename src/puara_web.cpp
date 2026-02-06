@@ -273,12 +273,12 @@ esp_err_t Webserver::settings_post_handler(httpd_req_t* req)
 
       // Decode the field name (key) to handle spaces/special chars
       field = urlDecode(field);
-      ESP_LOGD(PUARA_TAG, "%s", field);
+      ESP_LOGD(PUARA_TAG, "%s", field.c_str());
 
       // Change the value in the backend
       settings.update_variable_from_string(field, str_token);
 
-      ESP_LOGD(PUARA_TAG, "%s", str_token);
+      ESP_LOGD(PUARA_TAG, "%s", str_token.c_str());
       str_buf.erase(0, pos + delimiter.length());
     }
     ESP_LOGD(PUARA_TAG,"");
@@ -297,7 +297,7 @@ esp_err_t Webserver::get_handler(httpd_req_t* req)
 {
   const char* resp_str = (const char*)req->user_ctx;
   std::string requested_path = std::string{resp_str};
-  ESP_LOGI(PUARA_TAG,"http : Reading requested file %s", requested_path);
+  ESP_LOGI(PUARA_TAG,"http : Reading requested file %s", requested_path.c_str());
   std::string contents = fs.read_file(requested_path);
   httpd_resp_sendstr(req, contents.c_str());
 
@@ -373,7 +373,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
         switch(config_fields.at(field))
         {
           case 1:
-            ESP_LOGI(PUARA_TAG,"SSID: %s", str_token);
+            ESP_LOGI(PUARA_TAG,"SSID: %s", str_token.c_str());
             if(!str_token.empty())
             {
               config.wifiSSID = urlDecode(str_token);
@@ -384,7 +384,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             }
             break;
           case 2:
-            ESP_LOGI(PUARA_TAG,"APpasswd: %s", str_token);
+            ESP_LOGI(PUARA_TAG,"APpasswd: %s", str_token.c_str());
             if(!str_token.empty())
             {
               this->APpasswdVal1 = urlDecode(str_token);
@@ -396,7 +396,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             };
             break;
           case 3:
-            ESP_LOGI(PUARA_TAG,"APpasswdValidate: %s", str_token);
+            ESP_LOGI(PUARA_TAG,"APpasswdValidate: %s", str_token.c_str());
             if(!str_token.empty())
             {
               this->APpasswdVal2 = urlDecode(str_token);
@@ -408,7 +408,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             };
             break;
           case 4:
-            ESP_LOGI(PUARA_TAG,"password: %s", str_token);
+            ESP_LOGI(PUARA_TAG,"password: %s", str_token.c_str());
             if(!str_token.empty())
             {
               config.wifiPSK = urlDecode(str_token);
@@ -423,7 +423,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
             ret_flag = true;
             break;
           case 6:
-            ESP_LOGI(PUARA_TAG,"persistentAP: %s", str_token);
+            ESP_LOGI(PUARA_TAG,"persistentAP: %s", str_token.c_str());
             ESP_LOGI(PUARA_TAG,);
             checkbox_persistentAP = true;
             break;
@@ -434,7 +434,7 @@ esp_err_t Webserver::index_post_handler(httpd_req_t* req)
       }
       else
       {
-        ESP_LOGE(PUARA_TAG,"Error, no match for config field to store received data: %s", field);
+        ESP_LOGE(PUARA_TAG,"Error, no match for config field to store received data: %s", field.c_str());
       }
       str_buf.erase(0, pos + delimiter.length());
     }
