@@ -51,7 +51,6 @@ public:
    */
   std::string staIP();
 
-<<<<<<< Updated upstream
   /**
    * Initiate an FTM (Fine Timing Measurement) session with the connected AP.
    * Call this only on devices acting as FTM initiators (STAs connected to a responder AP).
@@ -59,8 +58,6 @@ public:
    */
   void initiateFTM();
 
-=======
->>>>>>> Stashed changes
   double getVarNumber(std::string varName);
   std::string getVarText(std::string varName);
 };

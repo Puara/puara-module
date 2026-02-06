@@ -16,24 +16,13 @@ Edu Meneses (2022) - https://www.edumeneses.com
 #include "puara_device.hpp"
 #include "puara_logger.hpp"
 #include "puara_filesystem.hpp"
-<<<<<<< Updated upstream
 #include "puara_ftm.hpp"
-=======
->>>>>>> Stashed changes
 #include "puara_mdns.hpp"
 #include "puara_serial.hpp"
 #include "puara_web.hpp"
 #include "puara_wifi.hpp"
-<<<<<<< Updated upstream
 #include <memory>
-=======
-<<<<<<< HEAD
-#include "puara_ftm.hpp"
 
-=======
-#include <memory>
->>>>>>> origin/main
->>>>>>> Stashed changes
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 

@@ -1,8 +1,7 @@
-#include "puara_wifi.hpp"
 
 #include "puara_config.hpp"
 #include "puara_logger.hpp"
-#include "puara_logger.hpp"
+#include "puara_wifi.hpp"
 
 #include <nvs_flash.h>
 
@@ -38,7 +37,6 @@ void WiFi::wifi_init()
 
   // Set device hostname
   esp_err_t setname = esp_netif_set_hostname(ap_netif, config.dmiName.c_str());
-  esp_err_t setname = esp_netif_set_hostname(ap_netif, config.dmiName.c_str());
   if(setname != ESP_OK)
   {
     ESP_LOGE(PUARA_TAG,"wifi_init: failed to set hostname: %s", config.dmiName.c_str());
@@ -56,10 +54,8 @@ void WiFi::wifi_init()
       IP_EVENT, IP_EVENT_STA_GOT_IP, &WiFi::sta_event_handler, this, &instance_got_ip));
 
   ESP_LOGI(PUARA_TAG,"wifi_init: setting wifi mode");
-  ESP_LOGI(PUARA_TAG,"wifi_init: setting wifi mode");
   if(config.persistentAP)
   {
-    ESP_LOGI(PUARA_TAG,"wifi_init:     AP-STA mode");
     ESP_LOGI(PUARA_TAG,"wifi_init:     AP-STA mode");
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
     ESP_LOGI(PUARA_TAG,"wifi_init: loading AP config");
@@ -71,11 +67,10 @@ void WiFi::wifi_init()
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
   }
   std::cout << "wifi_init: loading STA config" << std::endl;
-  ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &this->wifi_config));
+  ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &this->wifi_config_sta));
   std::cout << "wifi_init: esp_wifi_start" << std::endl;
   ESP_ERROR_CHECK(esp_wifi_start());
 
-  ESP_LOGI(PUARA_TAG,"wifi_init: wifi_init finished.");
   ESP_LOGI(PUARA_TAG,"wifi_init: wifi_init finished.");
 
   /* Waiting until either the connection is established (this->wifi_connected_bit)
@@ -113,7 +108,6 @@ void WiFi::wifi_init()
   }
   else
   {
-    ESP_LOGE(PUARA_TAG,"wifi_init: UNEXPECTED EVENT");
     ESP_LOGE(PUARA_TAG,"wifi_init: UNEXPECTED EVENT");
   }
 
@@ -173,7 +167,6 @@ void WiFi::wifi_scan(void)
   ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&number, ap_info));
   ESP_ERROR_CHECK(esp_wifi_scan_get_ap_num(&ap_count));
   ESP_LOGI(PUARA_TAG,"wifi_scan: Total APs scanned = %d", ap_count);
-  ESP_LOGI(PUARA_TAG,"wifi_scan: Total APs scanned = %d", ap_count);
   wifiAvailableSsid.clear();
   for(int i = 0; (i < PuaraAPI::wifiScanSize) && (i < ap_count); i++)
   {
@@ -195,7 +188,6 @@ void WiFi::start_wifi()
   if(config.dmiName.empty())
   {
     ESP_LOGW(PUARA_TAG,"start_wifi: Module name unpopulated. Using default name: Puara");
-    ESP_LOGW(PUARA_TAG,"start_wifi: Module name unpopulated. Using default name: Puara");
     config.dmiName = "Puara";
   }
   if(config.APpasswd.empty() || config.APpasswd.length() < 8
@@ -207,17 +199,10 @@ void WiFi::start_wifi()
     ESP_LOGW(PUARA_TAG,"startWifi:   - password is set to \"password\"");
     ESP_LOGW(PUARA_TAG,"startWifi: Using default AP password: password");
     ESP_LOGW(PUARA_TAG,"startWifi: It is strongly recommended to change the password");
-    ESP_LOGW(PUARA_TAG,"startWifi: AP password error. Possible causes:");
-    ESP_LOGW(PUARA_TAG,"startWifi:   - no AP password");
-    ESP_LOGW(PUARA_TAG,"startWifi:   - password is less than 8 characters long");
-    ESP_LOGW(PUARA_TAG,"startWifi:   - password is set to \"password\"");
-    ESP_LOGW(PUARA_TAG,"startWifi: Using default AP password: password");
-    ESP_LOGW(PUARA_TAG,"startWifi: It is strongly recommended to change the password");
     config.APpasswd = "password";
   }
   if(config.wifiSSID.empty())
   {
-    ESP_LOGW(PUARA_TAG,"start_wifi: No blank SSID allowed. Using default name: Puara");
     ESP_LOGW(PUARA_TAG,"start_wifi: No blank SSID allowed. Using default name: Puara");
     config.wifiSSID = "Puara";
   }
@@ -249,7 +234,6 @@ void WiFi::start_wifi()
   ESP_ERROR_CHECK(ret);
 
   ESP_LOGI(PUARA_TAG,"startWifi: Starting WiFi config");
-  ESP_LOGI(PUARA_TAG,"startWifi: Starting WiFi config");
   this->connect_counter = 0;
   wifi_init();
   this->ApStarted = true;
@@ -266,7 +250,6 @@ void WiFi::sta_event_handler(
   }
   else if(event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED)
   {
-    ESP_LOGW(PUARA_TAG, "Trying to connect to AP %d/%d", self.connect_counter, PuaraAPI::wifi_maximum_retry);
     std::cout << "Trying to connect to AP " << self.connect_counter << "/" << PuaraAPI::wifi_maximum_retry << std::endl;
     if(self.connect_counter < PuaraAPI::wifi_maximum_retry)
     {
@@ -299,7 +282,6 @@ void WiFi::sta_event_handler(
       xEventGroupSetBits(self.s_wifi_event_group, self.wifi_connected_bit);
     }
   
-/*
     // FTM implementation
     wifi_ap_record_t ap_info;
     if(esp_wifi_sta_get_ap_info(&ap_info) == ESP_OK){
@@ -308,10 +290,9 @@ void WiFi::sta_event_handler(
       self.ftm_responder_state = ap_info.ftm_responder;
       self.ftm_initiator_state = ap_info.ftm_initiator;
 
-      std::cout << "ap_info.primary / Channel of AP: " << (int)ap_info.primary << std::endl;
-      std::cout << "flag to identify if FTM is supported in responder mode: " << (int)ap_info.ftm_responder << std::endl;
-      std::cout << "if responder mode flag is 0, it does not support FTM " << std::endl;
-      std::cout << "flag to identify if FTM is supported in initiator mode: " << (int)ap_info.ftm_initiator << std::endl;
+      std::cout << "Channel of external AP: " << (int)ap_info.primary << std::endl;
+      std::cout << "Does external AP support FTM Responder Mode (0-no/1-yes): " << (int)ap_info.ftm_responder << std::endl;
+      std::cout << "Is external AP also FTM Initiator (0-no/1-yes): " << (int)ap_info.ftm_initiator << std::endl;
 
   //Print string MAC for proof of concept
       self.router_BSSID.clear();
@@ -330,7 +311,7 @@ void WiFi::sta_event_handler(
   //end proof of concept print
     }
     //end FTM implementation tests to get active Router MAC address
-*/
+
 /*
   }
   else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_FTM_REPORT){
