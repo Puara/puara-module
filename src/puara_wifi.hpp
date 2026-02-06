@@ -48,7 +48,7 @@ struct WiFi
 
   const int wifi_connected_bit = BIT0;
   const int wifi_fail_bit = BIT1;
-  EventGroupHandle_t s_wifi_event_group;
+  EventGroupHandle_t s_wifi_event_group = NULL;
 
   wifi_config_t wifi_config_sta;
   wifi_config_t wifi_config_ap;

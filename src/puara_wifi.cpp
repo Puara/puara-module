@@ -39,11 +39,11 @@ void WiFi::wifi_init()
   esp_err_t setname = esp_netif_set_hostname(ap_netif, config.dmiName.c_str());
   if(setname != ESP_OK)
   {
-    ESP_LOGE(PUARA_TAG,"wifi_init: failed to set hostname: %s", config.dmiName);
+    ESP_LOGE(PUARA_TAG,"wifi_init: failed to set hostname: %s", config.dmiName.c_str());
   }
   else
   {
-    ESP_LOGI(PUARA_TAG,"wifi_init: hostname: %s", config.dmiName);
+    ESP_LOGI(PUARA_TAG,"wifi_init: hostname: %s", config.dmiName.c_str());
   }
 
   esp_event_handler_instance_t instance_any_id;
@@ -84,16 +84,16 @@ void WiFi::wifi_init()
    * can test which event actually happened. */
   if(bits & this->wifi_connected_bit)
   {
-    ESP_LOGI(PUARA_TAG,"wifi_init: Connected to SSID: %s", config.wifiSSID);
+    ESP_LOGI(PUARA_TAG,"wifi_init: Connected to SSID: %s", config.wifiSSID.c_str());
     currentSSID = config.wifiSSID;
     this->StaIsConnected = true;
   }
   else if(bits & this->wifi_fail_bit)
   {
-    ESP_LOGW(PUARA_TAG,"wifi_init: Failed to connect to SSID: %s", config.wifiSSID);
+    ESP_LOGW(PUARA_TAG,"wifi_init: Failed to connect to SSID: %s", config.wifiSSID.c_str());
     if(!config.persistentAP)
     {
-      ESP_LOGW(PUARA_TAG,"wifi_init: Failed to connect to SSID: %s", config.wifiSSID);
+      ESP_LOGW(PUARA_TAG,"wifi_init: Failed to connect to SSID: %s", config.wifiSSID.c_str());
       ESP_LOGI(PUARA_TAG,"Switching to AP/STA mode");
       ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
       ESP_LOGI(PUARA_TAG,"wifi_init: loading AP config");
@@ -116,7 +116,12 @@ void WiFi::wifi_init()
       IP_EVENT, IP_EVENT_STA_GOT_IP, instance_got_ip));
   ESP_ERROR_CHECK(esp_event_handler_instance_unregister(
       WIFI_EVENT, ESP_EVENT_ANY_ID, instance_any_id));
+  
+  // Small delay to ensure any in-flight event handlers complete before deleting the event group
+  vTaskDelay(pdMS_TO_TICKS(100));
+  
   vEventGroupDelete(this->s_wifi_event_group);
+  this->s_wifi_event_group = NULL;
 
   // getting extra info
   unsigned char temp_info[6] = {0};
@@ -245,7 +250,7 @@ void WiFi::sta_event_handler(
   }
   else if(event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED)
   {
-    std::cout << "Trying to connect to AP " << self.connect_counter << "/" << PuaraAPI::wifi_maximum_retry << std::endl;
+    ESP_LOGW(PUARA_TAG, "Trying to connect to AP %d/%d", self.connect_counter, PuaraAPI::wifi_maximum_retry);
     if(self.connect_counter < PuaraAPI::wifi_maximum_retry)
     {
       self.connect_counter++;
@@ -253,8 +258,11 @@ void WiFi::sta_event_handler(
     }
     else
     {
-      xEventGroupSetBits(self.s_wifi_event_group, self.wifi_fail_bit);
-      std::cout << "Connect to external AP failed. Creating own Access Point network\n" << std::endl;
+      if(self.s_wifi_event_group != NULL)
+      {
+        xEventGroupSetBits(self.s_wifi_event_group, self.wifi_fail_bit);
+      }
+      ESP_LOGW(PUARA_TAG, "Connect to external AP failed. Creating own Access Point network");
     }
   }
   else if(event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP)
@@ -267,11 +275,14 @@ void WiFi::sta_event_handler(
     tempBuf << esp_ip4_addr3_16(&event->ip_info.ip) << ".";
     tempBuf << esp_ip4_addr4_16(&event->ip_info.ip);
     self.currentSTA_IP = tempBuf.str();
-    std::cout << "Connected to external AP With ip " << self.currentSTA_IP  << std::endl;
+    ESP_LOGI(PUARA_TAG, "Connected to external AP with IP %s", self.currentSTA_IP.c_str());
     self.connect_counter = 0;
-    xEventGroupSetBits(self.s_wifi_event_group, self.wifi_connected_bit);
+    if(self.s_wifi_event_group != NULL)
+    {
+      xEventGroupSetBits(self.s_wifi_event_group, self.wifi_connected_bit);
+    }
   
-
+/*
     // FTM implementation
     wifi_ap_record_t ap_info;
     if(esp_wifi_sta_get_ap_info(&ap_info) == ESP_OK){
@@ -280,10 +291,10 @@ void WiFi::sta_event_handler(
       self.ftm_responder_state = ap_info.ftm_responder;
       self.ftm_initiator_state = ap_info.ftm_initiator;
 
-      std::cout << "ap_info.primary / Channel of AP: " << ap_info.primary << std::endl;
-      std::cout << "flag to identify if FTM is supported in responder mode: " << ap_info.ftm_responder << std::endl;
+      std::cout << "ap_info.primary / Channel of AP: " << (int)ap_info.primary << std::endl;
+      std::cout << "flag to identify if FTM is supported in responder mode: " << (int)ap_info.ftm_responder << std::endl;
       std::cout << "if responder mode flag is 0, it does not support FTM " << std::endl;
-      std::cout << "flag to identify if FTM is supported in initiator mode: " << ap_info.ftm_initiator << std::endl;
+      std::cout << "flag to identify if FTM is supported in initiator mode: " << (int)ap_info.ftm_initiator << std::endl;
 
   //Print string MAC for proof of concept
       self.router_BSSID.clear();
@@ -302,16 +313,18 @@ void WiFi::sta_event_handler(
   //end proof of concept print
     }
     //end FTM implementation tests to get active Router MAC address
+*/
+/*
   }
   else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_FTM_REPORT){
 
     wifi_event_ftm_report_t* report = (wifi_event_ftm_report_t*) event_data;
     std::cout<<"FTM Report received! rtt: "<< report->rtt_est <<", distance: "<< report->dist_est << std::endl;
 //    	memcpy(&arduino_event.event_info.wifi_ftm_report, event_data, sizeof(wifi_event_ftm_report_t));
-  }
+*/  }
   else {
     // Debug: print unhandled events
-    std::cout << "Unhandled WiFi event - base: " << event_base << ", id: " << event_id << std::endl;
+    ESP_LOGD(PUARA_TAG, "Unhandled WiFi event - base: %s, id: %ld", event_base, event_id);
   }
 }
 
