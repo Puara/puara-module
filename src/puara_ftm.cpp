@@ -1,0 +1,31 @@
+#include "puara_ftm.hpp"
+#include "puara_logger.hpp"
+#include "puara_wifi.hpp"
+
+// #include <.h>
+//#include <iostream>
+
+namespace PuaraAPI
+{
+
+void FTM::configureFTM(){
+
+    std::cout << "Configuring FTM parameters" << std::endl;
+    //get responder MAC address
+    std::copy(std::begin(wifi.currentRouter_BSSID), std::end(wifi.currentRouter_BSSID), std::begin(wifi_ftm_cfg.resp_mac));
+    wifi_ftm_cfg.channel = wifi.ftm_channel; // = primary_channel_AP_ftm;
+    wifi_ftm_cfg.frm_count = 16; // No. of FTM frames requested in terms of 4 or 8 bursts (allowed values - 0(No pref), 16, 24, 32, 64)    
+    wifi_ftm_cfg.burst_period = 4; // Requested time period between consecutive FTM bursts in 100's of milliseconds (0 - ASAP)
+}
+
+void FTM::requestFTM(){
+    esp_err_t result = esp_wifi_ftm_initiate_session(&wifi_ftm_cfg);
+    if (result != ESP_OK) {
+        std::cout << "FTM session failed :: (esp_err_t) result : " << result << "\n" << std::endl;
+    }else if(result == ESP_OK) {
+        std::cout << "FTM session initiated successfully \n" << std::endl;
+    }
+}
+
+
+}

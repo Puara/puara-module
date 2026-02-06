@@ -31,16 +31,24 @@ struct WiFi
   std::string currentAP_IP;
   std::string currentAP_MAC;
 
+  //FTM related variables
+  std::string router_BSSID; //used for FTM proof
+  uint8_t currentRouter_BSSID[6];    // MAC address of router
+  uint8_t ftm_channel; // channel of AP for FTM purposes
+  uint32_t ftm_responder_state; // flag to verify if connected responder supports FTM 
+  uint32_t ftm_initiator_state; // flag to verify if connected responder supports FTM 
+  // end FTM related variables
+
   std::string wifiAvailableSsid;
 
-  // Internal API
+  // Internal API      //"sta" in sta_event_handler creates confusion and function name should be cleaned
   static void sta_event_handler(
       void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data);
   void wifi_init();
 
   const int wifi_connected_bit = BIT0;
   const int wifi_fail_bit = BIT1;
-  EventGroupHandle_t s_wifi_event_group;
+  EventGroupHandle_t s_wifi_event_group = NULL;
 
   wifi_config_t wifi_config_sta;
   wifi_config_t wifi_config_ap;

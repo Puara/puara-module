@@ -16,11 +16,13 @@ Edu Meneses (2022) - https://www.edumeneses.com
 #include "puara_device.hpp"
 #include "puara_logger.hpp"
 #include "puara_filesystem.hpp"
+#include "puara_ftm.hpp"
 #include "puara_mdns.hpp"
 #include "puara_serial.hpp"
 #include "puara_web.hpp"
 #include "puara_wifi.hpp"
 #include <memory>
+
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
@@ -39,6 +41,7 @@ struct PuaraGlobal
   PuaraAPI::WiFi wifi{config};
   PuaraAPI::Webserver webserver{config, device, fs, settings, wifi};
   PuaraAPI::MDNSService mdns;
+  PuaraAPI::FTM ftm{wifi};
 
   PuaraGlobal() { }
 
@@ -59,6 +62,8 @@ struct PuaraGlobal
     webserver.start_webserver();
     mdns.start(config.dmiName, config.dmiName);
     wifi.wifi_scan();
+    // FTM initiation removed - users should call puara.initiateFTM() explicitly
+    // if their device is meant to be an FTM initiator (STA connecting to a responder) 
 
     serial.module_monitor = monitor;
 
@@ -177,4 +182,14 @@ void Puara::wifi_scan()
 bool Puara::get_StaIsConnected()
 {
   return g_puara.wifi.get_StaIsConnected();
+}
+
+void Puara::configureFTM()
+{
+  return g_puara.ftm.configureFTM();
+}
+
+void Puara::requestFTM()
+{
+  return g_puara.ftm.requestFTM();
 }
