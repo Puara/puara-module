@@ -56,13 +56,26 @@ public:
    * Call this only on devices acting as FTM initiators (STAs connected to a responder AP).
    * Do NOT call this on devices acting as solely as FTM responders (APs).
    */
-  void configureFTM();
+  void configureFTM(uint8_t frm_cnt = 16, uint16_t burst_prd = 4);
 
   /**
    * Trigger an FTM procedure and get the report in the event handler. Call this only on devices acting as FTM initiators (STAs connected to a responder AP). Do NOT call this on devices acting as solely as FTM responders (APs).
    */
 
   void requestFTM();
+
+  // Verify if external AP supports FTM and if connected as initiator or responder
+  bool get_ftm_responder_state();
+
+  // Get last distance estimate in cm from FTM report
+  uint32_t get_last_distance_cm();
+  
+  // Get last RTT estimate in ns from FTM report
+  uint32_t get_last_rtt_ns();
+
+  // Verify if FTM report data is available
+  bool is_ftm_report_available();
+
 
   double getVarNumber(std::string varName);
   std::string getVarText(std::string varName);

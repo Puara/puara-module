@@ -184,12 +184,32 @@ bool Puara::get_StaIsConnected()
   return g_puara.wifi.get_StaIsConnected();
 }
 
-void Puara::configureFTM()
+void Puara::configureFTM(uint8_t frm_cnt, uint16_t burst_prd)
 {
-  return g_puara.ftm.configureFTM();
+  return g_puara.ftm.configureFTM(frm_cnt, burst_prd);
 }
 
 void Puara::requestFTM()
 {
   return g_puara.ftm.requestFTM();
+}
+
+bool Puara::is_ftm_report_available()
+{
+  return g_puara.wifi.ftm_report_available;
+}
+
+uint32_t Puara::get_last_distance_cm()
+{
+  return g_puara.wifi.last_distance_cm;
+}
+
+uint32_t Puara::get_last_rtt_ns()
+{
+  return g_puara.wifi.last_rtt_ns;
+}
+
+bool Puara::get_ftm_responder_state()
+{
+  return g_puara.wifi.ftm_responder_state != 0;
 }
