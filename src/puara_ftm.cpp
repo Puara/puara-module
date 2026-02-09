@@ -10,7 +10,7 @@ namespace PuaraAPI
 
 void FTM::configureFTM(uint8_t frm_cnt, uint16_t burst_prd){
 
-    std::cout << "Configuring FTM parameters" << std::endl;
+    ESP_LOGD(PUARA_TAG, "Configuring FTM parameters");
     //get responder MAC address
     std::copy(std::begin(wifi.currentRouter_BSSID), std::end(wifi.currentRouter_BSSID), std::begin(wifi_ftm_cfg.resp_mac));
     wifi_ftm_cfg.channel = wifi.ftm_channel; // = primary_channel_AP_ftm;
@@ -21,11 +21,10 @@ void FTM::configureFTM(uint8_t frm_cnt, uint16_t burst_prd){
 void FTM::requestFTM(){
     esp_err_t result = esp_wifi_ftm_initiate_session(&wifi_ftm_cfg);
     if (result != ESP_OK) {
-        std::cout << "FTM session failed :: (esp_err_t) result : " << result << "\n" << std::endl;
+        ESP_LOGD(PUARA_TAG, "FTM Session Failed : %s", esp_err_to_name(result));
     }else if(result == ESP_OK) {
-        std::cout << "FTM session initiated successfully \n" << std::endl;
+        ESP_LOGD(PUARA_TAG, "FTM session initiated successfully");
     }
 }
-
 
 }

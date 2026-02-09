@@ -115,9 +115,10 @@ void WiFi::wifi_init()
   /*
   ESP_ERROR_CHECK(esp_event_handler_instance_unregister(
       IP_EVENT, IP_EVENT_STA_GOT_IP, instance_got_ip));
+  */
   ESP_ERROR_CHECK(esp_event_handler_instance_unregister(
       WIFI_EVENT, ESP_EVENT_ANY_ID, instance_any_id));
-  */
+  
 
   esp_event_handler_instance_t instance_got_ftm_report;
   ESP_ERROR_CHECK(esp_event_handler_instance_register(
@@ -332,7 +333,7 @@ void WiFi::sta_event_handler(
       ESP_LOGW(PUARA_TAG, "FTM Report received with non-success status: %d", report->status);
     }
     // ftm_report_num_entries x sizeof(wifi_ftm_report_entry_t) allocated on heap every cycle to be freed by caller.
-    if (report->ftm_report_data){
+    if (report->ftm_report_data != NULL){
       free(report->ftm_report_data);
     }
   
