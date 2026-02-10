@@ -16,8 +16,8 @@ struct FTM
 {
   WiFi& wifi;
  
-  std::string router_BSSID; //used for FTM proof
-  uint8_t currentRouter_BSSID[6];    // MAC address of router
+  //std::string externalAP_BSSID; //used for FTM proof
+  uint8_t externalAP_BSSID[6];    // MAC address of router
   uint8_t ftm_channel; // channel of AP for FTM purposes
   uint32_t ftm_responder_state; // flag to verify if external AP is an FTM responder
   //uint32_t ftm_initiator_state; // flag to verify if external responder is also initiator

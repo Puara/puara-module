@@ -294,7 +294,7 @@ void WiFi::sta_event_handler(
     wifi_ap_record_t ap_info;
     if(esp_wifi_sta_get_ap_info(&ap_info) == ESP_OK){
       if(self.ftm){
-        std::copy(std::begin(ap_info.bssid), std::end(ap_info.bssid), std::begin(self.ftm->currentRouter_BSSID));
+        std::copy(std::begin(ap_info.bssid), std::end(ap_info.bssid), std::begin(self.ftm->externalAP_BSSID));
         self.ftm->ftm_channel = ap_info.primary;
         self.ftm->ftm_responder_state = ap_info.ftm_responder;
         //self.ftm_initiator_state = ap_info.ftm_initiator; to know if responder is also initiator is not necessary right now
@@ -304,20 +304,6 @@ void WiFi::sta_event_handler(
       ESP_LOGD(PUARA_TAG, "Is external AP also FTM Initiator (0-no/1-yes): %d", (int)ap_info.ftm_initiator );
 
 
-  //Print string MAC for proof of concept
-      self.ftm->router_BSSID.clear();
-      std::stringstream mac_stream;
-      mac_stream << std::hex << std::setfill('0')
-          << std::setw(2) << (int)ap_info.bssid[0] << ":"
-          << std::setw(2) << (int)ap_info.bssid[1] << ":"
-          << std::setw(2) << (int)ap_info.bssid[2] << ":"
-          << std::setw(2) << (int)ap_info.bssid[3] << ":"
-          << std::setw(2) << (int)ap_info.bssid[4] << ":"
-          << std::setw(2) << (int)ap_info.bssid[5];
-       self.ftm->router_BSSID = mac_stream.str();
-       ESP_LOGD(PUARA_TAG, "Responder MAC: %s", self.ftm->router_BSSID.c_str());
-       mac_stream.str("");
-       mac_stream.clear();
       }  // end if(self.ftm)
     }  // end if(esp_wifi_sta_get_ap_info)
     //end FTM implementation tests to get active Router MAC address
