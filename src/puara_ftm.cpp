@@ -12,8 +12,8 @@ void FTM::configureFTM(uint8_t frm_cnt, uint16_t burst_prd){
 
     ESP_LOGD(PUARA_TAG, "Configuring FTM parameters");
     //get responder MAC address
-    std::copy(std::begin(wifi.currentRouter_BSSID), std::end(wifi.currentRouter_BSSID), std::begin(wifi_ftm_cfg.resp_mac));
-    wifi_ftm_cfg.channel = wifi.ftm_channel; // = primary_channel_AP_ftm;
+    std::copy(std::begin(this->currentRouter_BSSID), std::end(this->currentRouter_BSSID), std::begin(wifi_ftm_cfg.resp_mac));
+    wifi_ftm_cfg.channel = this->ftm_channel;
     wifi_ftm_cfg.frm_count = frm_cnt; // No. of FTM frames requested in terms of 4 or 8 bursts (allowed values - 0(No pref), 16, 24, 32, 64)    
     wifi_ftm_cfg.burst_period = burst_prd; // Requested time period between consecutive FTM bursts in 100's of milliseconds (0 - ASAP)
 }

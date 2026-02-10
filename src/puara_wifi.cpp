@@ -1,5 +1,6 @@
 
 #include "puara_config.hpp"
+#include "puara_ftm.hpp"
 #include "puara_logger.hpp"
 #include "puara_wifi.hpp"
 
@@ -292,17 +293,19 @@ void WiFi::sta_event_handler(
     // FTM implementation
     wifi_ap_record_t ap_info;
     if(esp_wifi_sta_get_ap_info(&ap_info) == ESP_OK){
-      std::copy(std::begin(ap_info.bssid), std::end(ap_info.bssid), std::begin(self.currentRouter_BSSID));
-      self.ftm_channel = ap_info.primary;
-      self.ftm_responder_state = ap_info.ftm_responder;
-      self.ftm_initiator_state = ap_info.ftm_initiator;
+      if(self.ftm){
+        std::copy(std::begin(ap_info.bssid), std::end(ap_info.bssid), std::begin(self.ftm->currentRouter_BSSID));
+        self.ftm->ftm_channel = ap_info.primary;
+        self.ftm->ftm_responder_state = ap_info.ftm_responder;
+        //self.ftm_initiator_state = ap_info.ftm_initiator; to know if responder is also initiator is not necessary right now
 
-      std::cout << "Channel of external AP: " << (int)ap_info.primary << std::endl;
-      std::cout << "Does external AP support FTM Responder Mode (0-no/1-yes): " << (int)ap_info.ftm_responder << std::endl;
-      std::cout << "Is external AP also FTM Initiator (0-no/1-yes): " << (int)ap_info.ftm_initiator << std::endl;
+      ESP_LOGD(PUARA_TAG, "Channel of external AP: %d", (int)ap_info.primary );
+      ESP_LOGD(PUARA_TAG, "Does external AP support FTM Responder Mode (0-no/1-yes): %d", (int)ap_info.ftm_responder );  
+      ESP_LOGD(PUARA_TAG, "Is external AP also FTM Initiator (0-no/1-yes): %d", (int)ap_info.ftm_initiator );
+
 
   //Print string MAC for proof of concept
-      self.router_BSSID.clear();
+      self.ftm->router_BSSID.clear();
       std::stringstream mac_stream;
       mac_stream << std::hex << std::setfill('0')
           << std::setw(2) << (int)ap_info.bssid[0] << ":"
@@ -311,14 +314,13 @@ void WiFi::sta_event_handler(
           << std::setw(2) << (int)ap_info.bssid[3] << ":"
           << std::setw(2) << (int)ap_info.bssid[4] << ":"
           << std::setw(2) << (int)ap_info.bssid[5];
-       self.router_BSSID = mac_stream.str();
-       std::cout << "Responder MAC: " << self.router_BSSID << std::endl;
+       self.ftm->router_BSSID = mac_stream.str();
+       ESP_LOGD(PUARA_TAG, "Responder MAC: %s", self.ftm->router_BSSID.c_str());
        mac_stream.str("");
        mac_stream.clear();
-  //end proof of concept print
-    }
+      }  // end if(self.ftm)
+    }  // end if(esp_wifi_sta_get_ap_info)
     //end FTM implementation tests to get active Router MAC address
-
 
   }
   else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_FTM_REPORT){
@@ -326,9 +328,9 @@ void WiFi::sta_event_handler(
 
     if(report->status == FTM_STATUS_SUCCESS){
       ESP_LOGV(PUARA_TAG, "FTM Report: RTT: %u ns, Distance: %u cm", report->rtt_est, report->dist_est);
-      self.last_rtt_ns = report->rtt_est;
-      self.last_distance_cm = report->dist_est;
-      self.ftm_report_available = true;
+      self.ftm->last_rtt_ns = report->rtt_est;
+      self.ftm->last_distance_cm = report->dist_est;
+      self.ftm->ftm_report_available = true;
     }else{
       ESP_LOGW(PUARA_TAG, "FTM Report received with non-success status: %d", report->status);
     }

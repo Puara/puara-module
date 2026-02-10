@@ -43,7 +43,9 @@ struct PuaraGlobal
   PuaraAPI::MDNSService mdns;
   PuaraAPI::FTM ftm{wifi};
 
-  PuaraGlobal() { }
+  PuaraGlobal() { 
+    wifi.ftm = &ftm;
+ }
 
   void start(PuaraAPI::Monitors monitor, esp_log_level_t debug_level)
   {
@@ -195,21 +197,21 @@ void Puara::requestFTM()
 }
 
 bool Puara::is_ftm_report_available()
-{
-  return g_puara.wifi.ftm_report_available;
+{ 
+  return g_puara.ftm.ftm_report_available;
 }
 
 uint32_t Puara::get_last_distance_cm()
 {
-  return g_puara.wifi.last_distance_cm;
+  return g_puara.ftm.last_distance_cm;
 }
 
 uint32_t Puara::get_last_rtt_ns()
 {
-  return g_puara.wifi.last_rtt_ns;
+  return g_puara.ftm.last_rtt_ns;
 }
 
 bool Puara::get_ftm_responder_state()
 {
-  return g_puara.wifi.ftm_responder_state != 0;
+  return g_puara.ftm.ftm_responder_state != 0;
 }
