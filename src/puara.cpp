@@ -215,3 +215,13 @@ bool Puara::get_ftm_responder_state()
 {
   return g_puara.ftm.ftm_responder_state != 0;
 }
+
+void Puara::set_ftm_report_as_consumed()
+{
+  g_puara.ftm.ftm_report_available = false;
+}
+
+bool Puara::set_offset_responder(int16_t offset_cm)
+{
+  return g_puara.ftm.set_offset_responder(offset_cm);
+}

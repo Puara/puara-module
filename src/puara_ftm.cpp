@@ -27,4 +27,18 @@ void FTM::requestFTM(){
     }
 }
 
+bool FTM::set_offset_responder(int16_t offset_cm){
+    // Set offset in cm for FTM Responder : 
+    // An equivalent offset is calculated in picoseconds and added in TOD of FTM 
+    // Measurement frame (T1).
+    esp_err_t result = esp_wifi_ftm_resp_set_offset(offset_cm);
+    if(result == ESP_OK) {
+        ESP_LOGD(PUARA_TAG, "FTM responder offset set successfully");
+        return true;
+    } else {
+        ESP_LOGD(PUARA_TAG, "Failed to set FTM responder offset : %s", esp_err_to_name(result));
+        return false;
+    }
+}
+
 }

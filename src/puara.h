@@ -76,6 +76,11 @@ public:
   // Verify if FTM report data is available
   bool is_ftm_report_available();
 
+  // Mark FTM report as consumed after reading the data to prevent stale data usage
+  void set_ftm_report_as_consumed();
+
+  // Set offset in cm for FTM Responder.
+  bool set_offset_responder(int16_t offset_cm);
 
   double getVarNumber(std::string varName);
   std::string getVarText(std::string varName);

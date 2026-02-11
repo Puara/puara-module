@@ -29,6 +29,7 @@ struct FTM
 
     void configureFTM(uint8_t frm_cnt = 32, uint16_t burst_prd = 4); // Configure FTM parameters
     void requestFTM(); 
+    bool set_offset_responder(int16_t offset_cm); // Set offset in cm for FTM Responder
 
 };
 } 
