@@ -82,6 +82,9 @@ public:
   // Set offset in cm for FTM Responder.
   bool set_offset_responder(int16_t offset_cm);
 
+  // End the ongoing FTM Initiator session.
+  void end_ftm_request_session();
+
   double getVarNumber(std::string varName);
   std::string getVarText(std::string varName);
 };

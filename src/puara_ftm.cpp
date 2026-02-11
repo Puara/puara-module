@@ -41,4 +41,14 @@ bool FTM::set_offset_responder(int16_t offset_cm){
     }
 }
 
+void FTM::end_ftm_request_session(){
+    //End the ongoing FTM Initiator session. This API works only on FTM Initiator
+    esp_err_t result = esp_wifi_ftm_end_session();
+    if(result == ESP_OK) {
+        ESP_LOGD(PUARA_TAG, "FTM session ended successfully");
+    } else {
+        ESP_LOGD(PUARA_TAG, "Failed to end FTM session : %s", esp_err_to_name(result));
+    }
+}
+
 }

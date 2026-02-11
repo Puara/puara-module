@@ -225,3 +225,7 @@ bool Puara::set_offset_responder(int16_t offset_cm)
 {
   return g_puara.ftm.set_offset_responder(offset_cm);
 }
+
+void Puara::end_ftm_request_session(){
+  return g_puara.ftm.end_ftm_request_session();
+}
