@@ -297,7 +297,7 @@ void WiFi::sta_event_handler(
         std::copy(std::begin(ap_info.bssid), std::end(ap_info.bssid), std::begin(self.ftm->externalAP_BSSID));
         self.ftm->ftm_channel = ap_info.primary;
         self.ftm->ftm_responder_state = ap_info.ftm_responder;
-        self.ftm_initiator_state = ap_info.ftm_initiator; 
+        self.ftm->ftm_initiator_state = ap_info.ftm_initiator; 
         ESP_LOGD(PUARA_TAG, "Channel of external AP: %d", (int)ap_info.primary );
         ESP_LOGD(PUARA_TAG, "Does external AP support FTM Responder Mode (0-no/1-yes): %d", (int)ap_info.ftm_responder );  
         ESP_LOGD(PUARA_TAG, "Is external AP also FTM Initiator (0-no/1-yes): %d", (int)ap_info.ftm_initiator );
