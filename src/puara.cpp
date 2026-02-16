@@ -229,3 +229,8 @@ bool Puara::set_offset_responder(int16_t offset_cm)
 void Puara::end_ftm_request_session(){
   return g_puara.ftm.end_ftm_request_session();
 }
+
+int Puara::get_rssi_of_ftm_frame()
+{
+  return g_puara.ftm.rssi_of_ftm_frame;
+}

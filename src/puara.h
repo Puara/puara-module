@@ -85,6 +85,9 @@ public:
   // End the ongoing FTM Initiator session.
   void end_ftm_request_session();
 
+  // Get RSSI of last FTM frame from connected external AP
+  int get_rssi_of_last_ftm_frame();
+
   double getVarNumber(std::string varName);
   std::string getVarText(std::string varName);
 };

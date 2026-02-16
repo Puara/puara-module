@@ -297,17 +297,13 @@ void WiFi::sta_event_handler(
         std::copy(std::begin(ap_info.bssid), std::end(ap_info.bssid), std::begin(self.ftm->externalAP_BSSID));
         self.ftm->ftm_channel = ap_info.primary;
         self.ftm->ftm_responder_state = ap_info.ftm_responder;
-        //self.ftm_initiator_state = ap_info.ftm_initiator; to know if responder is also initiator is not necessary right now
-
-      ESP_LOGD(PUARA_TAG, "Channel of external AP: %d", (int)ap_info.primary );
-      ESP_LOGD(PUARA_TAG, "Does external AP support FTM Responder Mode (0-no/1-yes): %d", (int)ap_info.ftm_responder );  
-      ESP_LOGD(PUARA_TAG, "Is external AP also FTM Initiator (0-no/1-yes): %d", (int)ap_info.ftm_initiator );
-
-
-      }  // end if(self.ftm)
-    }  // end if(esp_wifi_sta_get_ap_info)
+        self.ftm_initiator_state = ap_info.ftm_initiator; 
+        ESP_LOGD(PUARA_TAG, "Channel of external AP: %d", (int)ap_info.primary );
+        ESP_LOGD(PUARA_TAG, "Does external AP support FTM Responder Mode (0-no/1-yes): %d", (int)ap_info.ftm_responder );  
+        ESP_LOGD(PUARA_TAG, "Is external AP also FTM Initiator (0-no/1-yes): %d", (int)ap_info.ftm_initiator );
+      }  
+    }  
     //end FTM implementation tests to get active Router MAC address
-
   }
   else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_FTM_REPORT){
     wifi_event_ftm_report_t* report = (wifi_event_ftm_report_t*) event_data;
@@ -317,6 +313,9 @@ void WiFi::sta_event_handler(
       self.ftm->last_rtt_ns = report->rtt_est;
       self.ftm->last_distance_cm = report->dist_est;
       self.ftm->ftm_report_available = true;
+      // there are multiple ftm_report_data entries, but we will just take the RSSI from the first one for now as an indicator of signal strength of the FTM responder
+      self.ftm->rssi_of_ftm_frame = report->ftm_report_data[0].rssi;
+
     }else{
       ESP_LOGW(PUARA_TAG, "FTM Report received with non-success status: %d", report->status);
     }
@@ -324,7 +323,7 @@ void WiFi::sta_event_handler(
     if (report->ftm_report_data != NULL){
       free(report->ftm_report_data);
     }
-  
+
   }
   else {
     // Debug: print unhandled events
@@ -336,4 +335,5 @@ bool WiFi::get_StaIsConnected()
 {
   return StaIsConnected;
 }
+
 }
