@@ -115,24 +115,23 @@ void WiFi::wifi_init()
     ESP_LOGE(PUARA_TAG,"wifi_init: UNEXPECTED EVENT");
   }
 
-  // Unregister IP and WIFI event handlers
-  /*
+  // Unregister IP and WIFI event handlers as system is "configured"
   ESP_ERROR_CHECK(esp_event_handler_instance_unregister(
       IP_EVENT, IP_EVENT_STA_GOT_IP, instance_got_ip));
-  */
   ESP_ERROR_CHECK(esp_event_handler_instance_unregister(
       WIFI_EVENT, ESP_EVENT_ANY_ID, instance_any_id));
-  
-
-  esp_event_handler_instance_t instance_got_ftm_report;
-  ESP_ERROR_CHECK(esp_event_handler_instance_register(
-      WIFI_EVENT, WIFI_EVENT_FTM_REPORT, &WiFi::sta_event_handler, this, &instance_got_ftm_report));
-
   // Small delay to ensure any in-flight event handlers complete before deleting the event group
   vTaskDelay(pdMS_TO_TICKS(100));
-  
   vEventGroupDelete(this->s_wifi_event_group);
   this->s_wifi_event_group = NULL;
+
+  // Register handler for FTM report events, which can come in at any time after
+  // connection to an AP is established, and will be used to populate FTM report 
+  // data in the FTM struct for retrieval by users of the API
+  esp_event_handler_instance_t instance_got_ftm_report;
+  ESP_ERROR_CHECK(esp_event_handler_instance_register(
+      WIFI_EVENT, WIFI_EVENT_FTM_REPORT, &WiFi::sta_event_handler, this, 
+      &instance_got_ftm_report));
 
   // getting extra info
   unsigned char temp_info[6] = {0};
