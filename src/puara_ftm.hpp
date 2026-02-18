@@ -15,7 +15,17 @@ struct WiFi;
 struct FTM
 {
   WiFi& wifi;
- 
+
+  struct scanned_ap_info
+  {
+    std::string ssid;
+    uint8_t bssid[6];
+    int8_t rssi;
+    uint8_t primary_channel;
+  };
+
+  scanned_ap_info scanned_aps[20] = {}; // Array to hold scanned AP info for FTM purposes, populated during WiFi scan
+
   //std::string externalAP_BSSID; //used for FTM proof
   uint8_t externalAP_BSSID[6];    // MAC address of router
   uint8_t ftm_channel; // channel of AP for FTM purposes
