@@ -8,7 +8,9 @@
 #ifndef PUARA_H
 #define PUARA_H
 
+
 #include "puara_config.hpp"
+#include "puara_ftm.hpp"
 
 #include <string>
 #include <string_view>
@@ -51,21 +53,19 @@ public:
    */
   std::string staIP();
 
-  /**
-   * Initiate an FTM (Fine Timing Measurement) session with the connected AP.
-   * Call this only on devices acting as FTM initiators (STAs connected to a responder AP).
-   * Do NOT call this on devices acting as solely as FTM responders (APs).
-   */
-  void configureFTM(uint8_t frm_cnt = 16, uint16_t burst_prd = 4);
+
+// FTM related functions
+  int get_num_responder_aps();
+
+  const std::vector<PuaraAPI::FTM::scanned_responder_ap_info>& get_scanned_responder_aps() const;
+
+//  void FTM::configureFTM(uint8_t frame_count, uint16_t burst_period, uint8_t* target_bssid, uint8_t target_channel){
 
   /**
    * Trigger an FTM procedure and get the report in the event handler. Call this only on devices acting as FTM initiators (STAs connected to a responder AP). Do NOT call this on devices acting as solely as FTM responders (APs).
    */
 
-  void requestFTM();
-
-  // Verify if external AP supports FTM and if connected as initiator or responder
-  bool get_ftm_responder_state();
+//  void requestFTM();
 
   // Get last distance estimate in cm from FTM report
   uint32_t get_last_distance_cm();
@@ -78,13 +78,13 @@ public:
 
   // Mark FTM report as consumed after reading the data to prevent stale data usage
   void set_ftm_report_as_consumed();
-
+/*
   // Set offset in cm for FTM Responder.
   bool set_offset_responder(int16_t offset_cm);
 
   // End the ongoing FTM Initiator session.
   void end_ftm_request_session();
-
+*/
   // Get RSSI of last FTM frame from connected external AP
   int get_rssi_of_ftm_frame();
 

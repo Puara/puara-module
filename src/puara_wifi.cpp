@@ -178,22 +178,23 @@ void WiFi::wifi_scan(void)
     ESP_LOGE(PUARA_TAG, "Scan start failed: %s", esp_err_to_name(err));
   }else{
     ESP_LOGV(PUARA_TAG, "esp_wifi_scan_start result: %s", esp_err_to_name(err));
-    esp_err_t error = (esp_wifi_scan_get_ap_records(&number, ap_info));
-      if (error != ESP_OK) {
-        ESP_LOGE(PUARA_TAG, "Scan get ap reords failed: %s", esp_err_to_name(error));
-      }else{
-        ESP_LOGV(PUARA_TAG, "esp_wifi_scan_get_ap_records result: %s", esp_err_to_name(error));
-      }
     esp_err_t mistake = esp_wifi_scan_get_ap_num(&ap_count);
       if (mistake != ESP_OK) {
         ESP_LOGE(PUARA_TAG, "Scan get ap number failed: %s", esp_err_to_name(mistake));
       }else{
         ESP_LOGV(PUARA_TAG, "esp_wifi_scan_get_ap_num result: %s", esp_err_to_name(mistake));
       }
+    esp_err_t error = (esp_wifi_scan_get_ap_records(&number, ap_info));
+      if (error != ESP_OK) {
+        ESP_LOGE(PUARA_TAG, "Scan get ap reords failed: %s", esp_err_to_name(error));
+      }else{
+        ESP_LOGV(PUARA_TAG, "esp_wifi_scan_get_ap_records result: %s", esp_err_to_name(error));
+      }
     ESP_LOGI(PUARA_TAG,"wifi_scan: Total APs scanned = %d", ap_count);
     wifiAvailableSsid.clear();
     int ap_responder_pos = 0;
-  
+    this->ftm->scanned_responder_aps.clear();
+
     for(int i = 0; (i < PuaraAPI::wifiScanSize) && (i < ap_count); i++)
      {
       // Web configurations 
@@ -205,18 +206,22 @@ void WiFi::wifi_scan(void)
       wifiAvailableSsid.append(std::to_string(ap_info[i].primary));
       wifiAvailableSsid.append(")<br>");
 
-      // FTM configurations
+      // FTM configurations : make a list of all APs that are FTM responders
       if(ap_info[i].ftm_responder){
-        this->ftm->scanned_aps[ap_responder_pos].ssid = std::string(reinterpret_cast<const char*>(ap_info[i].ssid));
-        std::copy(std::begin(ap_info[i].bssid), std::end(ap_info[i].bssid), std::begin(this->ftm->scanned_aps[ap_responder_pos].bssid));
-        this->ftm->scanned_aps[ap_responder_pos].rssi = ap_info[i].rssi;
-        this->ftm->scanned_aps[ap_responder_pos].primary_channel = ap_info[i].primary;
+        FTM::scanned_responder_ap_info ap;
+        ap.ssid = std::string(reinterpret_cast<const char*>(ap_info[i].ssid));
+        std::copy(std::begin(ap_info[i].bssid), std::end(ap_info[i].bssid), std::begin(ap.bssid));
+        ap.rssi = ap_info[i].rssi;
+        ap.primary_channel = ap_info[i].primary;
+        this->ftm->scanned_responder_aps.push_back(ap);
+        
 
-        ESP_LOGD(PUARA_TAG, "AP %d: SSID: %s, RSSI: %d, Channel: %d is FTM Responder", 
+        ESP_LOGD(PUARA_TAG, "AP %d: SSID: %s, BSSID: %02x:%02x:%02x:%02x:%02x:%02x, RSSI: %d, Channel: %d is FTM Responder", 
         ap_responder_pos, 
-        this->ftm->scanned_aps[ap_responder_pos].ssid.c_str(), 
-        this->ftm->scanned_aps[ap_responder_pos].rssi, 
-        this->ftm->scanned_aps[ap_responder_pos].primary_channel
+        ap.ssid.c_str(),  
+        ap.bssid[0], ap.bssid[1], ap.bssid[2], ap.bssid[3], ap.bssid[4], ap.bssid[5],
+        ap.rssi,
+        ap.primary_channel
       );
       ap_responder_pos++;
       }
@@ -325,24 +330,6 @@ void WiFi::sta_event_handler(
     {
       xEventGroupSetBits(self.s_wifi_event_group, self.wifi_connected_bit);
     }
-  
-    // FTM implementation if the module is connected as an STA to an external AP, but single FTM use is useless...
-    // kept as a dead hanging body for Sir Wilhem's needs
-    /* 
-    wifi_ap_record_t ap_info;
-    if(esp_wifi_sta_get_ap_info(&ap_info) == ESP_OK){
-      if(self.ftm){
-        std::copy(std::begin(ap_info.bssid), std::end(ap_info.bssid), std::begin(self.ftm->externalAP_BSSID));
-        self.ftm->ftm_channel = ap_info.primary;
-        self.ftm->ftm_responder_state = ap_info.ftm_responder;
-        self.ftm->ftm_initiator_state = ap_info.ftm_initiator; 
-        ESP_LOGD(PUARA_TAG, "Channel of external AP: %d", (int)ap_info.primary );
-        ESP_LOGD(PUARA_TAG, "Does external AP support FTM Responder Mode (0-no/1-yes): %d", (int)ap_info.ftm_responder );  
-        ESP_LOGD(PUARA_TAG, "Is external AP also FTM Initiator (0-no/1-yes): %d", (int)ap_info.ftm_initiator );
-      }  
-    }  
-    //end FTM implementation tests to get active Router MAC address
-    */
   }
   // Management of FTM event  
   else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_FTM_REPORT){

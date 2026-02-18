@@ -41,7 +41,7 @@ struct PuaraGlobal
   PuaraAPI::WiFi wifi{config};
   PuaraAPI::Webserver webserver{config, device, fs, settings, wifi};
   PuaraAPI::MDNSService mdns;
-  PuaraAPI::FTM ftm{wifi};
+  PuaraAPI::FTM ftm;
 
   PuaraGlobal() { 
     wifi.ftm = &ftm;
@@ -186,16 +186,23 @@ bool Puara::get_StaIsConnected()
   return g_puara.wifi.get_StaIsConnected();
 }
 
-void Puara::configureFTM(uint8_t frm_cnt, uint16_t burst_prd)
+// FTM related functions
+int Puara::get_num_responder_aps() {
+    return g_puara.ftm.scanned_responder_aps.size();
+}
+
+const std::vector<PuaraAPI::FTM::scanned_responder_ap_info>& Puara::get_scanned_responder_aps() const {
+    return g_puara.ftm.scanned_responder_aps;
+}
+/*void Puara::configureFTM(uint8_t frm_cnt, uint16_t burst_prd)
 {
   return g_puara.ftm.configureFTM(frm_cnt, burst_prd);
 }
-
 void Puara::requestFTM()
 {
   return g_puara.ftm.requestFTM();
 }
-
+*/
 bool Puara::is_ftm_report_available()
 { 
   return g_puara.ftm.ftm_report_available;
@@ -211,16 +218,11 @@ uint32_t Puara::get_last_rtt_ns()
   return g_puara.ftm.last_rtt_ns;
 }
 
-bool Puara::get_ftm_responder_state()
-{
-  return g_puara.ftm.ftm_responder_state != 0;
-}
-
 void Puara::set_ftm_report_as_consumed()
 {
   g_puara.ftm.ftm_report_available = false;
 }
-
+/*
 bool Puara::set_offset_responder(int16_t offset_cm)
 {
   return g_puara.ftm.set_offset_responder(offset_cm);
@@ -229,7 +231,7 @@ bool Puara::set_offset_responder(int16_t offset_cm)
 void Puara::end_ftm_request_session(){
   return g_puara.ftm.end_ftm_request_session();
 }
-
+*/
 int Puara::get_rssi_of_ftm_frame()
 {
   return g_puara.ftm.rssi_of_ftm_frame;
