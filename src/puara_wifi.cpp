@@ -337,11 +337,11 @@ void WiFi::sta_event_handler(
 
     if(report->status == FTM_STATUS_SUCCESS){
       ESP_LOGV(PUARA_TAG, "FTM Report: RTT: %u ns, Distance: %u cm", report->rtt_est, report->dist_est);
-      self.ftm->last_rtt_ns = report->rtt_est;
-      self.ftm->last_distance_cm = report->dist_est;
-      self.ftm->ftm_report_available = true;
+      self.ftm->last_ftm_report.rtt_est = report->rtt_est;
+      self.ftm->last_ftm_report.dist_est = report->dist_est;
       // there are multiple ftm_report_data entries, but we will just take the RSSI from the first one for now as an indicator of signal strength of the FTM responder
-      self.ftm->rssi_of_ftm_frame = report->ftm_report_data[0].rssi;
+      self.ftm->last_ftm_report.rssi = report->ftm_report_data[0].rssi;
+      self.ftm->ftm_report_available = true;
 
     }else{
       ESP_LOGW(PUARA_TAG, "FTM Report received with non-success status: %d", report->status);

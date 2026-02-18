@@ -7,7 +7,23 @@
 
 namespace PuaraAPI
 {
-
+  // take in scanned_responder_aps and create wifi_ftm_cfgs vector based on user-defined parameters for frame count and burst period (same for all APs for now but can be made more flexible in the future) - this is to be called in setup after wifi_scan and before requestFTM
+  std::vector<wifi_ftm_initiator_cfg_t> FTM::make_FTM_Configuration_Vectors(
+    const std::vector<PuaraAPI::FTM::scanned_responder_ap_info>& responders, 
+    uint8_t frame_count, 
+    uint16_t burst_period){
+    std::vector<wifi_ftm_initiator_cfg_t> ftm_configs;
+    for (const auto& ap : responders) {
+        wifi_ftm_initiator_cfg_t ftm_config{};
+        std::copy(std::begin(ap.bssid), std::end(ap.bssid), std::begin(ftm_config.resp_mac));
+        ftm_config.channel = ap.primary_channel;
+        ftm_config.frm_count = frame_count;
+        ftm_config.burst_period = burst_period;
+        ftm_config.use_get_report_api = false; // use WIFI_EVENT_FTM_REPORT to get FTM report
+        ftm_configs.push_back(ftm_config);
+    }
+    return ftm_configs;
+}
 // make a function that defines the trilaterion/quadrilaterion/n-eration 
 //    (returns what?)  makeArrayOfFTMConfigs( int arraySize, scanned_ap_info* scannedAPs) 
 /*
