@@ -177,8 +177,19 @@ void WiFi::wifi_scan(void)
   if (err != ESP_OK) {
     ESP_LOGE(PUARA_TAG, "Scan start failed: %s", esp_err_to_name(err));
   }else{
-    ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&number, ap_info));
-    ESP_ERROR_CHECK(esp_wifi_scan_get_ap_num(&ap_count));
+    ESP_LOGV(PUARA_TAG, "esp_wifi_scan_start result: %s", esp_err_to_name(err));
+    esp_err_t error = (esp_wifi_scan_get_ap_records(&number, ap_info));
+      if (error != ESP_OK) {
+        ESP_LOGE(PUARA_TAG, "Scan get ap reords failed: %s", esp_err_to_name(error));
+      }else{
+        ESP_LOGV(PUARA_TAG, "esp_wifi_scan_get_ap_records result: %s", esp_err_to_name(error));
+      }
+    esp_err_t mistake = esp_wifi_scan_get_ap_num(&ap_count);
+      if (mistake != ESP_OK) {
+        ESP_LOGE(PUARA_TAG, "Scan get ap number failed: %s", esp_err_to_name(mistake));
+      }else{
+        ESP_LOGV(PUARA_TAG, "esp_wifi_scan_get_ap_num result: %s", esp_err_to_name(mistake));
+      }
     ESP_LOGI(PUARA_TAG,"wifi_scan: Total APs scanned = %d", ap_count);
     wifiAvailableSsid.clear();
     int ap_responder_pos = 0;
