@@ -12,9 +12,12 @@ namespace PuaraAPI
 {
 struct DeviceConfiguration;
 
+struct FTM;
+
 struct WiFi
 {
   DeviceConfiguration& config;
+  FTM* ftm = nullptr;
 
   // Public API
   void start_wifi();
@@ -33,14 +36,14 @@ struct WiFi
 
   std::string wifiAvailableSsid;
 
-  // Internal API
+  // Internal API      //"sta" in sta_event_handler creates confusion and function name should be cleaned
   static void sta_event_handler(
       void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data);
   void wifi_init();
 
   const int wifi_connected_bit = BIT0;
   const int wifi_fail_bit = BIT1;
-  EventGroupHandle_t s_wifi_event_group;
+  EventGroupHandle_t s_wifi_event_group = NULL;
 
   wifi_config_t wifi_config_sta;
   wifi_config_t wifi_config_ap;

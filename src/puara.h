@@ -51,6 +51,43 @@ public:
    */
   std::string staIP();
 
+  /**
+   * Initiate an FTM (Fine Timing Measurement) session with the connected AP.
+   * Call this only on devices acting as FTM initiators (STAs connected to a responder AP).
+   * Do NOT call this on devices acting as solely as FTM responders (APs).
+   */
+  void configureFTM(uint8_t frm_cnt = 16, uint16_t burst_prd = 4);
+
+  /**
+   * Trigger an FTM procedure and get the report in the event handler. Call this only on devices acting as FTM initiators (STAs connected to a responder AP). Do NOT call this on devices acting as solely as FTM responders (APs).
+   */
+
+  void requestFTM();
+
+  // Verify if external AP supports FTM and if connected as initiator or responder
+  bool get_ftm_responder_state();
+
+  // Get last distance estimate in cm from FTM report
+  uint32_t get_last_distance_cm();
+  
+  // Get last RTT estimate in ns from FTM report
+  uint32_t get_last_rtt_ns();
+
+  // Verify if FTM report data is available
+  bool is_ftm_report_available();
+
+  // Mark FTM report as consumed after reading the data to prevent stale data usage
+  void set_ftm_report_as_consumed();
+
+  // Set offset in cm for FTM Responder.
+  bool set_offset_responder(int16_t offset_cm);
+
+  // End the ongoing FTM Initiator session.
+  void end_ftm_request_session();
+
+  // Get RSSI of last FTM frame from connected external AP
+  int get_rssi_of_ftm_frame();
+
   double getVarNumber(std::string varName);
   std::string getVarText(std::string varName);
 };
