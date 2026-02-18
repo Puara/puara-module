@@ -176,37 +176,39 @@ void WiFi::wifi_scan(void)
   esp_err_t err = esp_wifi_scan_start(NULL, true);
   if (err != ESP_OK) {
     ESP_LOGE(PUARA_TAG, "Scan start failed: %s", esp_err_to_name(err));
-  }
-  ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&number, ap_info));
-  ESP_ERROR_CHECK(esp_wifi_scan_get_ap_num(&ap_count));
-  ESP_LOGI(PUARA_TAG,"wifi_scan: Total APs scanned = %d", ap_count);
-  wifiAvailableSsid.clear();
-  int ap_responder_pos = 0;
-  for(int i = 0; (i < PuaraAPI::wifiScanSize) && (i < ap_count); i++)
-  {
-    // Web configurations 
-    wifiAvailableSsid.append("<strong>SSID: </strong>");
-    wifiAvailableSsid.append(reinterpret_cast<const char*>(ap_info[i].ssid));
-    wifiAvailableSsid.append("<br>      (RSSI: ");
-    wifiAvailableSsid.append(std::to_string(ap_info[i].rssi));
-    wifiAvailableSsid.append(", Channel: ");
-    wifiAvailableSsid.append(std::to_string(ap_info[i].primary));
-    wifiAvailableSsid.append(")<br>");
+  }else{
+    ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&number, ap_info));
+    ESP_ERROR_CHECK(esp_wifi_scan_get_ap_num(&ap_count));
+    ESP_LOGI(PUARA_TAG,"wifi_scan: Total APs scanned = %d", ap_count);
+    wifiAvailableSsid.clear();
+    int ap_responder_pos = 0;
+  
+    for(int i = 0; (i < PuaraAPI::wifiScanSize) && (i < ap_count); i++)
+     {
+      // Web configurations 
+      wifiAvailableSsid.append("<strong>SSID: </strong>");
+      wifiAvailableSsid.append(reinterpret_cast<const char*>(ap_info[i].ssid));
+      wifiAvailableSsid.append("<br>      (RSSI: ");
+      wifiAvailableSsid.append(std::to_string(ap_info[i].rssi));
+      wifiAvailableSsid.append(", Channel: ");
+      wifiAvailableSsid.append(std::to_string(ap_info[i].primary));
+      wifiAvailableSsid.append(")<br>");
 
-    // FTM configurations
-    if(ap_info[i].ftm_responder){
-      this->ftm->scanned_aps[ap_responder_pos].ssid = std::string(reinterpret_cast<const char*>(ap_info[i].ssid));
-      std::copy(std::begin(ap_info[i].bssid), std::end(ap_info[i].bssid), std::begin(this->ftm->scanned_aps[ap_responder_pos].bssid));
-      this->ftm->scanned_aps[ap_responder_pos].rssi = ap_info[i].rssi;
-      this->ftm->scanned_aps[ap_responder_pos].primary_channel = ap_info[i].primary;
+      // FTM configurations
+      if(ap_info[i].ftm_responder){
+        this->ftm->scanned_aps[ap_responder_pos].ssid = std::string(reinterpret_cast<const char*>(ap_info[i].ssid));
+        std::copy(std::begin(ap_info[i].bssid), std::end(ap_info[i].bssid), std::begin(this->ftm->scanned_aps[ap_responder_pos].bssid));
+        this->ftm->scanned_aps[ap_responder_pos].rssi = ap_info[i].rssi;
+        this->ftm->scanned_aps[ap_responder_pos].primary_channel = ap_info[i].primary;
 
-      ESP_LOGD(PUARA_TAG, "AP %d: SSID: %s, RSSI: %d, Channel: %d is FTM Responder", 
+        ESP_LOGD(PUARA_TAG, "AP %d: SSID: %s, RSSI: %d, Channel: %d is FTM Responder", 
         ap_responder_pos, 
         this->ftm->scanned_aps[ap_responder_pos].ssid.c_str(), 
         this->ftm->scanned_aps[ap_responder_pos].rssi, 
         this->ftm->scanned_aps[ap_responder_pos].primary_channel
       );
       ap_responder_pos++;
+      }
     }
   }
 }
