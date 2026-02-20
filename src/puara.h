@@ -48,23 +48,17 @@ public:
   void wifi_scan();
   bool get_StaIsConnected();
 
-  /**
-   * returns current IP address on external wifi access point
-   */
+   // returns current IP address on external wifi access point
   std::string staIP();
-
 
 // FTM related functions
   int get_num_responder_aps();
-
-  const std::vector<PuaraAPI::FTM::scanned_responder_ap_info>& get_scanned_responder_aps() const;
-
   bool ftm_report_available();
-
-//  void FTM::configureFTM(uint8_t frame_count, uint16_t burst_period, uint8_t* target_bssid, uint8_t target_channel){
-
-
-
+  const std::map<std::string, wifi_ftm_initiator_cfg_t> get_map_of_responder_configs(
+    uint8_t frame_count, uint16_t burst_period, const std::vector<std::string>& returned_ssids); 
+  void set_ftm_report_as_consumed();
+        
+  
   double getVarNumber(std::string varName);
   std::string getVarText(std::string varName);
 };

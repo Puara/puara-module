@@ -64,8 +64,6 @@ struct PuaraGlobal
     webserver.start_webserver();
     mdns.start(config.dmiName, config.dmiName);
     wifi.wifi_scan();
-    // FTM initiation removed - users should call puara.initiateFTM() explicitly
-    // if their device is meant to be an FTM initiator (STA connecting to a responder) 
 
     serial.module_monitor = monitor;
 
@@ -190,12 +188,16 @@ bool Puara::get_StaIsConnected()
 int Puara::get_num_responder_aps() {
     return g_puara.ftm.scanned_responder_aps.size();
 }
-
-const std::vector<PuaraAPI::FTM::scanned_responder_ap_info>& Puara::get_scanned_responder_aps() const {
-    return g_puara.ftm.scanned_responder_aps;
-}
-
 bool Puara::ftm_report_available()
 {
   return g_puara.ftm.ftm_report_available; // flag to indicate if FTM report data is available  
+}
+const std::map<std::string, wifi_ftm_initiator_cfg_t> Puara::get_map_of_responder_configs(
+    uint8_t frame_count, uint16_t burst_period, const std::vector<std::string>& returned_ssids)
+{
+  return g_puara.ftm.get_map_of_responder_configs(frame_count, burst_period, returned_ssids); 
+}
+void Puara::set_ftm_report_as_consumed()
+{
+  g_puara.ftm.ftm_report_available = false;
 }
