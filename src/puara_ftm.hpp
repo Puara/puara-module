@@ -41,6 +41,19 @@ struct FTM
 
   ftm_report_info last_ftm_report{};  // API accessible 
 
+  // fast accessor for the last report; returns const reference so caller can
+  // peek multiple fields without copying
+  const ftm_report_info& get_last_ftm_report() const { return last_ftm_report; }
+
+  // check if a report is available and optionally copy it into provided struct
+  // returns true when a report was present; does **not** consume the flag
+  bool get_ftm_report(ftm_report_info &out) const {
+      if (ftm_report_available) {
+          out = last_ftm_report;
+          return true;
+      }
+      return false;
+  }
 
   // Map of user-defined FTM responder configurations, with SSID as key and 
   // wifi_ftm_initiator_cfg_t struct (holding responder MAC, channel, frame count,

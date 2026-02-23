@@ -56,6 +56,13 @@ public:
   bool ftm_report_available();
   const std::map<std::string, wifi_ftm_initiator_cfg_t> get_map_of_responder_configs(
     uint8_t frame_count, uint16_t burst_period, const std::vector<std::string>& returned_ssids); 
+
+  // retrieve the latest FTM report all at once (fast, no per-field calls)
+  const PuaraAPI::FTM::ftm_report_info& get_last_ftm_report();
+
+  // retrieve a report by reference, returns true if available (flag not cleared)
+  bool get_ftm_report(PuaraAPI::FTM::ftm_report_info &out);
+
   void set_ftm_report_as_consumed();
         
   

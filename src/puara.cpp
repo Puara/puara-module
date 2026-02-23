@@ -197,6 +197,17 @@ const std::map<std::string, wifi_ftm_initiator_cfg_t> Puara::get_map_of_responde
 {
   return g_puara.ftm.get_map_of_responder_configs(frame_count, burst_period, returned_ssids); 
 }
+
+const PuaraAPI::FTM::ftm_report_info& Puara::get_last_ftm_report()
+{
+  return g_puara.ftm.get_last_ftm_report();
+}
+
+bool Puara::get_ftm_report(PuaraAPI::FTM::ftm_report_info &out)
+{
+  return g_puara.ftm.get_ftm_report(out);
+}
+
 void Puara::set_ftm_report_as_consumed()
 {
   g_puara.ftm.ftm_report_available = false;
