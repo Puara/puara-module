@@ -178,3 +178,18 @@ bool Puara::get_StaIsConnected()
 {
   return g_puara.wifi.get_StaIsConnected();
 }
+
+bool Puara::set_wifi_tx_power(int8_t max_tx_power)
+{
+  return g_puara.wifi.set_wifi_tx_power(max_tx_power);
+}
+
+bool Puara::set_wifi_channel(int8_t primary)
+{
+  return g_puara.wifi.set_wifi_channel(primary);
+}
+
+int8_t Puara::get_wifi_channel()
+{
+  return g_puara.wifi.get_wifi_channel();
+}

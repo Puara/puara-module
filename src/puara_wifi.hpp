@@ -37,7 +37,10 @@ struct WiFi
   static void sta_event_handler(
       void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data);
   void wifi_init();
-
+  bool set_wifi_tx_power(int8_t max_tx_power);
+  bool set_wifi_channel(int8_t primary);
+  int8_t get_wifi_channel();
+  
   const int wifi_connected_bit = BIT0;
   const int wifi_fail_bit = BIT1;
   EventGroupHandle_t s_wifi_event_group;
@@ -45,5 +48,6 @@ struct WiFi
   wifi_config_t wifi_config_sta;
   wifi_config_t wifi_config_ap;
   short int connect_counter;
+
 };
 } 

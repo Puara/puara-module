@@ -32,6 +32,9 @@ void WiFi::wifi_init()
   wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
   ESP_ERROR_CHECK(esp_wifi_init(&cfg));
 
+  esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);
+  esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20);
+
   // Set device hostname
   esp_err_t setname = esp_netif_set_hostname(ap_netif, config.dmiName.c_str());
   if(setname != ESP_OK)
@@ -274,4 +277,54 @@ bool WiFi::get_StaIsConnected()
 {
   return StaIsConnected;
 }
+
+/*
+Set maximum transmitting power after WiFi start.
+Value will be mapped to the max_tx_power of the struct wifi_country_t.
+Param power unit is 0.25dBm
+Range is [8, 84] corresponding to 2dBm - 20dBm.
+Mapping Table {Power, max_tx_power} = {
+  {8, 2}, {20, 5}, {28, 7}, {34, 8}, {44, 11}, {52, 13}, 
+  {56, 14}, {60, 15}, {66, 16}, {72, 18}, {80, 20}   }
+*/
+bool WiFi::set_wifi_tx_power(int8_t max_tx_power) {
+    esp_err_t result = esp_wifi_set_max_tx_power(max_tx_power);
+    if(result == ESP_OK) {
+        return true;
+    } else {
+        ESP_LOGE(PUARA_TAG,"set_wifi_tx_power: Failed to set WiFi TX power. Error code: %d", result);
+        return false;
+    }
 }
+
+/*
+Set primary channel of device. Puara now uses HT20 as default
+primary --   for HT20, primary is the channel number  
+second --   for HT20, second is ignored, 
+The channel info set by this API will not be stored in NVS. 
+This function only works in AP mode, when no STAs are connected to it yet.
+Must be run at setup() after puara.start().
+*/
+bool WiFi::set_wifi_channel(int8_t primary) {
+    esp_err_t result = esp_wifi_set_channel(primary, WIFI_SECOND_CHAN_NONE);
+    if(result == ESP_OK) {
+        return true;
+    } else {
+        ESP_LOGE(PUARA_TAG,"set_wifi_channels: Failed to set WiFi channels. Error code: %s", esp_err_to_name(result));
+        return false;
+    }
+}
+
+int8_t WiFi::get_wifi_channel() {
+    int8_t primary;
+    wifi_second_chan_t second;
+    esp_err_t result = esp_wifi_get_channel((uint8_t*)&primary, &second);
+    if(result == ESP_OK) {
+        return primary;
+    } else {
+        ESP_LOGE(PUARA_TAG,"get_wifi_channels: Failed to get WiFi channels. Error code: %d", result);
+        return -1;
+    }
+}
+
+} // namespace PuaraAPI
