@@ -328,4 +328,19 @@ bool WiFi::set_wifi_channels(int8_t primary, wifi_second_chan_t second) {
     }
 }
 
+/*
+Get the primary/secondary channel of device.
+  primary -- store current primary channel
+  second -- [out] store current second channel
+*/
+bool WiFi::get_wifi_channels(int8_t& primary, wifi_second_chan_t& second) {
+    esp_err_t result = esp_wifi_get_channel((uint8_t*)&primary, &second);
+    if(result == ESP_OK) {
+        return true;
+    } else {
+        ESP_LOGE(PUARA_TAG,"get_wifi_channels: Failed to get WiFi channels. Error code: %d", result);
+        return false;
+    }
 }
+
+} // namespace PuaraAPI

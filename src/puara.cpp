@@ -188,3 +188,8 @@ bool Puara::set_wifi_channels(int8_t primary, wifi_second_chan_t second)
 {
   return g_puara.wifi.set_wifi_channels(primary, second);
 }
+
+bool Puara::get_wifi_channels(int8_t& primary, wifi_second_chan_t& second)
+{
+  return g_puara.wifi.get_wifi_channels(primary, second);
+}
