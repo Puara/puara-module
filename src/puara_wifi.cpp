@@ -277,6 +277,7 @@ bool WiFi::get_StaIsConnected()
 {
   return StaIsConnected;
 }
+
 /*
 Set maximum transmitting power after WiFi start.
 Value will be mapped to the max_tx_power of the struct wifi_country_t.
@@ -285,13 +286,6 @@ Range is [8, 84] corresponding to 2dBm - 20dBm.
 Mapping Table {Power, max_tx_power} = {
   {8, 2}, {20, 5}, {28, 7}, {34, 8}, {44, 11}, {52, 13}, 
   {56, 14}, {60, 15}, {66, 16}, {72, 18}, {80, 20}   }
-
-Relationship between set value and actual value as follows: 
-{set value range, actual value} = {
-{[8, 19],8}, {[20, 27],20}, {[28, 33],28}, {[34, 43],34}, {[44, 51],44},
-{[52, 55],52}, {[56, 59],56}, {[60, 65],60}, {[66, 71],66}, {[72, 79],72}, 
-{[80, 84],80}
-}.
 */
 bool WiFi::set_wifi_tx_power(int8_t max_tx_power) {
     esp_err_t result = esp_wifi_set_max_tx_power(max_tx_power);
@@ -304,14 +298,12 @@ bool WiFi::set_wifi_tx_power(int8_t max_tx_power) {
 }
 
 /*
-Set primary/secondary channel of device.
-Puara now uses HT20 as default
-primary -- 
-  for HT20, primary is the channel number  
-second -- 
-  for HT20, second is ignored, 
+Set primary channel of device. Puara now uses HT20 as default
+primary --   for HT20, primary is the channel number  
+second --   for HT20, second is ignored, 
 The channel info set by this API will not be stored in NVS. 
-If you want to remember the channel store it to settings.json variable
+This function only works in AP mode, when no STAs are connected to it yet.
+Must be run at setup() after puara.start().
 */
 bool WiFi::set_wifi_channel(int8_t primary) {
     esp_err_t result = esp_wifi_set_channel(primary, WIFI_SECOND_CHAN_NONE);
