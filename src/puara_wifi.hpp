@@ -38,8 +38,8 @@ struct WiFi
       void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data);
   void wifi_init();
   bool set_wifi_tx_power(int8_t max_tx_power);
-  bool set_wifi_channels(int8_t primary, wifi_second_chan_t second);
-  bool get_wifi_channels(int8_t& primary, wifi_second_chan_t& second);
+  bool set_wifi_channels(int8_t primary);
+  int8_t get_wifi_channels();
   
   const int wifi_connected_bit = BIT0;
   const int wifi_fail_bit = BIT1;

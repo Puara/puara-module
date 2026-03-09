@@ -184,12 +184,12 @@ bool Puara::set_wifi_tx_power(int8_t max_tx_power)
   return g_puara.wifi.set_wifi_tx_power(max_tx_power);
 }
 
-bool Puara::set_wifi_channels(int8_t primary, wifi_second_chan_t second)
+bool Puara::set_wifi_channels(int8_t primary)
 {
-  return g_puara.wifi.set_wifi_channels(primary, second);
+  return g_puara.wifi.set_wifi_channels(primary);
 }
 
-bool Puara::get_wifi_channels(int8_t& primary, wifi_second_chan_t& second)
+int8_t Puara::get_wifi_channels()
 {
-  return g_puara.wifi.get_wifi_channels(primary, second);
+  return g_puara.wifi.get_wifi_channels();
 }

@@ -305,41 +305,33 @@ bool WiFi::set_wifi_tx_power(int8_t max_tx_power) {
 
 /*
 Set primary/secondary channel of device.
-(Puara now uses HT20 as default)
+Puara now uses HT20 as default
 primary -- 
   for HT20, primary is the channel number  
-  for HT40, primary is the primary channel
 second -- 
   for HT20, second is ignored, 
-  for HT40, second is the second channel
-
 The channel info set by this API will not be stored in NVS. 
-If you want to remember the channel used before WiFi stop, 
-you need to call this API again after WiFi start, or you can call 
-esp_wifi_set_config() to store the channel info in NVS.
+If you want to remember the channel store it to settings.json variable
 */
-bool WiFi::set_wifi_channels(int8_t primary, wifi_second_chan_t second) {
-    esp_err_t result = esp_wifi_set_channel(primary, second);
+bool WiFi::set_wifi_channels(int8_t primary) {
+    esp_err_t result = esp_wifi_set_channel(primary, WIFI_SECOND_CHAN_NONE);
     if(result == ESP_OK) {
         return true;
     } else {
-        ESP_LOGE(PUARA_TAG,"set_wifi_channels: Failed to set WiFi channels. Error code: %d", result);
+        ESP_LOGE(PUARA_TAG,"set_wifi_channels: Failed to set WiFi channels. Error code: %s", esp_err_to_name(result));
         return false;
     }
 }
 
-/*
-Get the primary/secondary channel of device.
-  primary -- store current primary channel
-  second -- [out] store current second channel
-*/
-bool WiFi::get_wifi_channels(int8_t& primary, wifi_second_chan_t& second) {
+int8_t WiFi::get_wifi_channels() {
+    int8_t primary;
+    wifi_second_chan_t second;
     esp_err_t result = esp_wifi_get_channel((uint8_t*)&primary, &second);
     if(result == ESP_OK) {
-        return true;
+        return primary;
     } else {
         ESP_LOGE(PUARA_TAG,"get_wifi_channels: Failed to get WiFi channels. Error code: %d", result);
-        return false;
+        return -1;
     }
 }
 

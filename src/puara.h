@@ -10,6 +10,10 @@
 
 #include "puara_config.hpp"
 
+// the wifi type definitions (esp_wifi.h) are required for
+// wifi_second_chan_t and the WIFI_SECOND_CHAN_* constants.
+#include <esp_wifi.h>
+
 #include <string>
 #include <string_view>
 #include <functional>
@@ -55,8 +59,8 @@ public:
   std::string getVarText(std::string varName);
 
   bool set_wifi_tx_power(int8_t max_tx_power);
-  bool set_wifi_channels(int8_t primary, wifi_second_chan_t second);
-  bool get_wifi_channels(int8_t& primary, wifi_second_chan_t& second);
+  bool set_wifi_channels(int8_t primary);
+  int8_t get_wifi_channels();
 };
 
 #endif
