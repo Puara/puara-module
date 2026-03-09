@@ -59,8 +59,8 @@ public:
   std::string getVarText(std::string varName);
 
   bool set_wifi_tx_power(int8_t max_tx_power);
-  bool set_wifi_channels(int8_t primary);
-  int8_t get_wifi_channels();
+  bool set_wifi_channel(int8_t primary);
+  int8_t get_wifi_channel();
 };
 
 #endif

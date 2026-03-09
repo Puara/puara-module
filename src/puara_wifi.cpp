@@ -313,7 +313,7 @@ second --
 The channel info set by this API will not be stored in NVS. 
 If you want to remember the channel store it to settings.json variable
 */
-bool WiFi::set_wifi_channels(int8_t primary) {
+bool WiFi::set_wifi_channel(int8_t primary) {
     esp_err_t result = esp_wifi_set_channel(primary, WIFI_SECOND_CHAN_NONE);
     if(result == ESP_OK) {
         return true;
@@ -323,7 +323,7 @@ bool WiFi::set_wifi_channels(int8_t primary) {
     }
 }
 
-int8_t WiFi::get_wifi_channels() {
+int8_t WiFi::get_wifi_channel() {
     int8_t primary;
     wifi_second_chan_t second;
     esp_err_t result = esp_wifi_get_channel((uint8_t*)&primary, &second);
