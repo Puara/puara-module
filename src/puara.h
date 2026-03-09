@@ -53,6 +53,9 @@ public:
 
   double getVarNumber(std::string varName);
   std::string getVarText(std::string varName);
+
+  bool set_wifi_tx_power(int8_t max_tx_power);
+
 };
 
 #endif

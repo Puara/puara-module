@@ -277,4 +277,33 @@ bool WiFi::get_StaIsConnected()
 {
   return StaIsConnected;
 }
+/*
+Set maximum transmitting power after WiFi start.
+Value will be mapped to the max_tx_power of the struct wifi_country_t.
+Param power unit is 0.25dBm
+Range is [8, 84] corresponding to 2dBm - 20dBm.
+Mapping Table {Power, max_tx_power} = {
+  {8, 2}, {20, 5}, {28, 7}, {34, 8}, {44, 11}, {52, 13}, 
+  {56, 14}, {60, 15}, {66, 16}, {72, 18}, {80, 20}   }
+
+Relationship between set value and actual value as follows: 
+{set value range, actual value} = {
+{[8, 19],8}, {[20, 27],20}, {[28, 33],28}, {[34, 43],34}, {[44, 51],44},
+{[52, 55],52}, {[56, 59],56}, {[60, 65],60}, {[66, 71],66}, {[72, 79],72}, 
+{[80, 84],80}
+}.
+*/
+bool WiFi::set_wifi_tx_power(int8_t max_tx_power) {
+    esp_err_t result = esp_wifi_set_max_tx_power(max_tx_power);
+    if(result == ESP_OK) {
+        return true;
+    } else {
+        ESP_LOGE(PUARA_TAG,"set_wifi_tx_power: Failed to set WiFi TX power. Error code: %d", result);
+        return false;
+    }
+}
+
+
+
+
 }
