@@ -159,8 +159,8 @@ void WiFi::wifi_scan(void)
   memset(ap_info, 0, sizeof(ap_info));
 
   esp_wifi_scan_start(NULL, true);
-  ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&number, ap_info));
   ESP_ERROR_CHECK(esp_wifi_scan_get_ap_num(&ap_count));
+  ESP_ERROR_CHECK(esp_wifi_scan_get_ap_records(&number, ap_info));
   ESP_LOGI(PUARA_TAG,"wifi_scan: Total APs scanned = %d", ap_count);
   wifiAvailableSsid.clear();
   for(int i = 0; (i < PuaraAPI::wifiScanSize) && (i < ap_count); i++)
