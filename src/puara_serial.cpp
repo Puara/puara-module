@@ -107,7 +107,7 @@ void Serial::uart_monitor()
       .stop_bits = UART_STOP_BITS_1,
       .flow_ctrl = UART_HW_FLOWCTRL_DISABLE, // UART_HW_FLOWCTRL_CTS_RTS,
       .rx_flow_ctrl_thresh = 122,
-      .source_clk = UART_SCLK_APB,
+      .source_clk = UART_SCLK_RTC,
   };
 
   // Configure UART1 parameters
