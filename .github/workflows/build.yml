@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # we have 8 templates, 4 different boards chosen for tests, and 2 filesystems
+        # we have 8 templates, 5 different boards chosen for tests, and 2 filesystems
         template:
           - name: basic
             fs: littlefs
@@ -61,11 +61,16 @@ jobs:
             board: tinypico
             extra_flags: "-DBOARD_HAS_PSRAM -mfix-esp32-psram-cache-issue"
           - name: m5stick-c
+            # m5stick-c has a ESP32-PICO-D4 MCU just like the tinypico. Could be removed but it is a popular board and good to have it tested as well ?
             board: m5stick-c
             extra_flags: "-DBOARD_HAS_PSRAM -mfix-esp32-psram-cache-issue"
           - name: ESP32-C3
             board: esp32-c3-devkitc-02
             extra_flags: "-DBOARD_HAS_PSRAM"
+          - name: ESP32-C6
+            board: esp32c6-devkitc
+            extra_flags: "-DBOARD_HAS_PSRAM"
+            # think about adding esp32 : e22, s2, c2, c5, c61, h2, h21, h4, 
 
     steps:
       - uses: actions/checkout@v4
