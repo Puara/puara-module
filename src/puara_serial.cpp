@@ -107,7 +107,11 @@ void Serial::uart_monitor()
       .stop_bits = UART_STOP_BITS_1,
       .flow_ctrl = UART_HW_FLOWCTRL_DISABLE, // UART_HW_FLOWCTRL_CTS_RTS,
       .rx_flow_ctrl_thresh = 122,
+#if CONFIG_IDF_TARGET_ESP32C6
+      .source_clk = UART_SCLK_RTC,
+#else
       .source_clk = UART_SCLK_APB,
+#endif
   };
 
   // Configure UART1 parameters
